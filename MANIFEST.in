@@ -1,0 +1,5 @@
+include filebrowser_safe/LICENSE
+recursive-include filebrowser_safe/media *
+recursive-include filebrowser_safe/templates *.html
+recursive-include filebrowser_safe/locale *.mo *.po
+
