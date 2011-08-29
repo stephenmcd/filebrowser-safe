@@ -16,7 +16,8 @@
     {{ block.super }}
     <script type="text/javascript" src="../../jsi18n/"></script>
     <script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
-    <script type="text/javascript" src="{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/jquery.uploadify.v2.1.0.js"></script>
+    <script type="text/javascript" src="{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/jquery.uploadify.v2.1.4.min.js"></script>
     <script type="text/javascript" src="{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/swfobject.js"></script>
     <script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedFieldsets.js"></script>
     <script type="text/javascript">
@@ -28,7 +29,7 @@
             'checkScript'       : '{% url fb_check %}',
             'cancelImg'         : '{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/cancel.png',
             'auto'              : false,
-            'folder'            : '{{ query.dir }}',
+            'folder'            : '{{ query.dir|escapejs }}',
             'multi'             : true,
             'fileDesc'          : '{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}*{{ item|safe }};{% endfor %}{% endifnotequal %}{% endfor %}',
             'fileExt'           : '{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}*{{ item|safe }};{% endfor %}{% endifnotequal %}{% endfor %}',
@@ -40,6 +41,8 @@
             'height'            : 30,
             'hideButton'        : false,
             'wmode'             : 'transparent',
+            'removeCompleted'   : false,
+            //'onAllComplete' : function(event,data) { confirm(data.filesUploaded + ' files uploaded successfully!');},
             translations        : {
                                   browseButton: '{% trans "BROWSE" %}',
                                   error: '{% trans "An Error occured" %}',
@@ -52,6 +55,10 @@
         $('input:submit').click(function(){
             $('#id_file').uploadifyUpload();
             return false;
+        });
+        $('a.deletelink').click(function(evt){
+                $('#id_file').uploadifyClearQueue();
+                return false;
         });
     });
     </script>
@@ -101,7 +108,7 @@
         
         <div class="submit-row">
             <p class="deletelink-box">
-                <a class="deletelink" href="javascript:$('#id_file').uploadifyClearQueue()">{% trans "Clear Queue" %}</a>
+                <a class="deletelink" href="javascript://">{% trans "Clear Queue" %}</a>
             </p>
             <input class="default" type="submit" name="_save" value='{% trans "Upload" %}' />
         </div>
