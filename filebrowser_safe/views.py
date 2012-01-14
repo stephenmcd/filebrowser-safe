@@ -138,7 +138,7 @@ def browse(request):
         'results_var': results_var,
         'counter': counter,
         'query': query,
-        'title': _(u'FileBrowser'),
+        'title': _(u'Media Library'),
         'settings_var': get_settings_var(),
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': ""
