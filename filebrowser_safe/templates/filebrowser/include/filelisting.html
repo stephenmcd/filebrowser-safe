@@ -2,7 +2,7 @@
 
 {% for file in page.object_list %}
 <tr class="{% cycle 'row1' 'row2' %}">
-    
+
     <!-- FILESELECT FOR FILEBROWSEFIELD -->
     {% ifequal query.pop '1' %}
     {% if results_var.select_total %}
@@ -16,7 +16,7 @@
     </td>
     {% endif %}
     {% endifequal %}
-    
+
     <!-- FILESELECT FOR RTE/TINYMCE -->
     {% ifequal query.pop '2' %}
     {% if results_var.select_total %}
@@ -30,7 +30,7 @@
     </td>
     {% endif %}
     {% endifequal %}
-    
+
     <!-- FILESELECT FOR CKEDITOR (FORMER "FCKEDITOR") -->
     {% ifequal query.pop '3' %}
     {% if results_var.select_total %}
@@ -44,17 +44,17 @@
     </td>
     {% endif %}
     {% endifequal %}
-    
+
     <!-- SHOW VERSIONS -->
     {% if results_var.images_total and settings_var.ADMIN_VERSIONS %}
     <td class="fb_icon">
         {% ifequal file.filetype 'Image' %}<a href="{% url fb_versions %}{% query_string "" "p" %}&amp;filename={{ file.filename }}" class="fb_showversionslink" title="{% trans 'Show Versions' %}"></a>{% endifequal %}
     </td>
     {% endif %}
-    
+
     <!-- FILEICON -->
     <td class="fb_icon"><img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" /></td>
-    
+
     <!-- THUMBNAIL -->
     {% if results_var.images_total %}
     <td class="fb_icon">
@@ -63,23 +63,23 @@
         {% endifequal %}
     </td>
     {% endif %}
-    
+
     <!-- FILENAME/DIMENSIONS -->
     {% ifequal file.filetype 'Folder' %}
     <td><b><a href="{% url fb_browse %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}">{{ file.filename }}</a></b></td>
     {% else %}
     <td><b><a href="{{ file.url_full }}">{{ file.filename }}</a></b>{% if file.dimensions %}<br /><span class="tiny">{{ file.dimensions.0 }} x {{ file.dimensions.1 }} px</span>{% endif %}</td>
     {% endifequal %}
-    
+
     <!-- RENAME -->
     <td class="fb_icon"><a href="{% url fb_rename %}{% query_string %}&amp;filename={{ file.filename }}" class="fb_renamelink" title="{% trans 'Rename' %}"></a></td>
-    
+
     <!-- SIZE -->
     <td>{{ file.filesize|filesizeformat }}</td>
-    
+
     <!-- DATE -->
     <td>{{ file.datetime|date:"N j, Y" }}</td>
-    
+
     <!-- DELETE -->
     {% if results_var.delete_total %}
     <td class="fb_icon">
@@ -92,7 +92,7 @@
         {% endifnotequal %}
     </td>
     {% endif %}
-    
+
     <!-- DEBUG -->
     {% if settings_var.DEBUG %}
     <td>
@@ -119,8 +119,8 @@
         {% endifequal %}
     </td>
     {% endif %}
-    
+
 </tr>
 {% endfor %}
 
- 
+
