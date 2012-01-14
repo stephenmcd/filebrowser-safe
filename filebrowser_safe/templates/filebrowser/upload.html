@@ -42,7 +42,7 @@
             'hideButton'        : false,
             'wmode'             : 'transparent',
             'removeCompleted'   : false,
-            'onAllComplete' : function(event,data) {location = $('.breadcrumbs a:first').attr('href')},
+            'onAllComplete' : function(event,data) {location = '{% url fb_browse %}'},
             translations        : {
                                   browseButton: '{% trans "BROWSE" %}',
                                   error: '{% trans "An Error occured" %}',
