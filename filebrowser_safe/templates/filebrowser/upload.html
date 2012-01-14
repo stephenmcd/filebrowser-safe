@@ -42,7 +42,7 @@
             'hideButton'        : false,
             'wmode'             : 'transparent',
             'removeCompleted'   : false,
-            //'onAllComplete' : function(event,data) { confirm(data.filesUploaded + ' files uploaded successfully!');},
+            'onAllComplete' : function(event,data) {location = $('.breadcrumbs a:first').attr('href')},
             translations        : {
                                   browseButton: '{% trans "BROWSE" %}',
                                   error: '{% trans "An Error occured" %}',
