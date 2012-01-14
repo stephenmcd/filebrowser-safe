@@ -81,13 +81,13 @@
             <input type="File" id="id_file" />
         </div>
         </fieldset>
-        
+
         <fieldset class="module aligned collapse-closed">
         <h2>{% trans "Help" %}</h2>
         <div class="form-row" >
             {% for extension in settings_var.EXTENSIONS.items %}
             {% ifnotequal extension.0 'Folder' %}
-            <label class="required">{% if forloop.first %}{% trans "Allowed" %}:{% else %}&nbsp;{% endif %}</label> 
+            <label class="required">{% if forloop.first %}{% trans "Allowed" %}:{% else %}&nbsp;{% endif %}</label>
             <p>{{ extension.0|safe }} ({{ extension.1|join:", "|safe }})</p>
             {% endifnotequal %}
             {% endfor %}
@@ -105,14 +105,14 @@
         </div>
         {% endif %}
         </fieldset>
-        
+
         <div class="submit-row">
             <p class="deletelink-box">
                 <a class="deletelink" href="javascript://">{% trans "Clear Queue" %}</a>
             </p>
             <input class="default" type="submit" name="_save" value='{% trans "Upload" %}' />
         </div>
-        
+
     </div>
     </form>
 </div>
