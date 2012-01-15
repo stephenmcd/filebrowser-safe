@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
 from django.utils.translation import ugettext as _
-from django.conf import settings
 from django import forms
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
@@ -30,6 +29,8 @@ from filebrowser_safe.functions import path_to_url, sort_by_attr, get_path, get_
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.decorators import flash_login_required
+
+from mezzanine.conf import settings
 
 # Precompile regular expressions
 filter_re = []
@@ -87,6 +88,8 @@ def browse(request):
         if fileobject.filetype == request.GET.get('filter_type', fileobject.filetype) and get_filterdate(request.GET.get('filter_date', ''), fileobject.date):
             append = True
         if request.GET.get('q') and not re.compile(request.GET.get('q').lower(), re.M).search(file.lower()):
+            append = False
+        if fileobject.filetype == "Folder" and file == settings.THUMBNAILS_DIR_NAME:
             append = False
 
         # APPEND FILE_LIST
