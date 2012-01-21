@@ -1,4 +1,4 @@
-{% load fb_versions %}
+{% load mezzanine_tags %}
 <style>
 .mezz-fb-thumbnail {display:inline;}
 .mezz-fb-thumbnail img {width:20px; height:20px; margin-top:0 !important;}
@@ -11,7 +11,7 @@
 {% ifequal value.filetype "Image" %}
 <p class="help mezz-fb-thumbnail" id="help_{{ final_attrs.id }}">
     <a href="{{ value.url_full }}" target="_blank" id="link_{{ final_attrs.id }}">
-        <img id="image_{{ final_attrs.id }}" src="{% version value.path final_attrs.ADMIN_THUMBNAIL %}" class="preview" />
+        <img id="image_{{ final_attrs.id }}" src="{{ MEDIA_URL }}{% thumbnail value.path 60 60 %}" class="preview" />
     </a>
 </p>
 {% else %}

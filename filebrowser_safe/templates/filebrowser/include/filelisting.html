@@ -1,4 +1,4 @@
-{% load i18n adminmedia fb_tags fb_versions %}
+{% load i18n adminmedia fb_tags mezzanine_tags %}
 
 {% for file in page.object_list %}
 <tr class="{% cycle 'row1' 'row2' %}">
@@ -9,7 +9,7 @@
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
         {% if selectable %}
-        <a href="javascript://" onclick="FileSubmit('{{ file.url_save }}', '{{ file.url_thumbnail }}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
+        <a href="javascript://" onclick="FileSubmit('{{ file.url_save }}', '{{ MEDIA_URL }}{% thumbnail file.path 60 60 %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
         {% else %}
         <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
         {% endif %}
@@ -61,7 +61,7 @@
     {% if results_var.images_total %}
     <td class="fb_icon">
         {% ifequal file.filetype 'Image' %}
-        <a href="{{ file.url_full }}"><img src="{% version file.path settings_var.ADMIN_THUMBNAIL %}" title="{% trans 'View Image' %}" /></a>
+        <a href="{{ file.url_full }}"><img src="{{ MEDIA_URL }}{% thumbnail file.path 60 60 %}" title="{% trans 'View Image' %}" /></a>
         {% endifequal %}
     </td>
     {% endif %}
