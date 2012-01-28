@@ -28,8 +28,12 @@ MEDIA_URL = getattr(settings, "FILEBROWSER_MEDIA_URL", settings.MEDIA_URL)
 # DO NOT USE A SLASH AT THE BEGINNING, DO NOT FORGET THE TRAILING SLASH AT THE END.
 DIRECTORY = getattr(settings, "FILEBROWSER_DIRECTORY", 'uploads/')
 
+_uploads_dir = os.path.join(MEDIA_ROOT, DIRECTORY)
+if not os.path.exists(_uploads_dir):
+    os.makedirs(_uploads_dir)
+
 # The URL/PATH to your filebrowser media-files.
-URL_FILEBROWSER_MEDIA = getattr(settings, "FILEBROWSER_URL_FILEBROWSER_MEDIA", "/media/filebrowser/")
+URL_FILEBROWSER_MEDIA = getattr(settings, "FILEBROWSER_URL_FILEBROWSER_MEDIA", "%sfilebrowser/" % settings.STATIC_URL)
 PATH_FILEBROWSER_MEDIA = getattr(settings, "FILEBROWSER_PATH_FILEBROWSER_MEDIA", os.path.join(settings.MEDIA_ROOT, 'filebrowser/'))
 
 # The URL/PATH to your TinyMCE Installation.
@@ -82,8 +86,8 @@ ADMIN_VERSIONS = getattr(settings, 'FILEBROWSER_ADMIN_VERSIONS', ['thumbnail','s
 ADMIN_THUMBNAIL = getattr(settings, 'FILEBROWSER_ADMIN_THUMBNAIL', 'fb_thumb')
 
 # EXTRA SETTINGS
-# True to save the URL including MEDIA_URL to your model fields
-# or False (default) to save path relative to MEDIA_URL.
+# True to save the URL including STATIC_URL to your model fields
+# or False (default) to save path relative to STATIC_URL.
 # Note: Full URL does not necessarily means absolute URL.
 SAVE_FULL_URL = getattr(settings, "FILEBROWSER_SAVE_FULL_URL", True)
 # If set to True, the FileBrowser will not try to import a mis-installed PIL.
