@@ -1,7 +1,7 @@
 {% extends "admin/base_site.html" %}
 
 <!-- LOADING -->
-{% load i18n adminmedia fb_tags fb_csrf %}
+{% load i18n adminmedia fb_tags %}
 
 <!-- STYLESHEETS -->
 {% block stylesheets %}
@@ -14,13 +14,14 @@
 {% block coltype %}colM{% endblock %}
 {% block bodyclass %}change-form filebrowser{% if query.pop %} popup{% endif %}{% endblock %}
 
-<!-- BREADCRUMBS -->
-{% block breadcrumbs %}{% include "filebrowser/include/breadcrumbs.html" %}{% endblock %}
+{% block content_title %}<h1>{% include "filebrowser/include/breadcrumbs.html" %}</h1>{% endblock %}
+{% block breadcrumbs %}<div class="breadcrumbs"></div>{% endblock %}
 
 <!-- CONTENT -->
 {% block content %}
 <div id="content-main">
-    <form action="{% query_string "" "filter_date,filter_type,q,p" %}" method="post">{% fb_csrf_token %}
+    <form action="{% query_string "" "filter_date,filter_type,q,p" %}" method="post">
+    {% csrf_token %}
     <div>
         {% if form.errors %}<p class="errornote">{% trans 'Please correct the following errors.' %}</p>{% endif %}
         <fieldset class="module aligned">

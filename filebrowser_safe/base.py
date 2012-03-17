@@ -1,202 +1,161 @@
 # coding: utf-8
 
 # imports
-import os, re, datetime
+import os, re, datetime, time, mimetypes
 from time import gmtime, strftime
 
 # django imports
 from django.conf import settings
+from django.core.files.storage import default_storage
+from django.utils.encoding import smart_str, smart_unicode
 
 # filebrowser imports
 from filebrowser_safe.settings import *
-from filebrowser_safe.functions import get_file_type, url_join, is_selectable, get_version_path
-
-# PIL import
-if STRICT_PIL:
-    from PIL import Image
-else:
-    try:
-        from PIL import Image
-    except ImportError:
-        import Image
+from filebrowser_safe.functions import (get_file_type, url_join, is_selectable,
+                                        path_strip)
 
 
-class FileObject(object):
+class FileObject():
     """
-    The FileObject represents a File on the Server.
+    The FileObject represents a file (or directory) on the server.
 
-    PATH has to be relative to MEDIA_ROOT.
+    An example::
+
+        from filebrowser.base import FileObject
+
+        fileobject = FileObject(path)
+
+    where path is a relative path to a storage location.
     """
 
-    def __init__(self, path):
+    def __init__(self, path, site=None):
+        if not site:
+            from filebrowser.sites import site as default_site
+            site = default_site
+        self.site = site
         self.path = path
-        self.url_rel = path.replace("\\","/")
-        self.head = os.path.split(path)[0]
-        self.filename = os.path.split(path)[1]
-        self.filename_lower = self.filename.lower() # important for sorting
-        self.filetype = get_file_type(self.filename)
+        self.head = os.path.dirname(path)
+        self.filename = os.path.basename(path)
+        self.filename_lower = self.filename.lower()
+        self.filename_root, self.extension = os.path.splitext(self.filename)
+        self.mimetype = mimetypes.guess_type(self.filename)
 
+
+    def __str__(self):
+        return smart_str(self.path)
+
+    def __unicode__(self):
+        return smart_unicode(self.path)
+
+    @property
+    def name(self):
+        return self.path
+
+    def __repr__(self):
+        return "<%s: %s>" % (self.__class__.__name__, self or "None")
+
+    def __len__(self):
+        return len(self.path)
+
+    # GENERAL ATTRIBUTES
+    _filetype_stored = None
+    def _filetype(self):
+        if self._filetype_stored != None:
+            return self._filetype_stored
+        if self.is_folder:
+            self._filetype_stored = 'Folder'
+        else:
+            self._filetype_stored = get_file_type(self.filename)
+        return self._filetype_stored
+    filetype = property(_filetype)
+
+    _filesize_stored = None
     def _filesize(self):
-        """
-        Filesize.
-        """
-        if os.path.isfile(os.path.join(MEDIA_ROOT, self.path)) or os.path.isdir(os.path.join(MEDIA_ROOT, self.path)):
-            return os.path.getsize(os.path.join(MEDIA_ROOT, self.path))
-        return ""
+        if self._filesize_stored != None:
+            return self._filesize_stored
+        if self.exists():
+            self._filesize_stored = default_storage.size(self.path)
+            return self._filesize_stored
+        return None
     filesize = property(_filesize)
 
+    _date_stored = None
     def _date(self):
-        """
-        Date.
-        """
-        if os.path.isfile(os.path.join(MEDIA_ROOT, self.path)) or os.path.isdir(os.path.join(MEDIA_ROOT, self.path)):
-            return os.path.getmtime(os.path.join(MEDIA_ROOT, self.path))
-        return ""
+        if self._date_stored != None:
+            return self._date_stored
+        if self.exists():
+            self._date_stored = time.mktime(default_storage.modified_time(self.path).timetuple())
+            return self._date_stored
+        return None
     date = property(_date)
 
     def _datetime(self):
-        """
-        Datetime Object.
-        """
-        return datetime.datetime.fromtimestamp(self.date)
+        if self.date:
+            return datetime.datetime.fromtimestamp(self.date)
+        return None
     datetime = property(_datetime)
 
-    def _extension(self):
-        """
-        Extension.
-        """
-        return u"%s" % os.path.splitext(self.filename)[1]
-    extension = property(_extension)
+    _exists_stored = None
+    def exists(self):
+        if self._exists_stored == None:
+            self._exists_stored = default_storage.exists(self.path)
+        return self._exists_stored
 
-    def _filetype_checked(self):
-        if self.filetype == "Folder" and os.path.isdir(self.path_full):
-            return self.filetype
-        elif self.filetype != "Folder" and os.path.isfile(self.path_full):
-            return self.filetype
-        else:
-            return ""
-    filetype_checked = property(_filetype_checked)
-
-    def _path_full(self):
-        """
-        Full server PATH including MEDIA_ROOT.
-        """
-        return u"%s" % os.path.join(MEDIA_ROOT, self.path)
-    path_full = property(_path_full)
-
-    def _path_relative(self):
-        return self.path
-    path_relative = property(_path_relative)
+    # PATH/URL ATTRIBUTES
 
     def _path_relative_directory(self):
-        """
-        Path relative to initial directory.
-        """
-        directory_re = re.compile(r'^(%s)' % (DIRECTORY))
-        value = directory_re.sub('', self.path)
-        return u"%s" % value
+        "path relative to DIRECTORY"
+        return path_strip(self.path, self.site.directory)
     path_relative_directory = property(_path_relative_directory)
 
-    def _url_relative(self):
-        return self.url_rel
-    url_relative = property(_url_relative)
+    def _url(self):
+        return default_storage.url(self.path)
+    url = property(_url)
 
-    def _url_full(self):
-        """
-        Full URL including MEDIA_URL.
-        """
-        return u"%s" % url_join(MEDIA_URL, self.url_rel)
-    url_full = property(_url_full)
+    # FOLDER ATTRIBUTES
 
-    def _url_save(self):
-        """
-        URL used for the filebrowsefield.
-        """
-        if SAVE_FULL_URL:
-            return self.url_full
-        else:
-            return self.url_rel
-    url_save = property(_url_save)
+    def _directory(self):
+        return path_strip(self.path, self.site.directory)
+    directory = property(_directory)
 
-    def _url_thumbnail(self):
-        """
-        Thumbnail URL.
-        """
-        if self.filetype == "Image":
-            return u"%s" % url_join(MEDIA_URL, get_version_path(self.path, 'fb_thumb'))
-        else:
-            return ""
-    url_thumbnail = property(_url_thumbnail)
+    def _folder(self):
+        return os.path.dirname(path_strip(os.path.join(self.head,''), self.site.directory))
+    folder = property(_folder)
 
-    def url_admin(self):
-        if self.filetype_checked == "Folder":
-            directory_re = re.compile(r'^(%s)' % (DIRECTORY))
-            value = directory_re.sub('', self.path)
-            return u"%s" % value
-        else:
-            return u"%s" % url_join(MEDIA_URL, self.path)
-
-    def _dimensions(self):
-        """
-        Image Dimensions.
-        """
-        if self.filetype == 'Image':
-            try:
-                im = Image.open(os.path.join(MEDIA_ROOT, self.path))
-                return im.size
-            except:
-                pass
-        else:
-            return False
-    dimensions = property(_dimensions)
-
-    def _width(self):
-        """
-        Image Width.
-        """
-        return self.dimensions[0]
-    width = property(_width)
-
-    def _height(self):
-        """
-        Image Height.
-        """
-        return self.dimensions[1]
-    height = property(_height)
-
-    def _orientation(self):
-        """
-        Image Orientation.
-        """
-        if self.dimensions:
-            if self.dimensions[0] >= self.dimensions[1]:
-                return "Landscape"
-            else:
-                return "Portrait"
-        else:
-            return None
-    orientation = property(_orientation)
+    _is_folder_stored = None
+    def _is_folder(self):
+        if self._is_folder_stored == None:
+            self._is_folder_stored = default_storage.isdir(self.path)
+        return self._is_folder_stored
+    is_folder = property(_is_folder)
 
     def _is_empty(self):
-        """
-        True if Folder is empty, False if not.
-        """
-        if os.path.isdir(self.path_full):
-            if not os.listdir(self.path_full):
+        if self.is_folder:
+            dirs, files = default_storage.listdir(self.path)
+            if not dirs and not files:
                 return True
-            else:
-                return False
-        else:
-            return None
+        return False
     is_empty = property(_is_empty)
 
-    def __repr__(self):
-        return u"%s" % self.url_save
+    def delete(self):
+        if self.is_folder:
+            default_storage.rmtree(self.path)
+            # shutil.rmtree(self.path)
+        else:
+            default_storage.delete(self.path)
 
-    def __str__(self):
-        return u"%s" % self.url_save
+    def delete_versions(self):
+        for version in self.versions():
+            try:
+                default_storage.delete(version)
+            except:
+                pass
 
-    def __unicode__(self):
-        return u"%s" % self.url_save
+    def delete_admin_versions(self):
+        for version in self.admin_versions():
+            try:
+                default_storage.delete(version)
+            except:
+                pass
 
 

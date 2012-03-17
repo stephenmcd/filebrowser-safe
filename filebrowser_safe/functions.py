@@ -14,14 +14,15 @@ from django.core.files.storage import default_storage
 # filebrowser imports
 from filebrowser_safe.settings import *
 
-# PIL import
-if STRICT_PIL:
-    from PIL import Image
-else:
-    try:
-        from PIL import Image
-    except ImportError:
-        import Image
+
+def path_strip(path, root):
+    if not path or not root:
+        return path
+    path = os.path.normcase(path)
+    root = os.path.normcase(root)
+    if path.startswith(root):
+        return path[len(root):]
+    return path
 
 
 def url_to_path(value):
@@ -62,42 +63,6 @@ def dir_from_url(value):
     directory_re = re.compile(r'^(%s)' % (DIRECTORY))
     value = directory_re.sub('', value)
     return os.path.split(value)[0]
-
-
-def get_version_path(value, version_prefix):
-    """
-    Construct the PATH to an Image version.
-    Value has to be server-path, relative to MEDIA_ROOT.
-
-    version_filename = filename + version_prefix + ext
-    Returns a path relative to MEDIA_ROOT.
-    """
-
-    if os.path.isfile(os.path.join(MEDIA_ROOT, value)):
-        path, filename = os.path.split(value)
-        filename, ext = os.path.splitext(filename)
-
-        # check if this file is a version of an other file
-        # to return filename_<version>.ext instead of filename_<version>_<version>.ext
-        tmp = filename.split("_")
-        if tmp[len(tmp)-1] in ADMIN_VERSIONS:
-            # it seems like the "original" is actually a version of an other original
-            # so we strip the suffix (aka. version_perfix)
-            new_filename = filename.replace("_" + tmp[len(tmp)-1], "")
-            # check if the version exists when we use the new_filename
-            if os.path.isfile(os.path.join(MEDIA_ROOT, path, new_filename + "_" + version_prefix + ext)):
-                # our "original" filename seem to be filename_<version> construct
-                # so we replace it with the new_filename
-                filename = new_filename
-                # if a VERSIONS_BASEDIR is set we need to strip it from the path
-                # or we get a <VERSIONS_BASEDIR>/<VERSIONS_BASEDIR>/... construct
-                if VERSIONS_BASEDIR != "":
-                        path = path.replace(VERSIONS_BASEDIR + "/", "")
-
-        version_filename = filename + "_" + version_prefix + ext
-        return os.path.join(VERSIONS_BASEDIR, path, version_filename)
-    else:
-        return None
 
 
 def sort_by_attr(seq, attr):
@@ -149,7 +114,7 @@ def get_path(path):
     Get Path.
     """
 
-    if path.startswith('.') or os.path.isabs(path) or not os.path.isdir(os.path.join(MEDIA_ROOT, DIRECTORY, path)):
+    if path.startswith('.') or os.path.isabs(path) or not default_storage.isdir(os.path.join(DIRECTORY, path)):
         return None
     return path
 
@@ -158,8 +123,7 @@ def get_file(path, filename):
     """
     Get File.
     """
-
-    if not os.path.isfile(os.path.join(MEDIA_ROOT, DIRECTORY, path, filename)) and not os.path.isdir(os.path.join(MEDIA_ROOT, DIRECTORY, path, filename)):
+    if not default_storage.exists(os.path.join(DIRECTORY, path, filename)):
         return None
     return filename
 
@@ -227,17 +191,6 @@ def get_settings_var():
     return settings_var
 
 
-def handle_file_upload(path, file):
-    """
-    Handle File Upload.
-    """
-
-    file_path = os.path.join(path, file.name)
-    uploadedfile = default_storage.save(file_path, file)
-    os.chmod(uploadedfile, 0664)
-    return uploadedfile
-
-
 def get_file_type(filename):
     """
     Get file type as defined in EXTENSIONS.
@@ -264,108 +217,3 @@ def is_selectable(filename, selecttype):
             if file_extension == extension.lower():
                 select_types.append(k)
     return select_types
-
-
-def version_generator(value, version_prefix, force=None):
-    """
-    Generate Version for an Image.
-    value has to be a serverpath relative to MEDIA_ROOT.
-    """
-
-    # PIL's Error "Suspension not allowed here" work around:
-    # s. http://mail.python.org/pipermail/image-sig/1999-August/000816.html
-    if STRICT_PIL:
-        from PIL import ImageFile
-    else:
-        try:
-            from PIL import ImageFile
-        except ImportError:
-            import ImageFile
-    ImageFile.MAXBLOCK = IMAGE_MAXBLOCK # default is 64k
-
-    try:
-        im = Image.open(os.path.join(MEDIA_ROOT, value))
-        version_path = get_version_path(value, version_prefix)
-        absolute_version_path = os.path.join(MEDIA_ROOT, version_path)
-        version_dir = os.path.split(absolute_version_path)[0]
-        if not os.path.isdir(version_dir):
-            os.makedirs(version_dir)
-            os.chmod(version_dir, 0664)
-        version = scale_and_crop(im, VERSIONS[version_prefix]['width'], VERSIONS[version_prefix]['height'], VERSIONS[version_prefix]['opts'])
-        try:
-            version.save(absolute_version_path, quality=90, optimize=(os.path.splitext(version_path)[1].lower() != '.gif'))
-        except IOError:
-            version.save(absolute_version_path, quality=90)
-        return version_path
-    except:
-        return None
-
-
-def scale_and_crop(im, width, height, opts):
-    """
-    Scale and Crop.
-    """
-
-    x, y   = [float(v) for v in im.size]
-    if width:
-        xr = float(width)
-    else:
-        xr = float(x*height/y)
-    if height:
-        yr = float(height)
-    else:
-        yr = float(y*width/x)
-
-    if 'crop' in opts:
-        r = max(xr/x, yr/y)
-    else:
-        r = min(xr/x, yr/y)
-
-    if r < 1.0 or (r > 1.0 and 'upscale' in opts):
-        im = im.resize((int(x*r), int(y*r)), resample=Image.ANTIALIAS)
-
-    if 'crop' in opts:
-        x, y   = [float(v) for v in im.size]
-        ex, ey = (x-min(x, xr))/2, (y-min(y, yr))/2
-        if ex or ey:
-            im = im.crop((int(ex), int(ey), int(x-ex), int(y-ey)))
-    return im
-
-    # if 'crop' in opts:
-    #     if 'top_left' in opts:
-    #         #draw cropping box from upper left corner of image
-    #         box = (0, 0, int(min(x, xr)), int(min(y, yr)))
-    #         im = im.resize((int(x), int(y)), resample=Image.ANTIALIAS).crop(box)
-    #     elif 'top_right' in opts:
-    #         #draw cropping box from upper right corner of image
-    #         box = (int(x-min(x, xr)), 0, int(x), int(min(y, yr)))
-    #         im = im.resize((int(x), int(y)), resample=Image.ANTIALIAS).crop(box)
-    #     elif 'bottom_left' in opts:
-    #         #draw cropping box from lower left corner of image
-    #         box = (0, int(y-min(y, yr)), int(xr), int(y))
-    #         im = im.resize((int(x), int(y)), resample=Image.ANTIALIAS).crop(box)
-    #     elif 'bottom_right' in opts:
-    #         #draw cropping box from lower right corner of image
-    #         (int(x-min(x, xr)), int(y-min(y, yr)), int(x), int(y))
-    #         im = im.resize((int(x), int(y)), resample=Image.ANTIALIAS).crop(box)
-    #     else:
-    #         ex, ey = (x-min(x, xr))/2, (y-min(y, yr))/2
-    #         if ex or ey:
-    #             box = (int(ex), int(ey), int(x-ex), int(y-ey))
-    #             im = im.resize((int(x), int(y)), resample=Image.ANTIALIAS).crop(box)
-    # return im
-
-scale_and_crop.valid_options = ('crop', 'upscale')
-
-
-def convert_filename(value):
-    """
-    Convert Filename.
-    """
-
-    if CONVERT_FILENAME:
-        return value.replace(" ", "_").lower()
-    else:
-        return value
-
-
