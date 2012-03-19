@@ -9,7 +9,7 @@
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
         {% if selectable %}
-        <a href="javascript://" onclick="FileSubmit('{{ file.url_save }}', '{{ MEDIA_URL }}{% ifequal file.filetype 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endifequal %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
+        <a href="javascript://" onclick="FileSubmit('{{ file.url }}', '{{ MEDIA_URL }}{% ifequal file.filetype 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endifequal %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
         {% else %}
         <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
         {% endif %}
@@ -23,7 +23,7 @@
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
         {% if selectable %}
-        <a href="javascript:FileBrowserDialogue.fileSubmit('{{ file.url_save|escapejs }}');" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
+        <a href="javascript:FileBrowserDialogue.fileSubmit('{{ file.url|escapejs }}');" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
         {% else %}
         <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
         {% endif %}
@@ -37,7 +37,7 @@
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
         {% if selectable %}
-        <a href="#" onclick="OpenFile(ProtectPath('{{ file.url_save|escapejs }}'));return false;" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
+        <a href="#" onclick="OpenFile(ProtectPath('{{ file.url|escapejs }}'));return false;" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
         {% else %}
         <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
         {% endif %}
@@ -95,7 +95,7 @@
         <strong>Full Path</strong> {{ file.path_full }}<br />
         <strong>Relative URL</strong> {{ file.url_relative }}<br />
         <strong>Full URL</strong> {{ file.url }}<br /><br />
-        <strong>URL for FileBrowseField</strong> {{ file.url_save }}<br />
+        <strong>URL for FileBrowseField</strong> {{ file.url }}<br />
         <strong>Thumbnail URL</strong> {{ file.url_thumbnail }}
         {% ifequal file.filetype 'Image' %}<br /><br />
         <strong>Dimensions</strong> {{ file.dimensions }}<br />
