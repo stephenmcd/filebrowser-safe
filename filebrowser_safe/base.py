@@ -28,11 +28,7 @@ class FileObject():
     where path is a relative path to a storage location.
     """
 
-    def __init__(self, path, site=None):
-        if not site:
-            from filebrowser.sites import site as default_site
-            site = default_site
-        self.site = site
+    def __init__(self, path):
         self.path = path
         self.head = os.path.dirname(path)
         self.filename = os.path.basename(path)
@@ -105,7 +101,7 @@ class FileObject():
 
     def _path_relative_directory(self):
         "path relative to DIRECTORY"
-        return path_strip(self.path, self.site.directory)
+        return path_strip(self.path, DIRECTORY)
     path_relative_directory = property(_path_relative_directory)
 
     def _url(self):
@@ -115,11 +111,11 @@ class FileObject():
     # FOLDER ATTRIBUTES
 
     def _directory(self):
-        return path_strip(self.path, self.site.directory)
+        return path_strip(self.path, DIRECTORY)
     directory = property(_directory)
 
     def _folder(self):
-        return os.path.dirname(path_strip(os.path.join(self.head,''), self.site.directory))
+        return os.path.dirname(path_strip(os.path.join(self.head,''), DIRECTORY))
     folder = property(_folder)
 
     _is_folder_stored = None

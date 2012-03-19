@@ -311,7 +311,7 @@ def delete(request):
     # QUERY / PATH CHECK
     query = request.GET
     path = get_path(query.get('dir', ''))
-    filename = os.path.join(query.get('dir', ''), query.get('filename', ''))
+    filename = query.get('filename', '')
     if path is None or filename is None:
         if path is None:
             msg = _('The requested Folder does not exist.')
