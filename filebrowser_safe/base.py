@@ -127,7 +127,11 @@ class FileObject():
 
     def _is_empty(self):
         if self.is_folder:
-            dirs, files = default_storage.listdir(self.path)
+            try:
+                dirs, files = default_storage.listdir(self.path)
+            except UnicodeDecodeError:
+                from mezzanine.core.exceptions import FileSystemEncodingChanged
+                raise FileSystemEncodingChanged()
             if not dirs and not files:
                 return True
         return False
