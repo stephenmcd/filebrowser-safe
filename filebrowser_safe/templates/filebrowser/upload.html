@@ -22,7 +22,8 @@
     <script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedFieldsets.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        var proxy = '{% try_url "static_proxy" %}';
+        {% url static_proxy as static_proxy_url %}
+        var proxy = '{{ static_proxy_url }}';
         if (proxy) {
             proxy += '?u=';
         }
