@@ -273,6 +273,7 @@ filebrowser_post_upload = Signal(providing_args=["path", "file"])
 
 @csrf_exempt
 @flash_login_required
+@staff_member_required
 def _upload_file(request):
     """
     Upload file to the server.
