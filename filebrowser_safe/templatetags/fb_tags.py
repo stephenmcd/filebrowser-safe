@@ -123,7 +123,7 @@ class SelectableNode(template.Node):
         elif filetype and format and filetype not in SELECT_FORMATS[format]:
             selectable = False
         else:
-            selectable = filetype != "Folder"
+            selectable = True
         context['selectable'] = selectable
         return ''
 
