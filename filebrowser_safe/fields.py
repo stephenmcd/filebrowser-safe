@@ -121,6 +121,6 @@ class FileBrowseField(Field):
 
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^filebrowser\.fields\.FileBrowseField"])
+    add_introspection_rules([], ["^filebrowser_safe\.fields\.FileBrowseField"])
 except ImportError:
     pass
