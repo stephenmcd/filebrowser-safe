@@ -415,3 +415,34 @@ def rename(request):
         'breadcrumbs_title': _(u'Rename')
     }, context_instance=Context(request))
 rename = staff_member_required(never_cache(rename))
+
+
+def versions(request):
+    """
+    Show all Versions for an Image according to ADMIN_VERSIONS.
+    """
+
+    # QUERY / PATH CHECK
+    query = request.GET
+    path = get_path(query.get('dir', ''))
+    filename = get_file(query.get('dir', ''), query.get('filename', ''))
+    if path is None or filename is None:
+        if path is None:
+            msg = _('The requested Folder does not exist.')
+        else:
+            msg = _('The requested File does not exist.')
+        request.user.message_set.create(message=msg)
+        return HttpResponseRedirect(reverse("fb_browse"))
+    abs_path = os.path.join(MEDIA_ROOT, DIRECTORY, path)
+
+    return render_to_response('filebrowser/versions.html', {
+        'original': path_to_url(os.path.join(DIRECTORY, path, filename)),
+        'query': query,
+        'title': _(u'Versions for "%s"') % filename,
+        'settings_var': get_settings_var(),
+        'breadcrumbs': get_breadcrumbs(query, path),
+        'breadcrumbs_title': _(u'Versions for "%s"') % filename
+    }, context_instance=Context(request))
+versions = staff_member_required(never_cache(versions))
+
+

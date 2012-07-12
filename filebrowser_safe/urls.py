@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^upload/', 'filebrowser_safe.views.upload', name="fb_upload"),
     url(r'^rename/$', 'filebrowser_safe.views.rename', name="fb_rename"),
     url(r'^delete/$', 'filebrowser_safe.views.delete', name="fb_delete"),
+    url(r'^versions/$', 'filebrowser_safe.views.versions', name="fb_versions"),
     url(r'^check_file/$', 'filebrowser_safe.views._check_file', name="fb_check"),
     url(r'^upload_file/$', 'filebrowser_safe.views._upload_file', name="fb_do_upload"),
 
