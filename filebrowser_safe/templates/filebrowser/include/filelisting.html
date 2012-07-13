@@ -1,4 +1,4 @@
-{% load i18n adminmedia fb_tags mezzanine_tags %}
+{% load i18n adminmedia fb_tags fb_versions mezzanine_tags %}
 
 {% for file in page.object_list %}
 <tr class="{% cycle 'row1' 'row2' %}">
@@ -9,7 +9,7 @@
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
         {% if selectable %}
-        <a href="javascript://" onclick="FileSubmit('{{ file.url }}', '{{ MEDIA_URL }}{% ifequal file.filetype 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endifequal %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
+        <a href="javascript://" onclick="FileSubmit('{{ file.url }}', '{{ file.url_thumbnail }}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
         {% else %}
         <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
         {% endif %}
@@ -45,6 +45,13 @@
     {% endif %}
     {% endifequal %}
 
+    <!-- SHOW VERSIONS -->
+    {% if results_var.images_total and settings_var.ADMIN_VERSIONS %}
+    <td class="fb_icon">
+        {% ifequal file.filetype 'Image' %}<a href="{% url fb_versions %}{% query_string "" "p" %}&amp;filename={{ file.filename }}" class="fb_showversionslink" title="{% trans 'Show Versions' %}"></a>{% endifequal %}
+    </td>
+    {% endif %}
+
     <!-- FILEICON -->
     <td class="fb_icon"><img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" /></td>
 
@@ -52,7 +59,7 @@
     {% if results_var.images_total %}
     <td class="fb_icon">
         {% ifequal file.filetype 'Image' %}
-        <a href="{{ file.url }}" target="_blank"><img src="{{ MEDIA_URL }}{% thumbnail file.path 60 60 %}" title="{% trans 'View Image' %}" /></a>
+        <a href="{{ file.url }}" target="_blank"><img src="{% version file.path settings_var.ADMIN_THUMBNAIL %}" title="{% trans 'View Image' %}" /></a>
         {% endifequal %}
     </td>
     {% endif %}
@@ -61,7 +68,7 @@
     {% ifequal file.filetype 'Folder' %}
     <td><b><a href="{% url fb_browse %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}">{{ file.filename }}</a></b></td>
     {% else %}
-    <td><b><a href="{{ file.url }}" target="_blank">{{ file.filename }}</a></b></td>
+    <td><b><a href="{{ file.url }}" target="_blank">{{ file.filename }}</a></b>{% if file.dimensions %}<br /><span class="tiny">{{ file.dimensions.0 }} x {{ file.dimensions.1 }} px</span>{% endif %}</td>
     {% endifequal %}
 
     <!-- RENAME -->
@@ -74,13 +81,17 @@
     <td>{{ file.datetime|date:"N j, Y" }}</td>
 
     <!-- DELETE -->
+    {% if results_var.delete_total %}
     <td class="fb_icon">
         {% ifnotequal file.filetype 'Folder' %}
         <a href="{% url fb_delete %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" class="fb_deletelink" onclick="return confirm('{% trans "Are you sure you want to delete this file?" %}');" title="{% trans 'Delete File' %}"></a>
         {% else %}
+        {% if file.is_empty %}
         <a href="{% url fb_delete %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" class="fb_deletelink" onclick="return confirm('{% trans "Are you sure you want to delete this Folder?" %}');" title="{% trans 'Delete Folder' %}"></a>
+        {% endif %}
         {% endifnotequal %}
     </td>
+    {% endif %}
 
     <!-- DEBUG -->
     {% if settings_var.DEBUG %}
