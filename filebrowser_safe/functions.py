@@ -14,6 +14,8 @@ from django.core.files.storage import default_storage
 # filebrowser imports
 from filebrowser_safe.settings import *
 
+from PIL import Image
+
 
 def path_strip(path, root):
     if not path or not root:
