@@ -57,11 +57,12 @@ EXTENSIONS = getattr(settings, "FILEBROWSER_EXTENSIONS", {
 SELECT_FORMATS = getattr(settings, "FILEBROWSER_SELECT_FORMATS", {
     'File': ['Folder','Document',],
     'Image': ['Image'],
-    'Media': ['Video','Sound'],
+    'Media': ['Video','Audio'],
     'Document': ['Document'],
     # for TinyMCE we can also define lower-case items
     'image': ['Image'],
     'file': ['Folder','Image','Document',],
+    'media': ['Video','Audio'],
 })
 
 # Directory to Save Image Versions (and Thumbnails). Relative to MEDIA_ROOT.
