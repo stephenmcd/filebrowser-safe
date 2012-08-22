@@ -222,7 +222,7 @@ mkdir = staff_member_required(never_cache(mkdir))
 
 def upload(request):
     """
-    Multipe File Upload.
+    Multiple File Upload.
     """
 
     from django.http import parse_cookie
@@ -308,6 +308,9 @@ def delete(request):
 
     When trying to delete a Directory, the Directory has to be empty.
     """
+
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("fb_browse"))
 
     # QUERY / PATH CHECK
     query = request.GET
