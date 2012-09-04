@@ -22,16 +22,16 @@
     <script type="text/javascript" src="{% admin_media_prefix %}js/admin/CollapsedFieldsets.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        {% url static_proxy as static_proxy_url %}
+        {% url "static_proxy" as static_proxy_url %}
         var proxy = '{{ static_proxy_url }}';
         if (proxy) {
             proxy += '?u=';
         }
         $('#id_file').uploadify({
             'uploader'          : proxy + '{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/uploadify.swf',
-            'script'            : '{% url fb_do_upload %}',
+            'script'            : '{% url "fb_do_upload" %}',
             'scriptData'        : {'session_key': '{{session_key}}'},
-            'checkScript'       : '{% url fb_check %}',
+            'checkScript'       : '{% url "fb_check" %}',
             'cancelImg'         : '{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/cancel.png',
             'auto'              : false,
             'folder'            : '{{ query.dir|escapejs }}',
@@ -47,7 +47,7 @@
             'hideButton'        : false,
             'wmode'             : 'transparent',
             'removeCompleted'   : false,
-            'onAllComplete' : function(event,data) {location = '{% url fb_browse %}{% query_string '' 'p' %}'},
+            'onAllComplete' : function(event,data) {location = '{% url "fb_browse" %}{% query_string '' 'p' %}'},
             translations        : {
                                   browseButton: '{% trans "BROWSE" %}',
                                   error: '{% trans "An Error occured" %}',
