@@ -3,16 +3,16 @@
 
 <span class="media-breadcrumb">
 {% if breadcrumbs or breadcrumbs_title %}
-    <a href="{% url fb_browse %}{% query_string "" "dir,filename,p" %}">{% trans 'Media Library' %}</a> <span>&rsaquo;</span>
+    <a href="{% url "fb_browse" %}{% query_string "" "dir,filename,p" %}">{% trans 'Media Library' %}</a> <span>&rsaquo;</span>
 {% else %}
     {% trans 'Media Library' %}
 {% endif %}
 {% for item in breadcrumbs %}
     {% if not forloop.last %}
-        <a href="{% url fb_browse %}{% query_string "" "dir,filename,p" %}&amp;dir={{ item.1 }}">{{ item.0 }}</a> <span>&rsaquo;</span>
+        <a href="{% url "fb_browse" %}{% query_string "" "dir,filename,p" %}&amp;dir={{ item.1 }}">{{ item.0 }}</a> <span>&rsaquo;</span>
     {% else %}
         {% if breadcrumbs_title %}
-            <a href="{% url fb_browse %}{% query_string "" "dir,filename,p" %}&amp;dir={{ item.1 }}">{{ item.0 }}</a> <span>&rsaquo;</span>
+            <a href="{% url "fb_browse" %}{% query_string "" "dir,filename,p" %}&amp;dir={{ item.1 }}">{{ item.0 }}</a> <span>&rsaquo;</span>
         {% else %}
             {{ item.0 }}
         {% endif %}

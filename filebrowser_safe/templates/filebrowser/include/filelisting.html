@@ -59,13 +59,13 @@
 
     <!-- FILENAME/DIMENSIONS -->
     {% ifequal file.filetype 'Folder' %}
-    <td><b><a href="{% url fb_browse %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}">{{ file.filename }}</a></b></td>
+    <td><b><a href="{% url "fb_browse" %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}">{{ file.filename }}</a></b></td>
     {% else %}
     <td><b><a href="{{ file.url }}" target="_blank">{{ file.filename }}</a></b></td>
     {% endifequal %}
 
     <!-- RENAME -->
-    <td class="fb_icon"><a href="{% url fb_rename %}{% query_string %}&amp;filename={{ file.filename }}" class="fb_renamelink" title="{% trans 'Rename' %}"></a></td>
+    <td class="fb_icon"><a href="{% url "fb_rename" %}{% query_string %}&amp;filename={{ file.filename }}" class="fb_renamelink" title="{% trans 'Rename' %}"></a></td>
 
     <!-- SIZE -->
     <td>{{ file.filesize|filesizeformat }}</td>
@@ -76,10 +76,10 @@
     <!-- DELETE -->
     <td class="fb_icon">
         {% ifnotequal file.filetype 'Folder' %}
-        <form method="POST" action="{% url fb_delete %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
+        <form method="POST" action="{% url "fb_delete" %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
         <a href="#" class="fb_deletelink" onclick="if (confirm('{% trans "Are you sure you want to delete this file?" %}')) {$('#delete-{{ forloop.counter0 }}').submit();} return false;" title="{% trans 'Delete File' %}"></a>
         {% else %}
-        <form method="POST" action="{% url fb_delete %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
+        <form method="POST" action="{% url "fb_delete" %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
         <a href="#" class="fb_deletelink" onclick="if (confirm('{% trans "Are you sure you want to delete this Folder?" %}')) {$('#delete-{{ forloop.counter0 }}').submit();} return false;" title="{% trans 'Delete Folder' %}"></a>
         {% endifnotequal %}
     </td>
