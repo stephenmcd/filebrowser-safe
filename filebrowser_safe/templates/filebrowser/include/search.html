@@ -17,7 +17,7 @@
         {% if query.pop %}<input type="hidden" name="pop" value="{{ query.pop }}" />{% endif %}
         {% if query.type %}<input type="hidden" name="type" value="{{ query.type }}" />{% endif %}
         <input type="submit" value="{% trans "Go" %}" />
-        
+
         <p class="help"><strong>Search for:</strong> Filename</p>
         {% if results_var.results_total %}
         {% if query.filter_type or query.filter_date or query.q %}
@@ -28,4 +28,4 @@
         </div>
     </form>
 </div>
-<script type="text/javascript">document.getElementById("searchbar").focus();</script>
+<script type="text/javascript">try { document.getElementById("searchbar").focus(); } catch(e) {}</script>

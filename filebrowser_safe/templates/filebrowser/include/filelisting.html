@@ -45,6 +45,20 @@
     {% endif %}
     {% endifequal %}
 
+    <!-- GENERIC FILESELECT: opener grabs file url from rel attribute dynamically on click -->
+    {% ifequal query.pop '4' %}
+    {% if results_var.select_total %}
+    <td class="fb_icon">
+        {% selectable file.filetype query.type %}
+        {% if selectable %}
+        <a href="#" rel="{{ file.url|escape }}" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
+        {% else %}
+        <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
+        {% endif %}
+    </td>
+    {% endif %}
+    {% endifequal %}
+
     <!-- FILEICON -->
     <td class="fb_icon"><img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" /></td>
 
