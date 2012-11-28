@@ -19,13 +19,15 @@ from django.shortcuts import render_to_response, HttpResponse
 from django.template import RequestContext as Context
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_unicode
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
 # filebrowser imports
 from filebrowser_safe.settings import *
 from filebrowser_safe.functions import (path_to_url, sort_by_attr, get_path,
-                get_file, get_breadcrumbs, get_filterdate, get_settings_var)
+                get_file, get_breadcrumbs, get_filterdate, get_settings_var,
+                convert_filename)
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.decorators import flash_login_required
@@ -277,6 +279,8 @@ filebrowser_post_upload = Signal(providing_args=["path", "file"])
 def _upload_file(request):
     """
     Upload file to the server.
+
+    Implement unicode handlers - https://github.com/sehmaschine/django-filebrowser/blob/master/filebrowser/sites.py#L471
     """
     if request.method == 'POST':
         folder = request.POST.get('folder')
@@ -288,13 +292,20 @@ def _upload_file(request):
             abs_path = os.path.join(DIRECTORY, folder, filedata.name)
             # PRE UPLOAD SIGNAL
             filebrowser_pre_upload.send(sender=request, path=request.POST.get('folder'), file=filedata)
+
+            filedata.name = convert_filename(filedata.name)
+
             # HANDLE UPLOAD
             exists = default_storage.exists(os.path.join(DIRECTORY, folder, filedata.name))
             uploadedfile = default_storage.save(abs_path, filedata)
+
+            path = os.path.join(DIRECTORY, folder)
+            file_name = os.path.join(path, filedata.name)
             if exists:
-                default_storage.move(uploadedfile, filedata.name, allow_overwrite=True)
+                default_storage.move(smart_unicode(uploadedfile), smart_unicode(file_name), allow_overwrite=True)
+
             # POST UPLOAD SIGNAL
-            filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(os.path.join(DIRECTORY, folder, filedata.name)))
+            filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(smart_unicode(file_name)))
     return HttpResponse('True')
 
 
