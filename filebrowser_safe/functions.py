@@ -1,7 +1,7 @@
 # coding: utf-8
 
 # imports
-import os, re, decimal
+import os, re, decimal, unicodedata
 from time import gmtime, strftime, localtime, mktime, time
 from urlparse import urlparse
 
@@ -217,3 +217,28 @@ def is_selectable(filename, selecttype):
             if file_extension == extension.lower():
                 select_types.append(k)
     return select_types
+
+
+def convert_filename(value):
+    """
+    Convert Filename.
+    https://github.com/sehmaschine/django-filebrowser/blob/master/filebrowser/functions.py
+    """
+
+    if NORMALIZE_FILENAME:
+        chunks = value.split(os.extsep)
+        normalized = []
+        for v in chunks:
+            v = unicodedata.normalize('NFKD', unicode(v)).encode('ascii', 'ignore')
+            v = re.sub('[^\w\s-]', '', v).strip()
+            normalized.append(v)
+
+        if len(normalized) > 1:
+            value = '.'.join(normalized)
+        else:
+            value = normalized[0]
+
+    if CONVERT_FILENAME:
+        value = value.replace(" ", "_").lower()
+
+    return value
