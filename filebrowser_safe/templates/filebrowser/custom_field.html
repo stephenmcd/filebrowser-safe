@@ -21,6 +21,13 @@
     </a>
 </p>
 {% endifequal %}
+{% if not self.is_required %}
+    {% if value %}
+    <p class="help mezz-fb-clear" id="clear_{{ final_attrs.id }}">
+        <a href="javascript:FileBrowser.clear('{{ final_attrs.id }}');">Clear</a>
+    </p>
+    {% endif %}
+{% endif %}
 {% if final_attrs.DEBUG %}
 <p>
     <strong>Path</strong> {{ value.path }}<br />
