@@ -1,4 +1,4 @@
-{% load mezzanine_tags future %}
+{% load mezzanine_tags i18n future %}
 <style>
 .mezz-fb-thumbnail {display:inline; margin-left:5px !important;}
 .mezz-fb-thumbnail img {width:20px; height:20px; margin-top:0 !important;}
@@ -23,8 +23,8 @@
 {% endifequal %}
 {% if not self.is_required %}
     {% if value %}
-    <p class="help mezz-fb-clear" id="clear_{{ final_attrs.id }}">
-        <a href="javascript:FileBrowser.clear('{{ final_attrs.id }}');">Clear</a>
+    <p class="help mezz-fb-clear" id="clear_{{ final_attrs.id }}" style="display:inline; margin:0 10px;">
+        <a href="javascript:FileBrowser.clear('{{ final_attrs.id }}');">{% trans "Clear" %}</a>
     </p>
     {% endif %}
 {% endif %}
