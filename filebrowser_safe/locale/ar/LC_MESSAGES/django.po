@@ -1,0 +1,389 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FileBrowser-safe\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-12 19:48-0500\n"
+"PO-Revision-Date: 2013-01-12 20:16-0500\n"
+"Last-Translator: Ahmad Khayyat <akhayyat@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5\n"
+"X-Poedit-Language: ar\n"
+
+#: fields.py:57
+#, python-format
+msgid "Extension %(ext)s is not allowed. Only %(allowed)s is allowed."
+msgstr "الامتداد %(ext)s غير مسموح به. يمكنك فقط استخدام هذه الامتدادات: %(allowed)s."
+
+#: forms.py:26
+msgid "Name"
+msgstr "الاسم"
+
+#: forms.py:26
+#: forms.py:32
+#: forms.py:49
+#: forms.py:55
+msgid "Only letters, numbers, underscores, spaces and hyphens are allowed."
+msgstr "يمكنك فقط استخدام الحروف والأرقام والخط السفلي (_) والمسافات والشرطات (-)."
+
+#: forms.py:35
+#: forms.py:58
+msgid "The Folder already exists."
+msgstr "هذا المجلد موجود حالياً."
+
+#: forms.py:49
+msgid "New Name"
+msgstr "الاسم الجديد"
+
+#: forms.py:60
+msgid "The File already exists."
+msgstr "هذا الملف موجود حالياً."
+
+#: settings.py:126
+msgid "Folder"
+msgstr "مجلد"
+
+#: settings.py:127
+msgid "Image"
+msgstr "صورة"
+
+#: settings.py:128
+msgid "Video"
+msgstr "فيديو"
+
+#: settings.py:129
+msgid "Document"
+msgstr "مستند"
+
+#: settings.py:130
+msgid "Audio"
+msgstr "صوت"
+
+#: settings.py:131
+msgid "Code"
+msgstr "شفرة"
+
+#: views.py:72
+#: views.py:182
+#: views.py:236
+#: views.py:332
+#: views.py:391
+msgid "The requested Folder does not exist."
+msgstr "المجلد المطلوب غير موجود."
+
+#: views.py:76
+msgid "Error finding Upload-Folder. Maybe it does not exist?"
+msgstr "حصل خطأ أثناء محاولة العثور على مجلد الرفع. هل أنت متأكد من أنه موجود؟"
+
+#: views.py:159
+#: templates/filebrowser/include/breadcrumbs.html:6
+#: templates/filebrowser/include/breadcrumbs.html:8
+msgid "Media Library"
+msgstr "مكتبة الوسائط"
+
+#: views.py:199
+#, python-format
+msgid "The Folder %s was successfully created."
+msgstr "تم إنشاء المجلد %s بنجاح."
+
+#: views.py:208
+msgid "Permission denied."
+msgstr "أنت غير مصرح لك بهذه العملية."
+
+#: views.py:210
+msgid "Error creating folder."
+msgstr "حصل خطأ أثناء إنشاء المجلد."
+
+#: views.py:217
+#: views.py:220
+#: templates/filebrowser/index.html:54
+msgid "New Folder"
+msgstr "مجلد جديد"
+
+#: views.py:247
+msgid "Select files to upload"
+msgstr "اختر ملفات لرفعها"
+
+#: views.py:251
+#: templates/filebrowser/index.html:55
+#: templates/filebrowser/upload.html:118
+msgid "Upload"
+msgstr "رفع"
+
+#: views.py:334
+#: views.py:393
+msgid "The requested File does not exist."
+msgstr "الملف المطلوب غير موجود."
+
+#: views.py:348
+#, python-format
+msgid "The file %s was successfully deleted."
+msgstr "تم حذف الملف %s بنجاح."
+
+#: views.py:351
+#: views.py:365
+msgid "An error occurred"
+msgstr "حصل خطأ"
+
+#: views.py:362
+#, python-format
+msgid "The folder %s was successfully deleted."
+msgstr "تم حذف المجلد %s بنجاح."
+
+#: views.py:413
+msgid "Renaming was successful."
+msgstr "تم تغيير الاسم بنجاح."
+
+#: views.py:418
+msgid "Error."
+msgstr "خطأ."
+
+#: views.py:426
+#, python-format
+msgid "Rename \"%s\""
+msgstr "تغيير اسم \"%s\""
+
+#: views.py:429
+#: templates/filebrowser/include/filelisting.html:83
+msgid "Rename"
+msgstr "إعادة التسمية"
+
+#: templates/filebrowser/append.html:5
+#: templates/filebrowser/append.html:7
+msgid "FileBrowser"
+msgstr ""
+
+#: templates/filebrowser/custom_field.html:27
+msgid "Clear"
+msgstr "مسح"
+
+#: templates/filebrowser/makedir.html:25
+#: templates/filebrowser/rename.html:26
+msgid "Please correct the following errors."
+msgstr "فضلاً صحح الأخطاء التالية."
+
+#: templates/filebrowser/makedir.html:33
+#: templates/filebrowser/upload.html:108
+msgid "The Name will be converted to lowercase. Spaces will be replaced with underscores."
+msgstr "سيتم استبدال المسافات بخطوط سفلية."
+
+#: templates/filebrowser/makedir.html:38
+#: templates/filebrowser/rename.html:37
+msgid "Submit"
+msgstr "تسليم"
+
+#: templates/filebrowser/upload.html:52
+msgid "BROWSE"
+msgstr "تصفح"
+
+#: templates/filebrowser/upload.html:53
+msgid "An Error occured"
+msgstr "حصل خطأ"
+
+#: templates/filebrowser/upload.html:54
+msgid "Completed"
+msgstr "تم"
+
+#: templates/filebrowser/upload.html:55
+msgid "Do you want to replace the file"
+msgstr "هل تريد استبدال الملف"
+
+#: templates/filebrowser/upload.html:56
+msgid "KB"
+msgstr ""
+
+#: templates/filebrowser/upload.html:57
+msgid "MB"
+msgstr ""
+
+#: templates/filebrowser/upload.html:91
+msgid "Help"
+msgstr "مساعدة"
+
+#: templates/filebrowser/upload.html:95
+msgid "Allowed"
+msgstr "مسموح"
+
+#: templates/filebrowser/upload.html:101
+msgid "Max. Filesize"
+msgstr "حجم الملف الأقصى"
+
+#: templates/filebrowser/upload.html:116
+msgid "Clear Queue"
+msgstr ""
+
+#: templates/filebrowser/include/filelisting.html:12
+msgid "Select"
+msgstr "اختر"
+
+#: templates/filebrowser/include/filelisting.html:26
+#: templates/filebrowser/include/filelisting.html:40
+#: templates/filebrowser/include/filelisting.html:54
+msgid "Select File"
+msgstr "اختر ملفاً"
+
+#: templates/filebrowser/include/filelisting.html:70
+msgid "View Image"
+msgstr "عرض الصورة"
+
+#: templates/filebrowser/include/filelisting.html:95
+msgid "Are you sure you want to delete this file?"
+msgstr "هل أنت متأكد من أنك تريد حذف هذا الملف؟"
+
+#: templates/filebrowser/include/filelisting.html:95
+msgid "Delete File"
+msgstr "حذف الملف"
+
+#: templates/filebrowser/include/filelisting.html:98
+msgid "Are you sure you want to delete this Folder?"
+msgstr "هل أنت متأكد من أنك تريد حذف هذا المجلد؟"
+
+#: templates/filebrowser/include/filelisting.html:98
+msgid "Delete Folder"
+msgstr "حذف المجلد"
+
+#: templates/filebrowser/include/filter.html:3
+msgid "Filter"
+msgstr "مرشّح"
+
+#: templates/filebrowser/include/filter.html:9
+msgid "By Date"
+msgstr "حسب التاريخ"
+
+#: templates/filebrowser/include/filter.html:11
+msgid "Any Date"
+msgstr "أي تاريخ"
+
+#: templates/filebrowser/include/filter.html:13
+msgid "Today"
+msgstr "اليوم"
+
+#: templates/filebrowser/include/filter.html:15
+msgid "Past 7 days"
+msgstr "٧ أيام الماضية"
+
+#: templates/filebrowser/include/filter.html:17
+msgid "Past 30 days"
+msgstr "٣٠ يوماً الماضية"
+
+#: templates/filebrowser/include/filter.html:19
+msgid "This year"
+msgstr "هذا العام"
+
+#: templates/filebrowser/include/filter.html:27
+msgid "By Type"
+msgstr "حسب النوع"
+
+#: templates/filebrowser/include/filter.html:29
+msgid "All"
+msgstr "الجميع"
+
+#: templates/filebrowser/include/paginator.html:5
+msgid "No Items Found"
+msgstr "لم يتم العثور على شيء"
+
+#: templates/filebrowser/include/paginator.html:11
+#, python-format
+msgid "%(counter)s Item"
+msgid_plural "%(counter)s Items"
+msgstr[0] "لا يوجد شيء"
+msgstr[1] "عنصر واحد"
+msgstr[2] "عنصران"
+msgstr[3] "%(counter)s عناصر"
+msgstr[4] "%(counter)s عنصراً"
+msgstr[5] "%(counter)s عنصر"
+
+#: templates/filebrowser/include/paginator.html:26
+msgid "No Items"
+msgstr "لا يوجد شيء"
+
+#: templates/filebrowser/include/search.html:3
+#, python-format
+msgid "1 result"
+msgid_plural "%(counter)s results"
+msgstr[0] "لا يوجد نتائج"
+msgstr[1] "نتيجة واحدة"
+msgstr[2] "نتيجتان"
+msgstr[3] "%(counter)s نتائج"
+msgstr[4] "%(counter)s نتيجة"
+msgstr[5] "%(counter)s نتيجة"
+
+#: templates/filebrowser/include/search.html:4
+#: templates/filebrowser/include/toolbar.html:9
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr "المجموع: %(full_result_count)s"
+
+#: templates/filebrowser/include/search.html:5
+msgid "Clear Restrictions"
+msgstr "إزالة القيود"
+
+#: templates/filebrowser/include/search.html:7
+#: templates/filebrowser/include/toolbar.html:16
+msgid "Search"
+msgstr "بحث"
+
+#: templates/filebrowser/include/search.html:19
+msgid "Go"
+msgstr "انطلق"
+
+#: templates/filebrowser/include/search.html:24
+#, python-format
+msgid "%(counter)s Item found"
+msgid_plural "%(counter)s Items found"
+msgstr[0] "لم بتم العثور على شيء"
+msgstr[1] "تم العثور على عنصر واحد"
+msgstr[2] "تم العثور على عنصرين"
+msgstr[3] "تم العثور على %(counter)s عناصر"
+msgstr[4] "تم العثور على %(counter)s عنصراً"
+msgstr[5] "تم العثور على %(counter)s عنصر"
+
+#: templates/filebrowser/include/search.html:25
+#, python-format
+msgid "%(counter)s Item total"
+msgid_plural "%(counter)s Items total"
+msgstr[0] "المجموع: %(counter)s"
+msgstr[1] "المجموع: عنصر واحد"
+msgstr[2] "المجموع: عنصران"
+msgstr[3] "المجموع: %(counter)s عناصر"
+msgstr[4] "المجموع: %(counter)s عنصراً"
+msgstr[5] "المجموع: %(counter)s عنصر"
+
+#: templates/filebrowser/include/tableheader.html:20
+#: templates/filebrowser/include/tableheader.html:21
+msgid "Filename"
+msgstr "اسم الملف"
+
+#: templates/filebrowser/include/tableheader.html:25
+#: templates/filebrowser/include/tableheader.html:26
+msgid "Size"
+msgstr "الحجم"
+
+#: templates/filebrowser/include/tableheader.html:28
+#: templates/filebrowser/include/tableheader.html:29
+msgid "Date"
+msgstr "التاريخ"
+
+#: templates/filebrowser/include/toolbar.html:6
+msgid "Results"
+msgstr "النتائج"
+
+#: templates/filebrowser/include/toolbar.html:8
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] "لا يوجد نتائج"
+msgstr[1] "نتيجة واحدة"
+msgstr[2] "نتيجتان"
+msgstr[3] "%(counter)s نتائج"
+msgstr[4] "%(counter)s نتيجة"
+msgstr[5] "%(counter)s نتيجة"
+
