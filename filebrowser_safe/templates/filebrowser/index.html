@@ -39,6 +39,11 @@
 {% endif %}
 {% endblock %}
 
+{% block rtl_styles %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{{ settings_var.URL_FILEBROWSER_MEDIA }}css/rtl.css" />
+{% endblock %}
+
 <!-- COLTYPE/BODYCLASS -->
 {% block coltype %}flex{% endblock %}
 {% block bodyclass %}change-list filebrowser{% if query.pop %} popup{% endif %}{% endblock %}
