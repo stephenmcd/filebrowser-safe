@@ -9,7 +9,7 @@
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
         {% if selectable %}
-        <a href="javascript://" onclick="FileSubmit('{{ file.url }}', '{{ MEDIA_URL }}{% ifequal file.filetype 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endifequal %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
+        <a href="javascript://" onclick="FileSubmit('{{ file.path }}', '{{ MEDIA_URL }}{% ifequal file.filetype 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endifequal %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
         {% else %}
         <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
         {% endif %}
