@@ -289,7 +289,6 @@ def _upload_file(request):
 
         if request.FILES:
             filedata = request.FILES['Filedata']
-            abs_path = os.path.join(DIRECTORY, folder, filedata.name)
             # PRE UPLOAD SIGNAL
             filebrowser_pre_upload.send(sender=request, path=request.POST.get('folder'), file=filedata)
 
@@ -297,6 +296,7 @@ def _upload_file(request):
 
             # HANDLE UPLOAD
             exists = default_storage.exists(os.path.join(DIRECTORY, folder, filedata.name))
+            abs_path = os.path.join(DIRECTORY, folder, filedata.name)
             uploadedfile = default_storage.save(abs_path, filedata)
 
             path = os.path.join(DIRECTORY, folder)
