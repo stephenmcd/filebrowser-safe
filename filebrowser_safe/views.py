@@ -1,8 +1,8 @@
 # coding: utf-8
 
 # general imports
-import os, re
-from time import gmtime, strftime
+import os
+import re
 
 # django imports
 from django.conf import settings as django_settings
@@ -25,13 +25,12 @@ from django.views.decorators.csrf import csrf_exempt
 
 # filebrowser imports
 from filebrowser_safe.settings import *
-from filebrowser_safe.functions import (path_to_url, sort_by_attr, get_path,
-                get_file, get_breadcrumbs, get_filterdate, get_settings_var,
+from filebrowser_safe.functions import (sort_by_attr, get_path,
+                get_breadcrumbs, get_filterdate, get_settings_var,
                 convert_filename)
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.decorators import flash_login_required
-from filebrowser_safe.storage import FileSystemStorageMixin
 
 from mezzanine.utils.importing import import_dotted_path
 
@@ -52,8 +51,8 @@ else:
 # Precompile regular expressions
 filter_re = []
 for exp in EXCLUDE:
-   filter_re.append(re.compile(exp))
-for k,v in VERSIONS.iteritems():
+    filter_re.append(re.compile(exp))
+for k, v in VERSIONS.iteritems():
     exp = (r'_%s.(%s)') % (k, '|'.join(EXTENSION_LIST))
     filter_re.append(re.compile(exp))
 
@@ -79,9 +78,9 @@ def browse(request):
     abs_path = os.path.join(DIRECTORY, path)
 
     # INITIAL VARIABLES
-    results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0 }
+    results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0}
     counter = {}
-    for k,v in EXTENSIONS.iteritems():
+    for k, v in EXTENSIONS.iteritems():
         counter[k] = 0
 
     dir_list, file_list = default_storage.listdir(abs_path)
@@ -168,6 +167,7 @@ browse = staff_member_required(never_cache(browse))
 filebrowser_pre_createdir = Signal(providing_args=["path", "dirname"])
 filebrowser_post_createdir = Signal(providing_args=["path", "dirname"])
 
+
 def mkdir(request):
     """
     Make Directory.
@@ -252,6 +252,7 @@ def upload(request):
     }, context_instance=Context(request))
 upload = staff_member_required(never_cache(upload))
 
+
 @csrf_exempt
 def _check_file(request):
     """
@@ -262,7 +263,7 @@ def _check_file(request):
     folder = fb_uploadurl_re.sub('', folder)
     fileArray = {}
     if request.method == 'POST':
-        for k,v in request.POST.items():
+        for k, v in request.POST.items():
             if k != "folder":
                 if default_storage.exists(os.path.join(DIRECTORY, folder, v)):
                     fileArray[k] = v
@@ -272,6 +273,7 @@ def _check_file(request):
 # upload signals
 filebrowser_pre_upload = Signal(providing_args=["path", "file"])
 filebrowser_post_upload = Signal(providing_args=["path", "file"])
+
 
 @csrf_exempt
 @flash_login_required
@@ -312,6 +314,7 @@ def _upload_file(request):
 # delete signals
 filebrowser_pre_delete = Signal(providing_args=["path", "filename"])
 filebrowser_post_delete = Signal(providing_args=["path", "filename"])
+
 
 def delete(request):
     """
@@ -372,6 +375,7 @@ delete = staff_member_required(never_cache(delete))
 # rename signals
 filebrowser_pre_rename = Signal(providing_args=["path", "filename", "new_filename"])
 filebrowser_post_rename = Signal(providing_args=["path", "filename", "new_filename"])
+
 
 def rename(request):
     """
