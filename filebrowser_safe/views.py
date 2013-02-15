@@ -98,6 +98,8 @@ def browse(request):
 
         # CREATE FILEOBJECT
         fileobject = FileObject(os.path.join(get_directory(), path, file))
+        # Strip leading slash in dirnames for MEDIA_LIBRARY_PER_SITE
+        fileobject.path_relative_directory = fileobject.path_relative_directory.lstrip("/")
 
         # FILTER / SEARCH
         append = False
