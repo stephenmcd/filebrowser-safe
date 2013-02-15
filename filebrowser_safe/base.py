@@ -1,18 +1,18 @@
 # coding: utf-8
 
 # imports
-import os, re, datetime, time, mimetypes
-from time import gmtime, strftime
+import os
+import datetime
+import time
+import mimetypes
 
 # django imports
-from django.conf import settings
 from django.core.files.storage import default_storage
 from django.utils.encoding import smart_str, smart_unicode
 
 # filebrowser imports
 from filebrowser_safe.settings import *
-from filebrowser_safe.functions import (get_file_type, url_join, is_selectable,
-                                        path_strip)
+from filebrowser_safe.functions import get_file_type, path_strip
 
 
 class FileObject():
@@ -36,7 +36,6 @@ class FileObject():
         self.filename_root, self.extension = os.path.splitext(self.filename)
         self.mimetype = mimetypes.guess_type(self.filename)
 
-
     def __str__(self):
         return smart_str(self.path)
 
@@ -55,6 +54,7 @@ class FileObject():
 
     # GENERAL ATTRIBUTES
     _filetype_stored = None
+
     def _filetype(self):
         if self._filetype_stored != None:
             return self._filetype_stored
@@ -66,6 +66,7 @@ class FileObject():
     filetype = property(_filetype)
 
     _filesize_stored = None
+
     def _filesize(self):
         if self._filesize_stored != None:
             return self._filesize_stored
@@ -76,6 +77,7 @@ class FileObject():
     filesize = property(_filesize)
 
     _date_stored = None
+
     def _date(self):
         if self._date_stored != None:
             return self._date_stored
@@ -92,6 +94,7 @@ class FileObject():
     datetime = property(_datetime)
 
     _exists_stored = None
+
     def exists(self):
         if self._exists_stored == None:
             self._exists_stored = default_storage.exists(self.path)
@@ -115,10 +118,11 @@ class FileObject():
     directory = property(_directory)
 
     def _folder(self):
-        return os.path.dirname(path_strip(os.path.join(self.head,''), DIRECTORY))
+        return os.path.dirname(path_strip(os.path.join(self.head, ''), DIRECTORY))
     folder = property(_folder)
 
     _is_folder_stored = None
+
     def _is_folder(self):
         if self._is_folder_stored == None:
             self._is_folder_stored = default_storage.isdir(self.path)
@@ -157,5 +161,3 @@ class FileObject():
                 default_storage.delete(version)
             except:
                 pass
-
-
