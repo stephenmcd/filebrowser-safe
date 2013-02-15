@@ -1,14 +1,12 @@
 # coding: utf-8
 
 # imports
-import os, re, decimal, unicodedata
-from time import gmtime, strftime, localtime, mktime, time
-from urlparse import urlparse
+import os
+import re
+import unicodedata
+from time import gmtime, strftime, localtime, time
 
 # django imports
-from django.utils.translation import ugettext as _
-from django.utils.safestring import mark_safe
-from django.core.files import File
 from django.core.files.storage import default_storage
 
 # filebrowser imports
@@ -83,7 +81,8 @@ def sort_by_attr(seq, attr):
     # (seq[i].attr, i, seq[i]) and sort it. The second item of tuple is needed not
     # only to provide stable sorting, but mainly to eliminate comparison of objects
     # (which can be expensive or prohibited) in case of equal attribute values.
-    intermed = map(None, map(getattr, seq, (attr,)*len(seq)), xrange(len(seq)), seq)
+    intermed = map(None, map(getattr, seq, (attr,) * len(seq)),
+                   xrange(len(seq)), seq)
     intermed.sort()
     return map(operator.getitem, intermed, (-1,) * len(intermed))
 
@@ -137,8 +136,8 @@ def get_breadcrumbs(query, path):
     dir_query = ""
     if path:
         for item in path.split(os.sep):
-            dir_query = os.path.join(dir_query,item)
-            breadcrumbs.append([item,dir_query])
+            dir_query = os.path.join(dir_query, item)
+            breadcrumbs.append([item, dir_query])
     return breadcrumbs
 
 
@@ -151,11 +150,19 @@ def get_filterdate(filterDate, dateTime):
     dateYear = strftime("%Y", gmtime(dateTime))
     dateMonth = strftime("%m", gmtime(dateTime))
     dateDay = strftime("%d", gmtime(dateTime))
-    if filterDate == 'today' and int(dateYear) == int(localtime()[0]) and int(dateMonth) == int(localtime()[1]) and int(dateDay) == int(localtime()[2]): returnvalue = 'true'
-    elif filterDate == 'thismonth' and dateTime >= time()-2592000: returnvalue = 'true'
-    elif filterDate == 'thisyear' and int(dateYear) == int(localtime()[0]): returnvalue = 'true'
-    elif filterDate == 'past7days' and dateTime >= time()-604800: returnvalue = 'true'
-    elif filterDate == '': returnvalue = 'true'
+    if filterDate == ('today' and
+                       int(dateYear) == int(localtime()[0]) and
+                       int(dateMonth) == int(localtime()[1]) and
+                       int(dateDay) == int(localtime()[2])):
+        returnvalue = 'true'
+    elif filterDate == 'thismonth' and dateTime >= time() - 2592000:
+        returnvalue = 'true'
+    elif filterDate == 'thisyear' and int(dateYear) == int(localtime()[0]):
+        returnvalue = 'true'
+    elif filterDate == 'past7days' and dateTime >= time() - 604800:
+        returnvalue = 'true'
+    elif filterDate == '':
+        returnvalue = 'true'
     return returnvalue
 
 
@@ -198,7 +205,7 @@ def get_file_type(filename):
 
     file_extension = os.path.splitext(filename)[1].lower()
     file_type = ''
-    for k,v in EXTENSIONS.iteritems():
+    for k, v in EXTENSIONS.iteritems():
         for extension in v:
             if file_extension == extension.lower():
                 file_type = k
@@ -212,7 +219,7 @@ def is_selectable(filename, selecttype):
 
     file_extension = os.path.splitext(filename)[1].lower()
     select_types = []
-    for k,v in SELECT_FORMATS.iteritems():
+    for k, v in SELECT_FORMATS.iteritems():
         for extension in v:
             if file_extension == extension.lower():
                 select_types.append(k)

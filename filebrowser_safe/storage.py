@@ -1,11 +1,13 @@
 # coding: utf-8
 
 # PYTHON IMPORTS
-import os, shutil
+import os
+import shutil
 
 # DJANGO IMPORTS
 from django.core.files.move import file_move_safe
 from django.core.files.base import ContentFile
+
 
 class StorageMixin(object):
     """
@@ -62,6 +64,7 @@ class FileSystemStorageMixin(StorageMixin):
     def rmtree(self, name):
         shutil.rmtree(self.path(name))
 
+
 class S3BotoStorageMixin(StorageMixin):
 
     def isfile(self, name):
@@ -71,7 +74,7 @@ class S3BotoStorageMixin(StorageMixin):
         # That's some inefficient implementation...
         # If there are some files having 'name' as their prefix, then
         # the name is considered to be a directory
-        if not name: # Empty name is a directory
+        if not name:  # Empty name is a directory
             return True
 
         if self.isfile(name):
@@ -112,6 +115,7 @@ class S3BotoStorageMixin(StorageMixin):
         for item in dirlist:
             item.delete()
 
+
 class GoogleStorageMixin(StorageMixin):
 
     def isfile(self, name):
@@ -121,7 +125,7 @@ class GoogleStorageMixin(StorageMixin):
         # That's some inefficient implementation...
         # If there are some files having 'name' as their prefix, then
         # the name is considered to be a directory
-        if not name: # Empty name is a directory
+        if not name:  # Empty name is a directory
             return True
 
         if self.isfile(name):
