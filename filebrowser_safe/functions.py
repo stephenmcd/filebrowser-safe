@@ -24,7 +24,7 @@ def get_directory():
     creating the root directory if missing.
     """
     dirname = DIRECTORY
-    if mezz_settings.MEDIA_LIBRARY_PER_SITE:
+    if getattr(mezz_settings, "MEDIA_LIBRARY_PER_SITE", False):
         dirname = os.path.join(dirname, "site-%s" % current_site_id())
     fullpath = os.path.join(mezz_settings.MEDIA_ROOT, dirname)
     if not os.path.exists(fullpath):
