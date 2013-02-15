@@ -7,10 +7,29 @@ import unicodedata
 from time import gmtime, strftime, localtime, time
 
 # django imports
+from django.contrib.sites.models import Site
 from django.core.files.storage import default_storage
+
+from mezzanine.conf import settings as mezz_settings
+from mezzanine.utils.sites import current_site_id
 
 # filebrowser imports
 from filebrowser_safe.settings import *
+
+
+def get_directory():
+    mezz_settings.use_editable()
+    if mezz_settings.MEDIA_LIBRARY_PER_SITE:
+        site_dir_name = "%s/" % Site.objects.get(pk=current_site_id()).name
+        if not os.path.exists(os.path.join(mezz_settings.MEDIA_ROOT,
+                                           DIRECTORY,
+                                           site_dir_name)):
+            os.makedirs(os.path.join(mezz_settings.MEDIA_ROOT,
+                                     DIRECTORY,
+                                     site_dir_name))
+        return '%s%s' % (DIRECTORY, site_dir_name)
+    else:
+        return DIRECTORY
 
 
 def path_strip(path, root):
@@ -58,7 +77,7 @@ def dir_from_url(value):
 
     mediaurl_re = re.compile(r'^(%s)' % (MEDIA_URL))
     value = mediaurl_re.sub('', value)
-    directory_re = re.compile(r'^(%s)' % (DIRECTORY))
+    directory_re = re.compile(r'^(%s)' % (get_directory()))
     value = directory_re.sub('', value)
     return os.path.split(value)[0]
 
@@ -113,7 +132,7 @@ def get_path(path):
     Get Path.
     """
 
-    if path.startswith('.') or os.path.isabs(path) or not default_storage.isdir(os.path.join(DIRECTORY, path)):
+    if path.startswith('.') or os.path.isabs(path) or not default_storage.isdir(os.path.join(get_directory(), path)):
         return None
     return path
 
@@ -122,7 +141,7 @@ def get_file(path, filename):
     """
     Get File.
     """
-    if not default_storage.exists(os.path.join(DIRECTORY, path, filename)):
+    if not default_storage.exists(os.path.join(get_directory(), path, filename)):
         return None
     return filename
 
@@ -176,7 +195,7 @@ def get_settings_var():
     settings_var['DEBUG'] = DEBUG
     settings_var['MEDIA_ROOT'] = MEDIA_ROOT
     settings_var['MEDIA_URL'] = MEDIA_URL
-    settings_var['DIRECTORY'] = DIRECTORY
+    settings_var['DIRECTORY'] = get_directory()
     # FileBrowser
     settings_var['URL_FILEBROWSER_MEDIA'] = URL_FILEBROWSER_MEDIA
     settings_var['PATH_FILEBROWSER_MEDIA'] = PATH_FILEBROWSER_MEDIA

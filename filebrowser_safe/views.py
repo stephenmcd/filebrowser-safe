@@ -27,7 +27,7 @@ from django.views.decorators.csrf import csrf_exempt
 from filebrowser_safe.settings import *
 from filebrowser_safe.functions import (sort_by_attr, get_path,
                 get_breadcrumbs, get_filterdate, get_settings_var,
-                convert_filename)
+                get_directory, convert_filename)
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.decorators import flash_login_required
@@ -71,11 +71,11 @@ def browse(request):
         msg = _('The requested Folder does not exist.')
         messages.add_message(request, messages.ERROR, msg)
         if directory is None:
-            # The DIRECTORY does not exist, raise an error to prevent eternal redirecting.
+            # The directory returned by get_directory() does not exist, raise an error to prevent eternal redirecting.
             raise ImproperlyConfigured, _("Error finding Upload-Folder. Maybe it does not exist?")
         redirect_url = reverse("fb_browse") + query_helper(query, "", "dir")
         return HttpResponseRedirect(redirect_url)
-    abs_path = os.path.join(DIRECTORY, path)
+    abs_path = os.path.join(get_directory(), path)
 
     # INITIAL VARIABLES
     results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0}
@@ -97,7 +97,7 @@ def browse(request):
         results_var['results_total'] += 1
 
         # CREATE FILEOBJECT
-        fileobject = FileObject(os.path.join(DIRECTORY, path, file))
+        fileobject = FileObject(os.path.join(get_directory(), path, file))
 
         # FILTER / SEARCH
         append = False
@@ -182,7 +182,7 @@ def mkdir(request):
         msg = _('The requested Folder does not exist.')
         messages.add_message(request, messages.ERROR, msg)
         return HttpResponseRedirect(reverse("fb_browse"))
-    abs_path = os.path.join(DIRECTORY, path)
+    abs_path = os.path.join(get_directory(), path)
 
     if request.method == 'POST':
         form = MakeDirForm(abs_path, request.POST)
@@ -265,7 +265,7 @@ def _check_file(request):
     if request.method == 'POST':
         for k, v in request.POST.items():
             if k != "folder":
-                if default_storage.exists(os.path.join(DIRECTORY, folder, v)):
+                if default_storage.exists(os.path.join(get_directory(), folder, v)):
                     fileArray[k] = v
     return HttpResponse(simplejson.dumps(fileArray))
 
@@ -297,11 +297,11 @@ def _upload_file(request):
             filedata.name = convert_filename(filedata.name)
 
             # HANDLE UPLOAD
-            exists = default_storage.exists(os.path.join(DIRECTORY, folder, filedata.name))
-            abs_path = os.path.join(DIRECTORY, folder, filedata.name)
+            exists = default_storage.exists(os.path.join(get_directory(), folder, filedata.name))
+            abs_path = os.path.join(get_directory(), folder, filedata.name)
             uploadedfile = default_storage.save(abs_path, filedata)
 
-            path = os.path.join(DIRECTORY, folder)
+            path = os.path.join(get_directory(), folder)
             file_name = os.path.join(path, filedata.name)
             if exists:
                 default_storage.move(smart_unicode(uploadedfile), smart_unicode(file_name), allow_overwrite=True)
@@ -337,9 +337,9 @@ def delete(request):
             msg = _('The requested File does not exist.')
         messages.add_message(request, messages.ERROR, msg)
         return HttpResponseRedirect(reverse("fb_browse"))
-    abs_path = os.path.join(DIRECTORY, path)
+    abs_path = os.path.join(get_directory(), path)
     if request.GET.get('filetype') != "Folder":
-        relative_server_path = os.path.join(DIRECTORY, path, filename)
+        relative_server_path = os.path.join(get_directory(), path, filename)
         try:
             # PRE DELETE SIGNAL
             filebrowser_pre_delete.send(sender=request, path=path, filename=filename)
@@ -397,15 +397,15 @@ def rename(request):
             msg = _('The requested File does not exist.')
         messages.add_message(request, messages.ERROR, msg)
         return HttpResponseRedirect(reverse("fb_browse"))
-    abs_path = os.path.join(MEDIA_ROOT, DIRECTORY, path)
+    abs_path = os.path.join(MEDIA_ROOT, get_directory(), path)
     file_extension = os.path.splitext(filename)[1].lower()
 
     if request.method == 'POST':
         form = RenameForm(abs_path, file_extension, request.POST)
         if form.is_valid():
-            relative_server_path = os.path.join(DIRECTORY, path, filename)
+            relative_server_path = os.path.join(get_directory(), path, filename)
             new_filename = form.cleaned_data['name'] + file_extension
-            new_relative_server_path = os.path.join(DIRECTORY, path, new_filename)
+            new_relative_server_path = os.path.join(get_directory(), path, new_filename)
             try:
                 # PRE RENAME SIGNAL
                 filebrowser_pre_rename.send(sender=request, path=path, filename=filename, new_filename=new_filename)
