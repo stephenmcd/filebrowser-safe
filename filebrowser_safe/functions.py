@@ -7,10 +7,29 @@ import unicodedata
 from time import gmtime, strftime, localtime, time
 
 # django imports
+from django.contrib.sites.models import Site
 from django.core.files.storage import default_storage
+
+from mezzanine.conf import settings as mezz_settings
+from mezzanine.utils.sites import current_site_id
 
 # filebrowser imports
 from filebrowser_safe.settings import *
+
+
+def get_directory():
+    mezz_settings.use_editable()
+    if mezz_settings.MEDIA_LIBRARY_PER_SITE:
+        site_dir_name = "%s/" % Site.objects.get(pk=current_site_id()).name
+        if not os.path.exists(os.path.join(mezz_settings.MEDIA_ROOT,
+                                           DIRECTORY,
+                                           site_dir_name)):
+            os.makedirs(os.path.join(mezz_settings.MEDIA_ROOT,
+                                     DIRECTORY,
+                                     site_dir_name))
+        return '%s%s' % (DIRECTORY, site_dir_name)
+    else:
+        return DIRECTORY
 
 
 def path_strip(path, root):
