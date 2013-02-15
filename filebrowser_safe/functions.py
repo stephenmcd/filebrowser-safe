@@ -18,18 +18,18 @@ from filebrowser_safe.settings import *
 
 
 def get_directory():
-    mezz_settings.use_editable()
+    """
+    Returns FB's ``DIRECTORY`` setting, appending a directory using
+    the site's ID if ``MEDIA_LIBRARY_PER_SITE`` is ``True``, and also
+    creating the root directory if missing.
+    """
+    dirname = DIRECTORY
     if mezz_settings.MEDIA_LIBRARY_PER_SITE:
-        site_dir_name = "%s/" % Site.objects.get(pk=current_site_id()).name
-        if not os.path.exists(os.path.join(mezz_settings.MEDIA_ROOT,
-                                           DIRECTORY,
-                                           site_dir_name)):
-            os.makedirs(os.path.join(mezz_settings.MEDIA_ROOT,
-                                     DIRECTORY,
-                                     site_dir_name))
-        return '%s%s' % (DIRECTORY, site_dir_name)
-    else:
-        return DIRECTORY
+        dirname = os.path.join(dirname, "site-%s" % current_site_id())
+    fullpath = os.path.join(mezz_settings.MEDIA_ROOT, dirname)
+    if not os.path.exists(fullpath):
+        os.makedirs(fullpath)
+    return dirname
 
 
 def path_strip(path, root):
