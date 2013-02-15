@@ -71,7 +71,7 @@ def browse(request):
         msg = _('The requested Folder does not exist.')
         messages.add_message(request, messages.ERROR, msg)
         if directory is None:
-            # The DIRECTORY does not exist, raise an error to prevent eternal redirecting.
+            # The directory returned by get_directory() does not exist, raise an error to prevent eternal redirecting.
             raise ImproperlyConfigured, _("Error finding Upload-Folder. Maybe it does not exist?")
         redirect_url = reverse("fb_browse") + query_helper(query, "", "dir")
         return HttpResponseRedirect(redirect_url)

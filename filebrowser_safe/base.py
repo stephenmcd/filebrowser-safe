@@ -12,7 +12,7 @@ from django.utils.encoding import smart_str, smart_unicode
 
 # filebrowser imports
 from filebrowser_safe.settings import *
-from filebrowser_safe.functions import get_file_type, path_strip
+from filebrowser_safe.functions import get_file_type, path_strip, get_directory
 
 
 class FileObject():
@@ -103,8 +103,8 @@ class FileObject():
     # PATH/URL ATTRIBUTES
 
     def _path_relative_directory(self):
-        "path relative to DIRECTORY"
-        return path_strip(self.path, DIRECTORY)
+        "path relative to the path returned by get_directory()"
+        return path_strip(self.path, get_directory())
     path_relative_directory = property(_path_relative_directory)
 
     def _url(self):
@@ -114,11 +114,11 @@ class FileObject():
     # FOLDER ATTRIBUTES
 
     def _directory(self):
-        return path_strip(self.path, DIRECTORY)
+        return path_strip(self.path, get_directory())
     directory = property(_directory)
 
     def _folder(self):
-        return os.path.dirname(path_strip(os.path.join(self.head, ''), DIRECTORY))
+        return os.path.dirname(path_strip(os.path.join(self.head, ''), get_directory()))
     folder = property(_folder)
 
     _is_folder_stored = None
