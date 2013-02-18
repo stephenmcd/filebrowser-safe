@@ -28,7 +28,6 @@ def get_directory():
         dirname = os.path.join(dirname, "site-%s" % current_site_id())
     fullpath = os.path.join(mezz_settings.MEDIA_ROOT, dirname)
     if not default_storage.exists(fullpath):
-        import pdb; pdb.set_trace()
         default_storage.makedirs(fullpath)
     return dirname
 
