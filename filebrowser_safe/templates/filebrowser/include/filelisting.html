@@ -80,7 +80,9 @@
     {% endifequal %}
 
     <!-- RENAME -->
+    {% ifnotequal query.pop '4' %}
     <td class="fb_icon"><a href="{% url "fb_rename" %}{% query_string %}&amp;filename={{ file.filename }}" class="fb_renamelink" title="{% trans 'Rename' %}"></a></td>
+    {% endifnotequal %}
 
     <!-- SIZE -->
     <td>{{ file.filesize|filesizeformat }}</td>
@@ -89,6 +91,7 @@
     <td>{{ file.datetime|date:"N j, Y" }}</td>
 
     <!-- DELETE -->
+    {% ifnotequal query.pop '4' %}
     <td class="fb_icon">
         {% ifnotequal file.filetype 'Folder' %}
         <form method="POST" action="{% url "fb_delete" %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
@@ -98,6 +101,7 @@
         <a href="#" class="fb_deletelink" onclick="if (confirm('{% trans "Are you sure you want to delete this Folder?" %}')) {$('#delete-{{ forloop.counter0 }}').submit();} return false;" title="{% trans 'Delete Folder' %}"></a>
         {% endifnotequal %}
     </td>
+    {% endifnotequal %}
 
     <!-- DEBUG -->
     {% if settings_var.DEBUG %}
