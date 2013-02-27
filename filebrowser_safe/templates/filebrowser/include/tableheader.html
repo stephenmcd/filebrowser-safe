@@ -19,9 +19,9 @@
     {% ifequal query.o 'filename_lower' %}<th class="sorted {{ query.ot }}ending"><a href="{% query_string "" "o,ot,p" %}&amp;ot={% ifequal query.ot 'desc' %}asc{% else %}desc{% endifequal %}&amp;o=filename_lower">{% trans 'Filename' %}</a></th>{% endifequal %}
     {% ifnotequal query.o 'filename_lower' %}<th><a href="{% query_string "" "o,ot,p" %}&amp;ot=asc&amp;o=filename_lower">{% trans 'Filename' %}</a></th>{% endifnotequal %}
     <!-- RENAME -->
-    {% ifnotequal query.pop '4' %}
+    {% if not query.pop %}}
     <th>&nbsp;</th>
-    {% endifnotequal %}
+    {% endif %}
     <!-- SIZE -->
     {% ifequal query.o 'filesize' %}<th class="sorted {{ query.ot }}ending"><a href="{% query_string "" "o,ot,p" %}&amp;ot={% ifequal query.ot 'desc' %}asc{% else %}desc{% endifequal %}&amp;o=filesize">{% trans 'Size' %}</a></th>{% endifequal %}
     {% ifnotequal query.o 'filesize' %}<th><a href="{% query_string "" "o,ot,p" %}&amp;ot=asc&amp;o=filesize">{% trans 'Size' %}</a></th>{% endifnotequal %}
@@ -29,9 +29,9 @@
     {% ifequal query.o 'date' %}<th class="sorted {{ query.ot }}ending"><a href="{% query_string "" "o,ot,p" %}&amp;ot={% ifequal query.ot 'desc' %}asc{% else %}desc{% endifequal %}&amp;o=date">{% trans 'Date' %}</a></th>{% endifequal %}
     {% ifnotequal query.o 'date' %}<th><a href="{% query_string "" "o,ot,p" %}&amp;ot=asc&amp;o=date">{% trans 'Date' %}</a></th>{% endifnotequal %}
     <!-- DELETE -->
-    {% ifnotequal query.pop '4' %}
+    {% if not query.pop %}
     <th>&nbsp;</th>
-    {% endifnotequal %}
+    {% endif %}
     {% if settings_var.DEBUG %}<th>Debug</th>{% endif %}
     </tr>
 </thead>
