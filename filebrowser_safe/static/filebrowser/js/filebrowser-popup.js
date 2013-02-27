@@ -41,8 +41,12 @@ var browseMediaLibrary = function (callback, type) {
     // the return value
     url = null;
 
+    // the currently open url inside the dialog
+    currentUrl = null;
+
     gallery.load("/admin/media-library/browse/?pop=4&type=" + type, function(){
         gallery.dialog('open');
+        currentUrl = "/admin/media-library/browse/?pop=4&type=";
 
         gallery.on('dialogclose', function() {
             setTimeout(function() {
@@ -51,11 +55,19 @@ var browseMediaLibrary = function (callback, type) {
         });
 
         gallery.on('click', 'a', function() {
-            if($(this).hasClass('fb_selectlink')) {
+            newUrl = $(this).attr('href');
+            if ($(this).hasClass('fb_selectlink')) {
                 url = $(this).attr('rel');
                 gallery.dialog('close');
+            } else if ($(this).attr('target') == '_blank') {
+                return true; // process click event normally
             } else {
-                gallery.load($(this).attr('href'));
+                if (newUrl.substring(0, 1) === '?') {
+                    // newUrl is a query string only (starts with '?')
+                    newUrl = currentUrl.replace(/\?.*/, newUrl);
+                }
+                currentUrl = newUrl;
+                gallery.load(newUrl);
             }
             return false;
         });
