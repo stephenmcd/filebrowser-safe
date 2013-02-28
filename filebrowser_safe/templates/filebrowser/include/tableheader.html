@@ -19,7 +19,7 @@
     {% ifequal query.o 'filename_lower' %}<th class="sorted {{ query.ot }}ending"><a href="{% query_string "" "o,ot,p" %}&amp;ot={% ifequal query.ot 'desc' %}asc{% else %}desc{% endifequal %}&amp;o=filename_lower">{% trans 'Filename' %}</a></th>{% endifequal %}
     {% ifnotequal query.o 'filename_lower' %}<th><a href="{% query_string "" "o,ot,p" %}&amp;ot=asc&amp;o=filename_lower">{% trans 'Filename' %}</a></th>{% endifnotequal %}
     <!-- RENAME -->
-    {% if not query.pop %}}
+    {% if not query.pop %}
     <th>&nbsp;</th>
     {% endif %}
     <!-- SIZE -->
