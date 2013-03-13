@@ -6,6 +6,7 @@ import os
 # django imports
 from django.db import models
 from django import forms
+from django.core.files.storage import default_storage
 from django.forms.widgets import Input
 from django.db.models.fields import Field
 from django.template.loader import render_to_string
@@ -14,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 # filebrowser imports
 from filebrowser_safe.settings import *
 from filebrowser_safe.base import FileObject
-from filebrowser_safe.functions import url_to_path
+from filebrowser_safe.functions import url_to_path, get_directory
 
 
 class FileBrowseWidget(Input):
@@ -35,6 +36,10 @@ class FileBrowseWidget(Input):
     def render(self, name, value, attrs=None):
         if value is None:
             value = ""
+        if self.directory:
+            fullpath = os.path.join(get_directory(), self.directory)
+            if not default_storage.isdir(fullpath):
+                default_storage.makedirs(fullpath)
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
         final_attrs['search_icon'] = URL_FILEBROWSER_MEDIA + 'img/filebrowser_icon_show.gif'
         final_attrs['directory'] = self.directory
