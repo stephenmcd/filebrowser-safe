@@ -28,9 +28,8 @@ var FileBrowser = {
         }
     },
     clear: function(id) {
-        var id2=String(id).replace(/\-/g,"____").split(".").join("___");
-        $('#help_'+id2+', #clear_'+id2).hide();
-        $('#'+id2).val('');
+        $('#help_'+id+', #clear_'+id).hide();
+        $('#'+id).val('');
     }
 }
 
