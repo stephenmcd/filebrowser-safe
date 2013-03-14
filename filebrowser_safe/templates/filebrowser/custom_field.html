@@ -22,11 +22,9 @@
 </p>
 {% endifequal %}
 {% if not self.is_required %}
-    {% if value %}
-    <p class="help mezz-fb-clear" id="clear_{{ final_attrs.id }}" style="display:inline; margin:0 10px;">
+    <p class="help mezz-fb-clear" id="clear_{{ final_attrs.id }}" style="display:{% if value %}inline{% else %}none{% endif %}; margin:0 10px;">
         <a href="javascript:FileBrowser.clear('{{ final_attrs.id }}');">{% trans "Clear" %}</a>
     </p>
-    {% endif %}
 {% endif %}
 {% if final_attrs.DEBUG %}
 <p>
