@@ -1,13 +1,11 @@
 {% load i18n future adminmedia fb_tags mezzanine_tags %}
 
-
 {% if query.pop %}
 <style>
 {% if query.pop == '4' %}
 #media-library-popup #header, #media-library-popup .object-tools {display: none;}
 #media-library-popup h1 {margin: -60px 0 15px 0;}
 {% else %}
-#header, .object-tools {display: none;}
 h1 {margin:-30px 0 15px 0;}
 {% endif %}
 </style>
