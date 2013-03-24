@@ -1,12 +1,12 @@
 {% extends "admin/base_site.html" %}
 
 <!-- LOADING -->
-{% load i18n future adminmedia fb_tags fb_pagination %}
+{% load i18n future static fb_tags fb_pagination %}
 
 <!-- STYLESHEETS -->
 {% block stylesheets %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelist.css" />
+    <link rel="stylesheet" type="text/css" href="{% static "grappelli/" %}css/changelist.css" />
     <link rel="stylesheet" type="text/css" href="{{ settings_var.URL_FILEBROWSER_MEDIA }}css/filebrowser.css" />
 {% endblock %}
 
@@ -30,7 +30,7 @@
 
 {{ media }}
 
-<script type="text/javascript" src="{% admin_media_prefix %}js/admin/Changelist.js"></script>
+<script type="text/javascript" src="{% static "grappelli/" %}js/admin/Changelist.js"></script>
 
 {% if not actions_on_top and not actions_on_bottom %}
 <style>
