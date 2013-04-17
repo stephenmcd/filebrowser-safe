@@ -10,9 +10,6 @@ from time import gmtime, strftime, localtime, time
 from django.contrib.sites.models import Site
 from django.core.files.storage import default_storage
 
-from mezzanine.conf import settings as mezz_settings
-from mezzanine.utils.sites import current_site_id
-
 # filebrowser imports
 from filebrowser_safe.settings import *
 
@@ -23,6 +20,8 @@ def get_directory():
     the site's ID if ``MEDIA_LIBRARY_PER_SITE`` is ``True``, and also
     creating the root directory if missing.
     """
+    from mezzanine.conf import settings as mezz_settings
+    from mezzanine.utils.sites import current_site_id
     dirname = DIRECTORY
     if getattr(mezz_settings, "MEDIA_LIBRARY_PER_SITE", False):
         dirname = os.path.join(dirname, "site-%s" % current_site_id())
