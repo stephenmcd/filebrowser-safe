@@ -90,7 +90,7 @@ h1 {margin:-30px 0 15px 0;}
     {% endifequal %}
 
     <!-- RENAME -->
-    {% if not query.pop %}
+    {% if query.pop != '4' %}
     <td class="fb_icon"><a href="{% url "fb_rename" %}{% query_string %}&amp;filename={{ file.filename }}" class="fb_renamelink" title="{% trans 'Rename' %}"></a></td>
     {% endif %}
 
@@ -101,7 +101,7 @@ h1 {margin:-30px 0 15px 0;}
     <td>{{ file.datetime|date:"N j, Y" }}</td>
 
     <!-- DELETE -->
-    {% if not query.pop %}
+    {% if query.pop != '4' %}
     <td class="fb_icon">
         {% ifnotequal file.filetype 'Folder' %}
         <form method="POST" action="{% url "fb_delete" %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
