@@ -1,6 +1,6 @@
 /* Loading this file dynamically creates a popup dialog showing the
  * media library for file selection (single file selection only at
- * this time).
+ * this time) inside an iframe.
  *
  * To invoke the popup, call the browseMediaLibrary function with the
  * following arguments:
@@ -23,55 +23,55 @@
  *  2. js:  mezzanine/js/%s' % settings.JQUERY_FILENAME
  *  3. js:  filebrowser/js/jquery-ui-1.9.1.custom.min.js
  *  4. js:  filebrowser/js/filebrowser-popup.js (this script)
+ *
+ * Please keep in mind that jQuery UI dialog imposes z-index which isn't
+ * always correctly calculated so it might need to be manually overridden
+ * in the CSS. This happens with Mezzanine's inline editing for instance,
+ * where exposeMask has bigger z-index than the dialog.
 **/
 
-$(document).ready(function() {
-    gallery = $('<div id="media-library-popup"></div>');
-    gallery.dialog({
-        autoOpen: false,
-        title: 'Media Library',
-        width: 900,
-    });
+var browseMediaLibrary;
+
+$(function() {
+	'use strict'
+
+	var iframe = $('<iframe frameborder="0" marginwidth="0" marginheight="0" width="920" height="600" allowfullscreen></iframe>'),
+		gallery = $('<div></div>').append(iframe).appendTo('body')
+			.dialog({
+				autoOpen: false,
+				title: 'Media Library',
+				width: 920,
+				dialogClass: 'media-library'
+			});
+
+	browseMediaLibrary = function (callback, type) {
+		var url = null;
+
+		// type defaults to image
+		type = (typeof type !== 'undefined') ? type : 'image';
+		iframe.attr('src', window.__filebrowser_url + '?pop=4&type=' + type);
+
+		gallery.dialog('open');
+
+		gallery.on('dialogclose', function() {
+			// Make sure to unload the iframe
+			iframe.attr('src', '');
+			callback(url);
+		});
+
+		// Binding must wait until iframe's content is completely loaded.
+		iframe.on('load', function() {
+			// This will work as long as both parent window and
+			// iframe src are on the same domain.
+			$(iframe.get(0).contentWindow.document)
+				.find('.fb_selectlink')
+				.click(function(e) {
+					e.preventDefault();
+					url = $(this).attr('rel');
+					gallery.dialog('close');
+			});
+		});
+
+		return true; // tell the editor that we'll take care of getting the image url
+	};
 });
-
-var browseMediaLibrary = function (callback, type) {
-    // type defaults to image
-    type = (typeof type !== 'undefined') ? type : "image";
-
-    // the return value
-    url = null;
-
-    // the currently open url inside the dialog
-    currentUrl = null;
-
-    gallery.load("/admin/media-library/browse/?pop=4&type=" + type, function(){
-        gallery.dialog('open');
-        currentUrl = "/admin/media-library/browse/?pop=4&type=";
-
-        gallery.on('dialogclose', function() {
-            setTimeout(function() {
-                callback(url);
-            });
-        });
-
-        gallery.on('click', 'a', function() {
-            newUrl = $(this).attr('href');
-            if ($(this).hasClass('fb_selectlink')) {
-                url = $(this).attr('rel');
-                gallery.dialog('close');
-            } else if ($(this).attr('target') == '_blank') {
-                return true; // process click event normally
-            } else {
-                if (newUrl.substring(0, 1) === '?') {
-                    // newUrl is a query string only (starts with '?')
-                    newUrl = currentUrl.replace(/\?.*/, newUrl);
-                }
-                currentUrl = newUrl;
-                gallery.load(newUrl);
-            }
-            return false;
-        });
-    });
-
-    return true; // tell the editor that we'll take care of getting the image url
-};
