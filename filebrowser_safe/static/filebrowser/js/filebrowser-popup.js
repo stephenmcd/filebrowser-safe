@@ -2,7 +2,7 @@
  * media library for file selection (single file selection only at
  * this time) inside an iframe.
  *
- * To invoke the popup, call the browseMediaLibrary function with the
+ * To invoke the popup, call the mediaLibrary.open function with the
  * following arguments:
  *
  *  1. Callback function: The function that will be called after the
@@ -30,22 +30,25 @@
  * where exposeMask has bigger z-index than the dialog.
 **/
 
-var browseMediaLibrary;
+var mediaLibrary = {
+	iframe: null,
+	gallery: null,
 
-$(function() {
-	'use strict'
-
-	var iframe = $('<iframe frameborder="0" marginwidth="0" marginheight="0" width="920" height="600" allowfullscreen></iframe>'),
-		gallery = $('<div></div>').append(iframe).appendTo('body')
+	init: function() {
+		this.iframe = $('<iframe frameborder="0" marginwidth="0" marginheight="0" width="920" height="600" allowfullscreen></iframe>');
+		this.gallery = $('<div></div>').append(this.iframe).appendTo('body')
 			.dialog({
 				autoOpen: false,
 				title: 'Media Library',
 				width: 920,
 				dialogClass: 'media-library'
 			});
+	},
 
-	browseMediaLibrary = function (callback, type) {
-		var url = null;
+	open: function(callback, type) {
+		var url = null,
+			iframe = mediaLibrary.iframe,
+			gallery = mediaLibrary.gallery;
 
 		// type defaults to image
 		type = (typeof type !== 'undefined') ? type : 'image';
@@ -56,7 +59,11 @@ $(function() {
 		gallery.on('dialogclose', function() {
 			// Make sure to unload the iframe
 			iframe.attr('src', '');
-			callback(url);
+			// Certain editors (e.g. pagedown) require this callback to be
+			// asynchronous.
+			setTimeout(function() {
+				callback(url);
+			}, 1);
 		});
 
 		// Binding must wait until iframe's content is completely loaded.
@@ -73,5 +80,12 @@ $(function() {
 		});
 
 		return true; // tell the editor that we'll take care of getting the image url
-	};
+	}
+};
+
+// Compatibility for libraries that depend on old non-namespaced function
+var browseMediaLibrary = mediaLibrary.open;
+
+$(function() {
+   mediaLibrary.init();
 });
