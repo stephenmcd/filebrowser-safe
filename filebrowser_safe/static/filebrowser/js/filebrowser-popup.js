@@ -35,13 +35,17 @@ var mediaLibrary = {
 	gallery: null,
 
 	init: function() {
-		this.iframe = $('<iframe frameborder="0" marginwidth="0" marginheight="0" width="920" height="600" allowfullscreen></iframe>');
+		this.iframe = $('<iframe frameborder="0" marginwidth="0" marginheight="0" width="900" height="500" allowfullscreen></iframe>');
 		this.gallery = $('<div></div>').append(this.iframe).appendTo('body')
 			.dialog({
 				autoOpen: false,
 				title: 'Media Library',
-				width: 920,
-				dialogClass: 'media-library'
+				width: 900,
+				dialogClass: 'media-library',
+				resizable: false,
+				create: function(event, ui) {
+					$(this).css('padding', 0);
+				}
 			});
 	},
 
@@ -87,5 +91,5 @@ var mediaLibrary = {
 var browseMediaLibrary = mediaLibrary.open;
 
 $(function() {
-   mediaLibrary.init();
+	mediaLibrary.init();
 });
