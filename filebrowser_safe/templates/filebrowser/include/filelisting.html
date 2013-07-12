@@ -2,12 +2,7 @@
 
 {% if query.pop %}
 <style>
-{% if query.pop == '4' %}
-#media-library-popup #header, #media-library-popup .object-tools {display: none;}
-#media-library-popup h1 {margin: -60px 0 15px 0;}
-{% else %}
 h1 {margin:-30px 0 15px 0;}
-{% endif %}
 </style>
 {% endif %}
 
@@ -101,7 +96,6 @@ h1 {margin:-30px 0 15px 0;}
     <td>{{ file.datetime|date:"N j, Y" }}</td>
 
     <!-- DELETE -->
-    {% if query.pop != '4' %}
     <td class="fb_icon">
         {% ifnotequal file.filetype 'Folder' %}
         <form method="POST" action="{% url "fb_delete" %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
@@ -111,7 +105,6 @@ h1 {margin:-30px 0 15px 0;}
         <a href="#" class="fb_deletelink" onclick="if (confirm('{% trans "Are you sure you want to delete this Folder?" %}')) {$('#delete-{{ forloop.counter0 }}').submit();} return false;" title="{% trans 'Delete Folder' %}"></a>
         {% endifnotequal %}
     </td>
-    {% endif %}
 
     <!-- DEBUG -->
     {% if settings_var.DEBUG %}
