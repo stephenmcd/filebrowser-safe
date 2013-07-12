@@ -68,6 +68,10 @@ var mediaLibrary = {
 			setTimeout(function() {
 				callback(url);
 			}, 1);
+
+			// Clean-up the events so they don't get triggered more than once
+			iframe.off('load');
+			gallery.off('dialogclose');
 		});
 
 		// Binding must wait until iframe's content is completely loaded.
