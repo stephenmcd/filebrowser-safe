@@ -1,4 +1,4 @@
-function FileSubmit(FileURL, ThumbURL, FileType) {
+function FileSubmit(FilePath, FileURL, ThumbURL, FileType) {
 
     // var input_id=window.name.split("___").join(".");
     var input_id=window.name.replace(/____/g,'-').split("___").join(".");
@@ -13,7 +13,7 @@ function FileSubmit(FileURL, ThumbURL, FileType) {
     clear = opener.document.getElementById(clear_id);
 
     // set new value for input field
-    input.value = FileURL;
+    input.value = FilePath;
 
     // enable the clear "button"
     $(clear).css("display", "inline");
