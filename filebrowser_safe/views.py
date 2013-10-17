@@ -38,6 +38,11 @@ from mezzanine.utils.importing import import_dotted_path
 # Add some required methods to FileSystemStorage
 storage_class_name = django_settings.DEFAULT_FILE_STORAGE.split(".")[-1]
 mixin_class_name = "filebrowser_safe.storage.%sMixin" % storage_class_name
+
+# Workaround for django-s3-folder-storage
+if django_settings.DEFAULT_FILE_STORAGE == 's3_folder_storage.s3.DefaultStorage':
+    mixin_class_name = 'filebrowser_safe.storage.S3BotoStorageMixin'
+
 try:
     mixin_class = import_dotted_path(mixin_class_name)
     storage_class = import_dotted_path(django_settings.DEFAULT_FILE_STORAGE)
