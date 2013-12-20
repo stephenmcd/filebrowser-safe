@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # coding: utf-8
 
 # imports
@@ -8,7 +9,13 @@ import mimetypes
 
 # django imports
 from django.core.files.storage import default_storage
-from django.utils.encoding import smart_str, smart_unicode
+from django.utils.encoding import smart_str
+
+try:
+    from django.utils.encoding import smart_text
+except ImportError:
+    # Backward compatibility for Py2 and Django < 1.5
+    from django.utils.encoding import smart_unicode as smart_text
 
 # filebrowser imports
 from filebrowser_safe.settings import *
@@ -40,7 +47,7 @@ class FileObject():
         return smart_str(self.path)
 
     def __unicode__(self):
-        return smart_unicode(self.path)
+        return smart_text(self.path)
 
     @property
     def name(self):
@@ -104,7 +111,7 @@ class FileObject():
 
     def _path_relative_directory(self):
         "path relative to the path returned by get_directory()"
-        return path_strip(self.path, get_directory())
+        return path_strip(self.path, get_directory()).lstrip("/")
     path_relative_directory = property(_path_relative_directory)
 
     def _url(self):

@@ -1,3 +1,8 @@
+from __future__ import unicode_literals
+from future.builtins import int
+from future.builtins import range
+from future.builtins import map
+from future.builtins import str
 # coding: utf-8
 
 # imports
@@ -81,30 +86,6 @@ def dir_from_url(value):
     return os.path.split(value)[0]
 
 
-def sort_by_attr(seq, attr):
-    """
-    Sort the sequence of objects by object's attribute
-
-    Arguments:
-    seq  - the list or any sequence (including immutable one) of objects to sort.
-    attr - the name of attribute to sort by
-
-    Returns:
-    the sorted list of objects.
-    """
-    import operator
-
-    # Use the "Schwartzian transform"
-    # Create the auxiliary list of tuples where every i-th tuple has form
-    # (seq[i].attr, i, seq[i]) and sort it. The second item of tuple is needed not
-    # only to provide stable sorting, but mainly to eliminate comparison of objects
-    # (which can be expensive or prohibited) in case of equal attribute values.
-    intermed = map(None, map(getattr, seq, (attr,) * len(seq)),
-                   xrange(len(seq)), seq)
-    intermed.sort()
-    return map(operator.getitem, intermed, (-1,) * len(intermed))
-
-
 def url_join(*args):
     """
     URL join routine.
@@ -115,7 +96,7 @@ def url_join(*args):
     else:
         url = "/"
     for arg in args:
-        arg = unicode(arg).replace("\\", "/")
+        arg = str(arg).replace("\\", "/")
         arg_split = arg.split("/")
         for elem in arg_split:
             if elem != "" and elem != "http:":
@@ -223,7 +204,7 @@ def get_file_type(filename):
 
     file_extension = os.path.splitext(filename)[1].lower()
     file_type = ''
-    for k, v in EXTENSIONS.iteritems():
+    for k, v in EXTENSIONS.items():
         for extension in v:
             if file_extension == extension.lower():
                 file_type = k
@@ -237,7 +218,7 @@ def is_selectable(filename, selecttype):
 
     file_extension = os.path.splitext(filename)[1].lower()
     select_types = []
-    for k, v in SELECT_FORMATS.iteritems():
+    for k, v in SELECT_FORMATS.items():
         for extension in v:
             if file_extension == extension.lower():
                 select_types.append(k)
@@ -254,7 +235,7 @@ def convert_filename(value):
         chunks = value.split(os.extsep)
         normalized = []
         for v in chunks:
-            v = unicodedata.normalize('NFKD', unicode(v)).encode('ascii', 'ignore')
+            v = unicodedata.normalize('NFKD', str(v)).encode('ascii', 'ignore')
             v = re.sub('[^\w\s-]', '', v).strip()
             normalized.append(v)
 

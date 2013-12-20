@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+from future.builtins import str
 # coding: utf-8
 
 # django imports
@@ -52,16 +54,16 @@ def get_query_string(p, new_params=None, remove=None):
     if remove is None:
         remove = []
     for r in remove:
-        for k in p.keys():
+        for k in list(p.keys()):
             #if k.startswith(r):
             if k == r:
                 del p[k]
-    for k, v in new_params.items():
+    for k, v in list(new_params.items()):
         if k in p and v is None:
             del p[k]
         elif v is not None:
             p[k] = v
-    return mark_safe('?' + '&'.join([u'%s=%s' % (k, v) for k, v in p.items()]).replace(' ', '%20'))
+    return mark_safe('?' + '&'.join([u'%s=%s' % (k, v) for k, v in list(p.items())]).replace(' ', '%20'))
 
 
 def string_to_dict(string):
@@ -136,7 +138,7 @@ def selectable(parser, token):
     try:
         tag, filetype, format = token.split_contents()
     except:
-        raise TemplateSyntaxError, "%s tag requires 2 arguments" % token.contents.split()[0]
+        raise TemplateSyntaxError("%s tag requires 2 arguments" % token.contents.split()[0])
 
     return SelectableNode(filetype, format)
 

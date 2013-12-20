@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from future.builtins import str
+from future.builtins import super
 # coding: utf-8
 
 # imports
@@ -16,6 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from filebrowser_safe.settings import *
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.functions import url_to_path, get_directory
+from future.utils import with_metaclass
 
 
 class FileBrowseWidget(Input):
@@ -83,9 +87,7 @@ class FileBrowseFormField(forms.CharField):
         return value
 
 
-class FileBrowseField(Field):
-    __metaclass__ = models.SubfieldBase
-
+class FileBrowseField(with_metaclass(models.SubfieldBase, Field)):
     def __init__(self, *args, **kwargs):
         self.directory = kwargs.pop('directory', '')
         self.extensions = kwargs.pop('extensions', '')
@@ -100,7 +102,7 @@ class FileBrowseField(Field):
     def get_db_prep_value(self, value, connection, prepared=False):
         if value is None:
             return None
-        return unicode(value)
+        return str(value)
 
 
     def get_manipulator_field_objs(self):

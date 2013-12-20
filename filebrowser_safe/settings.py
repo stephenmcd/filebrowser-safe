@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # coding: utf-8
 
 # imports
@@ -97,7 +98,7 @@ IMAGE_MAXBLOCK = getattr(settings, 'FILEBROWSER_IMAGE_MAXBLOCK', 1024 * 1024)
 # Exclude files matching any of the following regular expressions
 # Default is to exclude 'thumbnail' style naming of image-thumbnails.
 EXTENSION_LIST = []
-for exts in EXTENSIONS.values():
+for exts in list(EXTENSIONS.values()):
     EXTENSION_LIST += exts
 EXCLUDE = getattr(settings, 'FILEBROWSER_EXCLUDE', (r'_(%(exts)s)_.*_q\d{1,3}\.(%(exts)s)' % {'exts': ('|'.join(EXTENSION_LIST))},))
 # Max. Upload Size in Bytes.

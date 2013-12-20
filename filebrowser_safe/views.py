@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # coding: utf-8
 
 # general imports
@@ -19,13 +20,18 @@ from django.shortcuts import render_to_response, HttpResponse
 from django.template import RequestContext as Context
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
-from django.utils.encoding import smart_unicode
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
+try:
+    from django.utils.encoding import smart_text
+except ImportError:
+    # Backward compatibility for Py2 and Django < 1.5
+    from django.utils.encoding import smart_unicode as smart_text
+
 # filebrowser imports
 from filebrowser_safe.settings import *
-from filebrowser_safe.functions import (sort_by_attr, get_path,
+from filebrowser_safe.functions import (get_path,
                 get_breadcrumbs, get_filterdate, get_settings_var,
                 get_directory, convert_filename)
 from filebrowser_safe.templatetags.fb_tags import query_helper
@@ -57,7 +63,7 @@ else:
 filter_re = []
 for exp in EXCLUDE:
     filter_re.append(re.compile(exp))
-for k, v in VERSIONS.iteritems():
+for k, v in VERSIONS.items():
     exp = (r'_%s.(%s)') % (k, '|'.join(EXTENSION_LIST))
     filter_re.append(re.compile(exp))
 
@@ -77,7 +83,7 @@ def browse(request):
         messages.add_message(request, messages.ERROR, msg)
         if directory is None:
             # The directory returned by get_directory() does not exist, raise an error to prevent eternal redirecting.
-            raise ImproperlyConfigured, _("Error finding Upload-Folder. Maybe it does not exist?")
+            raise ImproperlyConfigured(_("Error finding Upload-Folder. Maybe it does not exist?"))
         redirect_url = reverse("fb_browse") + query_helper(query, "", "dir")
         return HttpResponseRedirect(redirect_url)
     abs_path = os.path.join(get_directory(), path)
@@ -85,7 +91,7 @@ def browse(request):
     # INITIAL VARIABLES
     results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0}
     counter = {}
-    for k, v in EXTENSIONS.iteritems():
+    for k, v in EXTENSIONS.items():
         counter[k] = 0
 
     dir_list, file_list = default_storage.listdir(abs_path)
@@ -105,8 +111,6 @@ def browse(request):
         url_path = "/".join([s.strip("/") for s in
                             [get_directory(), path, file] if s.strip("/")])
         fileobject = FileObject(url_path)
-        # Strip leading slash in dirnames for MEDIA_LIBRARY_PER_SITE
-        fileobject.path_relative_directory = fileobject.path_relative_directory.lstrip("/")
 
         # FILTER / SEARCH
         append = False
@@ -143,7 +147,7 @@ def browse(request):
     # SORTING
     query['o'] = request.GET.get('o', DEFAULT_SORTING_BY)
     query['ot'] = request.GET.get('ot', DEFAULT_SORTING_ORDER)
-    files = sort_by_attr(files, request.GET.get('o', DEFAULT_SORTING_BY))
+    files = sorted(files, key=lambda f: getattr(f, request.GET.get('o', DEFAULT_SORTING_BY)))
     if not request.GET.get('ot') and DEFAULT_SORTING_ORDER == "desc" or request.GET.get('ot') == "desc":
         files.reverse()
 
@@ -212,7 +216,8 @@ def mkdir(request):
                 # remove pagination
                 redirect_url = reverse("fb_browse") + query_helper(query, "ot=desc,o=date", "ot,o,filter_type,filter_date,q,p")
                 return HttpResponseRedirect(redirect_url)
-            except OSError, (errno, strerror):
+            except OSError as xxx_todo_changeme:
+                (errno, strerror) = xxx_todo_changeme.args
                 if errno == 13:
                     form.errors['dir_name'] = forms.util.ErrorList([_('Permission denied.')])
                 else:
@@ -272,7 +277,7 @@ def _check_file(request):
     folder = fb_uploadurl_re.sub('', folder)
     fileArray = {}
     if request.method == 'POST':
-        for k, v in request.POST.items():
+        for k, v in list(request.POST.items()):
             if k != "folder":
                 if default_storage.exists(os.path.join(get_directory(), folder, v)):
                     fileArray[k] = v
@@ -313,10 +318,10 @@ def _upload_file(request):
             path = os.path.join(get_directory(), folder)
             file_name = os.path.join(path, filedata.name)
             if exists:
-                default_storage.move(smart_unicode(uploadedfile), smart_unicode(file_name), allow_overwrite=True)
+                default_storage.move(smart_text(uploadedfile), smart_text(file_name), allow_overwrite=True)
 
             # POST UPLOAD SIGNAL
-            filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(smart_unicode(file_name)))
+            filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(smart_text(file_name)))
     return HttpResponse('True')
 
 
@@ -427,7 +432,8 @@ def rename(request):
                 messages.add_message(request, messages.SUCCESS, msg)
                 redirect_url = reverse("fb_browse") + query_helper(query, "", "filename")
                 return HttpResponseRedirect(redirect_url)
-            except OSError, (errno, strerror):
+            except OSError as xxx_todo_changeme1:
+                (errno, strerror) = xxx_todo_changeme1.args
                 form.errors['name'] = forms.util.ErrorList([_('Error.')])
     else:
         form = RenameForm(abs_path, file_extension)
