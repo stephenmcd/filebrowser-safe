@@ -1,11 +1,9 @@
 from __future__ import unicode_literals
-# coding: utf-8
 
-# general imports
+from json import dumps
 import os
 import re
 
-# django imports
 from django.conf import settings as django_settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
@@ -29,11 +27,9 @@ except ImportError:
     # Backward compatibility for Py2 and Django < 1.5
     from django.utils.encoding import smart_unicode as smart_text
 
-# filebrowser imports
 from filebrowser_safe.settings import *
-from filebrowser_safe.functions import (get_path,
-                get_breadcrumbs, get_filterdate, get_settings_var,
-                get_directory, convert_filename)
+from filebrowser_safe.functions import (get_path, get_breadcrumbs,
+    get_filterdate, get_settings_var, get_directory, convert_filename)
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.decorators import flash_login_required
@@ -281,7 +277,7 @@ def _check_file(request):
             if k != "folder":
                 if default_storage.exists(os.path.join(get_directory(), folder, v)):
                     fileArray[k] = v
-    return HttpResponse(simplejson.dumps(fileArray))
+    return HttpResponse(dumps(fileArray))
 
 
 # upload signals
