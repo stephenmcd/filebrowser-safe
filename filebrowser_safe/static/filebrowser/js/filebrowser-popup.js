@@ -35,8 +35,8 @@ var mediaLibrary = {
 	gallery: null,
 
 	init: function() {
-		this.iframe = $('<iframe frameborder="0" marginwidth="0" marginheight="0" width="900" height="500" allowfullscreen></iframe>');
-		this.gallery = $('<div></div>').append(this.iframe).appendTo('body')
+		this.iframe = jQuery('<iframe frameborder="0" marginwidth="0" marginheight="0" width="900" height="500" allowfullscreen></iframe>');
+		this.gallery = jQuery('<div></div>').append(this.iframe).appendTo('body')
 			.dialog({
 				autoOpen: false,
 				title: 'Media Library',
@@ -44,7 +44,7 @@ var mediaLibrary = {
 				dialogClass: 'media-library',
 				resizable: false,
 				create: function(event, ui) {
-					$(this).css('padding', 0);
+					jQuery(this).css('padding', 0);
 				}
 			});
 	},
@@ -78,11 +78,11 @@ var mediaLibrary = {
 		iframe.on('load', function() {
 			// This will work as long as both parent window and
 			// iframe src are on the same domain.
-			$(iframe.get(0).contentWindow.document)
+			jQuery(iframe.get(0).contentWindow.document)
 				.find('.fb_selectlink')
 				.click(function(e) {
 					e.preventDefault();
-					url = $(this).attr('rel');
+					url = jQuery(this).attr('rel');
 					gallery.dialog('close');
 			});
 		});
@@ -94,6 +94,6 @@ var mediaLibrary = {
 // Compatibility for libraries that depend on old non-namespaced function
 var browseMediaLibrary = mediaLibrary.open;
 
-$(function() {
+jQuery(function() {
 	mediaLibrary.init();
 });

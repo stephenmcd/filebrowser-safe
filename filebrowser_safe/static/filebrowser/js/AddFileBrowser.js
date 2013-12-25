@@ -4,7 +4,7 @@ var FileBrowser = {
     // change this
     thumb_prefix: 'thumb_',
     no_thumb: 'filebrowser/img/no_thumb.gif',
-    
+
     init: function() {
         // Deduce admin_media_prefix by looking at the <script>s in the
         // current document and finding the URL of *this* module.
@@ -28,8 +28,8 @@ var FileBrowser = {
         }
     },
     clear: function(id) {
-        $('#help_'+id+', #clear_'+id).hide();
-        $('#'+id).val('');
+        jQuery('#help_'+id+', #clear_'+id).hide();
+        jQuery('#'+id).val('');
     }
 }
 

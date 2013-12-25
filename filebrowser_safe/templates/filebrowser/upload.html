@@ -19,7 +19,7 @@
     <script type="text/javascript" src="{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/jquery.uploadify.v2.1.4.min.js"></script>
     <script type="text/javascript" src="{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/swfobject.js"></script>
     <script type="text/javascript">
-    $(document).ready(function() {
+    jQuery(function($) {
         {% url "static_proxy" as static_proxy_url %}
         var proxy = '{{ static_proxy_url }}';
         if (proxy) {
