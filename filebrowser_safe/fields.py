@@ -13,6 +13,7 @@ from django.core.files.storage import default_storage
 from django.forms.widgets import Input
 from django.db.models.fields import Field
 from django.template.loader import render_to_string
+from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 
 # filebrowser imports
@@ -102,8 +103,7 @@ class FileBrowseField(with_metaclass(models.SubfieldBase, Field)):
     def get_db_prep_value(self, value, connection, prepared=False):
         if value is None:
             return None
-        return str(value)
-
+        return smart_str(value)
 
     def get_manipulator_field_objs(self):
         return [oldforms.TextField]
