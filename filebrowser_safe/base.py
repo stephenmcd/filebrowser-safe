@@ -54,7 +54,7 @@ class FileObject():
         return self.path
 
     def __repr__(self):
-        return "<%s: %s>" % (self.__class__.__name__, self or "None")
+        return smart_str("<%s: %s>" % (self.__class__.__name__, self or "None"))
 
     def __len__(self):
         return len(self.path)
