@@ -14,6 +14,9 @@
         <img id="image_{{ final_attrs.id }}" src="{{ MEDIA_URL }}{% thumbnail value.path 60 60 %}" class="preview" />
     </a>
 </p>
+<div id="remove_featured" style="float:right;padding-top:5px;font-size:11px;">
+    <a href="javascript:$('#{{ final_attrs.id }}').val('');$('#help_{{ final_attrs.id }}').hide();$('#remove_featured').hide();"> remove</a>
+</div>
 {% else %}
 <p class="help" id="help_{{ final_attrs.id }}" style="display: none;">
     <a href="javascript://" target="_self" id="link_{{ final_attrs.id }}">
