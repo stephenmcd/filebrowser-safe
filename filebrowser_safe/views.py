@@ -63,6 +63,21 @@ for k, v in VERSIONS.items():
     filter_re.append(re.compile(exp))
 
 
+def remove_thumbnails(file_path):
+    """
+    Cleans up previous Mezzanine thumbnail directories when
+    a new file is written (upload or rename).
+    """
+    from mezzanine.conf import settings
+    dir_name, file_name = os.path.split(file_path)
+    thumbnails_dir = settings.THUMBNAILS_DIR_NAME
+    path = os.path.join(dir_name, thumbnails_dir, "thumbs-%s" % file_name)
+    try:
+        default_storage.rmtree(path)
+    except:
+        pass
+
+
 def browse(request):
     """
     Browse Files/Directories.
@@ -300,23 +315,26 @@ def _upload_file(request):
 
         if request.FILES:
             filedata = request.FILES['Filedata']
+            directory = get_directory()
+
             # PRE UPLOAD SIGNAL
             filebrowser_pre_upload.send(sender=request, path=request.POST.get('folder'), file=filedata)
 
+            # Try and remove both original and normalised thumb names,
+            # in case files were added programmatically outside FB.
+            file_path = os.path.join(directory, folder, filedata.name)
+            remove_thumbnails(file_path)
             filedata.name = convert_filename(filedata.name)
+            file_path = os.path.join(directory, folder, filedata.name)
+            remove_thumbnails(file_path)
 
             # HANDLE UPLOAD
-            exists = default_storage.exists(os.path.join(get_directory(), folder, filedata.name))
-            abs_path = os.path.join(get_directory(), folder, filedata.name)
-            uploadedfile = default_storage.save(abs_path, filedata)
-
-            path = os.path.join(get_directory(), folder)
-            file_name = os.path.join(path, filedata.name)
-            if exists:
-                default_storage.move(smart_text(uploadedfile), smart_text(file_name), allow_overwrite=True)
+            uploadedfile = default_storage.save(file_path, filedata)
+            if default_storage.exists(file_path):
+                default_storage.move(smart_text(uploadedfile), smart_text(file_path), allow_overwrite=True)
 
             # POST UPLOAD SIGNAL
-            filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(smart_text(file_name)))
+            filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(smart_text(file_path)))
     return HttpResponse('True')
 
 
@@ -419,6 +437,7 @@ def rename(request):
                 # PRE RENAME SIGNAL
                 filebrowser_pre_rename.send(sender=request, path=path, filename=filename, new_filename=new_filename)
                 # RENAME ORIGINAL
+                remove_thumbnails(new_relative_server_path)
                 default_storage.move(relative_server_path, new_relative_server_path)
                 # POST RENAME SIGNAL
                 filebrowser_post_rename.send(sender=request, path=path, filename=filename, new_filename=new_filename)
