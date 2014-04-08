@@ -70,8 +70,7 @@ def remove_thumbnails(file_path):
     """
     from mezzanine.conf import settings
     dir_name, file_name = os.path.split(file_path)
-    thumbnails_dir = settings.THUMBNAILS_DIR_NAME
-    path = os.path.join(dir_name, thumbnails_dir, "thumbs-%s" % file_name)
+    path = os.path.join(dir_name, settings.THUMBNAILS_DIR_NAME, file_name)
     try:
         default_storage.rmtree(path)
     except:
