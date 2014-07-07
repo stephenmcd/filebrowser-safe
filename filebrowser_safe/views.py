@@ -334,6 +334,9 @@ def _upload_file(request):
 
             # POST UPLOAD SIGNAL
             filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(smart_text(file_path)))
+        get_params = request.POST.get('get_params')
+        if get_params:
+            return HttpResponseRedirect(reverse('fb_browse') + get_params)
     return HttpResponse('True')
 
 
