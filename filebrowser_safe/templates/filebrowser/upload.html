@@ -25,44 +25,48 @@
         if (proxy) {
             proxy += '?u=';
         }
-        $('#id_file').uploadify({
-            'uploader'          : proxy + '{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/uploadify.swf',
-            'script'            : '{% url "fb_do_upload" %}',
-            'scriptData'        : {'session_key': '{{session_key}}'},
-            'checkScript'       : '{% url "fb_check" %}',
-            'cancelImg'         : '{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/cancel.png',
-            'auto'              : false,
-            'folder'            : '{{ query.dir|escapejs }}',
-            'multi'             : true,
-            'fileDesc'          : '{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}*{{ item|safe }};{% endfor %}{% endifnotequal %}{% endfor %}',
-            'fileExt'           : '{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}*{{ item|safe }};{% endfor %}{% endifnotequal %}{% endfor %}',
-            'sizeLimit'         : {{ settings_var.MAX_UPLOAD_SIZE|unlocalize }},
-            'scriptAccess'      : 'always',
-            'queueSizeLimit'    : 50,
-            'simUploadLimit'    : 1,
-            'width'             : 300,
-            'height'            : 30,
-            'hideButton'        : false,
-            'wmode'             : 'transparent',
-            'removeCompleted'   : false,
-            'onAllComplete' : function(event,data) {location = '{% url "fb_browse" %}{% query_string '' 'p' %}'},
-            translations        : {
-                                  browseButton: '{% trans "BROWSE" %}',
-                                  error: '{% trans "An Error occured" %}',
-                                  completed: '{% trans "Completed" %}',
-                                  replaceFile: '{% trans "Do you want to replace the file" %}',
-                                  unitKb: '{% trans "KB" %}',
-                                  unitMb: '{% trans "MB" %}'
-            }
-        });
-        $('input:submit').click(function(){
-            $('#id_file').uploadifyUpload();
-            return false;
-        });
-        $('a.deletelink').click(function(evt){
-                $('#id_file').uploadifyClearQueue();
+
+        var hasFlash = ((typeof navigator.plugins != "undefined" && typeof navigator.plugins["Shockwave Flash"] == "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) != false));
+        if (hasFlash) {
+            $('#id_file').uploadify({
+                'uploader'          : proxy + '{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/uploadify.swf',
+                'script'            : '{% url "fb_do_upload" %}',
+                'scriptData'        : {'session_key': '{{session_key}}'},
+                'checkScript'       : '{% url "fb_check" %}',
+                'cancelImg'         : '{{ settings_var.URL_FILEBROWSER_MEDIA }}uploadify/cancel.png',
+                'auto'              : false,
+                'folder'            : '{{ query.dir|escapejs }}',
+                'multi'             : true,
+                'fileDesc'          : '{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}*{{ item|safe }};{% endfor %}{% endifnotequal %}{% endfor %}',
+                'fileExt'           : '{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}*{{ item|safe }};{% endfor %}{% endifnotequal %}{% endfor %}',
+                'sizeLimit'         : {{ settings_var.MAX_UPLOAD_SIZE|unlocalize }},
+                'scriptAccess'      : 'always',
+                'queueSizeLimit'    : 50,
+                'simUploadLimit'    : 1,
+                'width'             : 300,
+                'height'            : 30,
+                'hideButton'        : false,
+                'wmode'             : 'transparent',
+                'removeCompleted'   : false,
+                'onAllComplete' : function(event,data) {location = '{% url "fb_browse" %}{% query_string '' 'p' %}'},
+                translations        : {
+                                      browseButton: '{% trans "BROWSE" %}',
+                                      error: '{% trans "An Error occured" %}',
+                                      completed: '{% trans "Completed" %}',
+                                      replaceFile: '{% trans "Do you want to replace the file" %}',
+                                      unitKb: '{% trans "KB" %}',
+                                      unitMb: '{% trans "MB" %}'
+                }
+            });
+            $('input:submit').click(function(){
+                $('#id_file').uploadifyUpload();
                 return false;
-        });
+            });
+            $('a.deletelink').click(function(evt){
+                    $('#id_file').uploadifyClearQueue();
+                    return false;
+            });
+        }
     });
     </script>
 {% endblock %}
