@@ -81,11 +81,15 @@
 <!-- CONTENT -->
 {% block content %}
 <div id="content-main">
-    <form>
+    <form action="{% url "fb_do_upload" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
     <div>
         <fieldset class="module aligned">
         <div class="form-row">
-            <input type="File" id="id_file" />
+            <input name="Filedata" type="file" id="id_file" />
+            <input name="session_key" type="hidden" id="session_key" value="{{ session_key }}" />
+            <input name="folder" type="hidden" id="folder" value="{{ query.dir|escapejs }}" />
+            <input name="get_params" type="hidden" id="get_params" value="{% query_string '' 'p' %}" />
         </div>
         </fieldset>
 
