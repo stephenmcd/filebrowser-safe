@@ -42,6 +42,7 @@ class FileBrowseWidget(Input):
     def render(self, name, value, attrs=None):
         if value is None:
             value = ""
+        directory = self.directory
         if self.directory:
             directory = os.path.normpath(datetime.datetime.now().strftime(self.directory))
             fullpath = os.path.join(get_directory(), directory)
@@ -49,7 +50,7 @@ class FileBrowseWidget(Input):
                 default_storage.makedirs(fullpath)
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
         final_attrs['search_icon'] = URL_FILEBROWSER_MEDIA + 'img/filebrowser_icon_show.gif'
-        final_attrs['directory'] = self.directory
+        final_attrs['directory'] = directory
         final_attrs['extensions'] = self.extensions
         final_attrs['format'] = self.format
         final_attrs['ADMIN_THUMBNAIL'] = ADMIN_THUMBNAIL
