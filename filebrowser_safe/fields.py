@@ -42,7 +42,8 @@ class FileBrowseWidget(Input):
         if value is None:
             value = ""
         if self.directory:
-            fullpath = os.path.join(get_directory(), self.directory)
+            directory = os.path.normpath(datetime.datetime.now().strftime(self.directory))
+            fullpath = os.path.join(get_directory(), directory)
             if not default_storage.isdir(fullpath):
                 default_storage.makedirs(fullpath)
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
