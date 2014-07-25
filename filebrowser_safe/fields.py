@@ -44,7 +44,9 @@ class FileBrowseWidget(Input):
             value = ""
         directory = self.directory
         if self.directory:
-            directory = os.path.normpath(datetime.datetime.now().strftime(self.directory))
+            if callable(self.directory):
+                directory = self.directory()
+            directory = os.path.normpath(datetime.datetime.now().strftime(directory))
             fullpath = os.path.join(get_directory(), directory)
             if not default_storage.isdir(fullpath):
                 default_storage.makedirs(fullpath)
