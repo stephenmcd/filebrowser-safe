@@ -6,6 +6,7 @@ from time import gmtime, strftime, localtime, mktime, time
 from urlparse import urlparse
 
 # django imports
+from django.utils import six
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.core.files import File
@@ -229,8 +230,8 @@ def convert_filename(value):
         chunks = value.split(os.extsep)
         normalized = []
         for v in chunks:
-            v = unicodedata.normalize('NFKD', unicode(v)).encode('ascii', 'ignore')
-            v = re.sub('[^\w\s-]', '', v).strip()
+            v = unicodedata.normalize('NFKD', six.text_type(v)).encode('ascii', 'ignore').decode('ascii')
+            v = re.sub(r'[^\w\s-]', '', v).strip()
             normalized.append(v)
 
         if len(normalized) > 1:
