@@ -12,6 +12,7 @@ import unicodedata
 from time import gmtime, strftime, localtime, time
 
 # django imports
+from django.utils import six
 from django.contrib.sites.models import Site
 from django.core.files.storage import default_storage
 
@@ -234,9 +235,10 @@ def convert_filename(value):
     if NORMALIZE_FILENAME:
         chunks = value.split(os.extsep)
         normalized = []
+
         for v in chunks:
-            v = unicodedata.normalize('NFKD', str(v)).encode('ascii', 'ignore')
-            v = re.sub('[^\w\s-]', '', v).strip()
+            v = unicodedata.normalize('NFKD', six.text_type(v)).encode('ascii', 'ignore').decode('ascii')
+            v = re.sub(r'[^\w\s-]', '', v).strip()
             normalized.append(v)
 
         if len(normalized) > 1:
