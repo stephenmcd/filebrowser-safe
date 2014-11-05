@@ -135,6 +135,20 @@ msgstr "Файл %s удален."
 msgid "The folder %s was successfully deleted."
 msgstr "Папка %s удалена."
 
+#: filebrowser_safe/templates/filebrowser/include/breadcrumbs.html:6
+#: filebrowser_safe/templates/filebrowser/include/breadcrumbs.html:8
+#: filebrowser_safe/views.py:180
+msgid "Media Library"
+msgstr "Медиа Библиотека"
+
+#: filebrowser_safe/templates/filebrowser/upload.html:119
+msgid ""
+"Once you've selected all the files you want to upload, click the upload "
+"button in the bottom right corner to begin the upload process."
+msgstr ""
+"После того, как Вы выбрали файлы, которые хотите загрузить, нажмите на "
+"кнопку \"Загрузить\" в нижнем правом углу, чтобы начать загрузку."
+
 #: views.py:447
 msgid "Renaming was successful."
 msgstr "Переименовано."
