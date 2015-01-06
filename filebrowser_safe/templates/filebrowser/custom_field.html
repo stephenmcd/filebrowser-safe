@@ -15,10 +15,11 @@
     </a>
 </p>
 {% else %}
-<p class="help" id="help_{{ final_attrs.id }}" style="display: none;">
-    <a href="javascript://" target="_self" id="link_{{ final_attrs.id }}">
+<p class="help" id="help_{{ final_attrs.id }}">
+    <a href="javascript://" target="_self" id="link_{{ final_attrs.id }}" style="display: none;">
         <img id="image_{{ final_attrs.id }}" class="preview" src="" />
     </a>
+    {{ value.path }}
 </p>
 {% endifequal %}
 {% if not self.is_required %}
