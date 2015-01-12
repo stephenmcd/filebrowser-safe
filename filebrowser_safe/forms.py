@@ -65,7 +65,8 @@ class RenameForm(forms.Form):
     def clean_name(self):
         if self.cleaned_data['name']:
             # only letters, numbers, underscores, spaces and hyphens are allowed.
-            if not alnum_name_re.search(self.cleaned_data['name']):
+            if (not alnum_name_re.search(self.cleaned_data['name']) or
+                not alnum_name_re.search(self.path)):
                 raise forms.ValidationError(_(u'Only letters, numbers, underscores, spaces and hyphens are allowed.'))
             #  folder/file must not already exist.
             if os.path.isdir(os.path.join(self.path, self.cleaned_data['name'])):

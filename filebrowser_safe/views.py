@@ -13,7 +13,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from django.dispatch import Signal
 from django import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render_to_response, HttpResponse
 from django.template import RequestContext as Context
 from django.utils.translation import ugettext as _
@@ -311,6 +311,8 @@ def _upload_file(request):
         folder = request.POST.get('folder')
         fb_uploadurl_re = re.compile(r'^.*(%s)' % reverse("fb_upload"))
         folder = fb_uploadurl_re.sub('', folder)
+        if "." in folder:
+            return HttpResponseBadRequest("")
 
         if request.FILES:
             filedata = request.FILES['Filedata']
@@ -367,7 +369,13 @@ def delete(request):
         messages.add_message(request, messages.ERROR, msg)
         return HttpResponseRedirect(reverse("fb_browse"))
     abs_path = os.path.join(get_directory(), path)
-    if request.GET.get('filetype') != "Folder":
+
+    normalized = os.path.normpath(os.path.join(get_directory(), path, filename))
+
+    if not normalized.startswith(get_directory()) or ".." in normalized:
+        msg = _("An error occurred")
+        messages.add_message(request, messages.ERROR, msg)
+    elif request.GET.get('filetype') != "Folder":
         relative_server_path = os.path.join(get_directory(), path, filename)
         try:
             # PRE DELETE SIGNAL
