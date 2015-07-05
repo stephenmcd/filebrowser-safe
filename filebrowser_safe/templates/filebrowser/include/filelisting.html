@@ -1,4 +1,4 @@
-{% load i18n static fb_tags mezzanine_tags %}
+{% load i18n future static fb_tags mezzanine_tags %}
 
 {% if query.pop %}
 <style>
@@ -24,7 +24,7 @@ h1 {margin:-30px 0 15px 0;}
     {% endifequal %}
 
     <!-- FILESELECT FOR RTE/TINYMCE -->
-    {% ifequal query.pop '2' %}
+    {% if query.pop == '2' or query.pop == '5' %}
     {% if results_var.select_total %}
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
@@ -35,7 +35,7 @@ h1 {margin:-30px 0 15px 0;}
         {% endif %}
     </td>
     {% endif %}
-    {% endifequal %}
+    {% endif %}
 
     <!-- FILESELECT FOR CKEDITOR (FORMER "FCKEDITOR") -->
     {% ifequal query.pop '3' %}
