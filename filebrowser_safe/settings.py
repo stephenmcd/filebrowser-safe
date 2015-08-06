@@ -40,18 +40,19 @@ PATH_TINYMCE = getattr(settings, "FILEBROWSER_PATH_TINYMCE", DEFAULT_PATH_TINYMC
 # Allowed Extensions for File Upload. Lower case is important.
 # Please be aware that there are Icons for the default extension settings.
 # Therefore, if you add a category (e.g. "Misc"), you won't get an icon.
-EXTENSIONS = getattr(settings, "FILEBROWSER_EXTENSIONS", {
+EXTENSIONS = {
     'Folder': [''],
     'Image': ['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff', '.svg'],
     'Video': ['.mov', '.wmv', '.mpeg', '.mpg', '.avi', '.rm', '.mp4'],
     'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.docx'],
     'Audio': ['.mp3', '.wav', '.aiff', '.midi', '.m4p'],
     'Code': ['.html', '.py', '.js', '.css']
-})
+}
+EXTENSIONS.update(getattr(settings, "FILEBROWSER_EXTENSIONS", {}))
 
 # Define different formats for allowed selections.
 # This has to be a subset of EXTENSIONS.
-SELECT_FORMATS = getattr(settings, "FILEBROWSER_SELECT_FORMATS", {
+SELECT_FORMATS = {
     'File': ['Folder', 'Document'],
     'Image': ['Image'],
     'Media': ['Video', 'Audio'],
@@ -60,7 +61,8 @@ SELECT_FORMATS = getattr(settings, "FILEBROWSER_SELECT_FORMATS", {
     'image': ['Image'],
     'file': ['Folder', 'Image', 'Document'],
     'media': ['Video', 'Audio'],
-})
+}
+SELECT_FORMATS.update(getattr(settings, "FILEBROWSER_SELECT_FORMATS", {}))
 
 # Directory to Save Image Versions (and Thumbnails). Relative to MEDIA_ROOT.
 # If no directory is given, versions are stored within the Image directory.
