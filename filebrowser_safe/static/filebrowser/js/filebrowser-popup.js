@@ -35,12 +35,17 @@ var mediaLibrary = {
     gallery: null,
 
     init: function() {
-        this.iframe = jQuery('<iframe frameborder="0" marginwidth="0" marginheight="0" width="900" height="500" allowfullscreen></iframe>');
+        this.iframe = jQuery('<iframe frameborder="0" marginwidth="0" marginheight="0" width="900" height="700" allowfullscreen></iframe>');
         this.gallery = jQuery('<div></div>').append(this.iframe).appendTo('body')
             .dialog({
                 autoOpen: false,
-                title: 'Media Library',
-                width: 900,
+                title: function() {
+                    if ($('html').attr('lang') == 'ar') {
+                        return 'مكتبة الوسائط';
+                    }
+                    else { return 'Media Library'}
+                },
+                width: 916,
                 dialogClass: 'media-library',
                 resizable: false,
                 create: function(event, ui) {
@@ -57,6 +62,9 @@ var mediaLibrary = {
         // type defaults to image
         type = (typeof type !== 'undefined') ? type : 'image';
         iframe.attr('src', window.__filebrowser_url + '?pop=4&type=' + type);
+        if ($('html').attr('dir') == 'rtl') {
+            $('.ui-dialog-title').css('float','right');
+        }
 
         gallery.dialog('open');
 
