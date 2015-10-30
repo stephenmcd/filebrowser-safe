@@ -17,7 +17,7 @@
             var allowedSize = formData.sizeLimit && parseInt(formData.sizeLimit);
 
             form.on('change', 'input[type="file"]', function(e){
-                var input = e.srcElement;
+                var input = e.srcElement || e.target;
                 var selectedFile = input.files[0];
                 var el = $(input).closest('.file-input-wrapper');
 
@@ -30,7 +30,9 @@
                     input.value = '';
                     el.find('span.error.size-error').show();
                 }else if(input.value && selectedFile && !el.next().is('.file-input-wrapper')){
-                    el.after(el.clone());
+                    // jquery has .clone, however it has some strange behavior,
+                    // like assigning id="null" to the newly-created element
+                    el.after(el[0].outerHTML);
                     el.find('.filename').show().text(selectedFile.name);
                 }
             });
@@ -43,8 +45,8 @@
                 $('a.deletelink').hide();
 
                 $.each($('.file-input-wrapper'), function(index, el){
-                    var input = el.querySelector('input[type="file"]');
                     var element = $(el);
+                    var input = element.find('input[type="file"]').eq(0)[0];
 
                     if(input && input.files.length){
                         var promise = queueFile(url, data, {
