@@ -75,14 +75,14 @@
                         // it always fires last
                         promise.always(function(){
                             if(queue.length === 0){
-                                // window.location.href = doneRedirect;
+                                window.location.href = doneRedirect;
                             }
                         });
                     }
                 });
 
                 if(queue.length === 0){
-                    // window.location.href = doneRedirect;
+                    window.location.href = doneRedirect;
                 }
             });
 
