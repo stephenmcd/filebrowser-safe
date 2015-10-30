@@ -6,7 +6,7 @@ h1 {margin:-30px 0 15px 0;}
 </style>
 {% endif %}
 
-{% for file in page.object_list %}
+{% for file in page.object_list|dictsort:"filetype" %}
 <tr class="{% cycle 'row1' 'row2' %}">
 
     <!-- FILESELECT FOR FILEBROWSEFIELD -->
