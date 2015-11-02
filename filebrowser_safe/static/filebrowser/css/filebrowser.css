@@ -38,25 +38,12 @@ table .fb_showversionslink:hover, table .fb_showversionslink:active { background
 }
 
 /*
-    note that some browsers don't allow
-    input[type="file"] to be display:none
-*/
-.file-input-wrapper input[type="file"]{
-    position: absolute;
-    top: 0;
-    left: -9999em;
-}
-
-.file-input-wrapper label{
-    padding: 7px 15px;
-    font-size: 15px !important;
-}
-
-/*
     these had to be copied from grapelli, because theirs are
     limited to buttons and input[type="submit"]
 */
-.file-input-wrapper label{
+.file-input-wrapper .button{
+    padding: 7px 15px;
+    font-size: 15px !important;
     background: #309bbf;
     color:#fff;
     margin: 0;
@@ -64,15 +51,21 @@ table .fb_showversionslink:hover, table .fb_showversionslink:active { background
     border-radius: 5px;
     float: none;
     display: inline-block;
+    line-height: 1;
+    cursor: pointer;
+    vertical-align: middle;
 }
 
-.file-input-wrapper label:hover{
+.file-input-wrapper .button-error{
+    background: #bf3030;
+}
+
+.file-input-wrapper .button:hover{
     background: #444;
 }
 
 .file-input-wrapper span{
     margin-left: 10px;
-    display: none;
 }
 
 .file-input-wrapper .progress{
@@ -83,7 +76,7 @@ table .fb_showversionslink:hover, table .fb_showversionslink:active { background
     border-radius: 5px;
     overflow: hidden;
     vertical-align: middle;
-    display: none;
+    display: inline-block;
 }
 
 .file-input-wrapper .progress-inner, .file-input-wrapper .progress-inner:before{
@@ -112,3 +105,24 @@ table .fb_showversionslink:hover, table .fb_showversionslink:active { background
     color: #f00;
 }
 
+/*
+    note that some browsers don't allow
+    input[type="file"] to be display:none
+*/
+.file-input-wrapper input[type="file"],
+.file-input-wrapper .hide,
+.file-input-wrapper.selected .hide-selected,
+.file-input-wrapper.in-progress .hide-in-progress,
+.file-input-wrapper.done .hide-done{
+    position: absolute;
+    top: 0;
+    left: -9999em;
+}
+
+.file-input-wrapper.selected .show-selected,
+.file-input-wrapper.in-progress .show-in-progress,
+.file-input-wrapper.done .show-done{
+    position: relative;
+    top: auto;
+    left: auto;
+}

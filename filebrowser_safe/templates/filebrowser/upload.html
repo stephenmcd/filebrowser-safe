@@ -39,7 +39,10 @@
         id="upload-form"
         data-redirect-when-done="{% url "fb_browse" %}{% query_string '' 'p' %}"
         data-allowed-extensions="{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}{{ item|safe }}{% if not forloop.last %},{% endif %}{% endfor %}{% endifnotequal %}{% endfor %}"
-        data-size-limit="{{ settings_var.MAX_UPLOAD_SIZE|unlocalize }}">
+        data-size-limit="{{ settings_var.MAX_UPLOAD_SIZE|unlocalize }}"
+        data-server-error="{% trans 'There was a server error when uploading the file.' %}"
+        data-size-error="{% trans 'The file size is larger than the limit.' %}"
+        data-extension-error="{% trans 'The file extension is not allowed.' %}">
 
     {% csrf_token %}
     <div>
@@ -47,19 +50,20 @@
         <div class="form-row">
             <div>
                 <div class="file-input-wrapper">
-                    <label>
+                    <label class="button hide-in-progress hide-done">
                         {% trans 'Browse' %}
                         <input name="Filedata" type="file" />
                     </label>
 
-                    <div class="progress">
+                    <div class="progress hide show-in-progress show-done">
                         <div class="progress-inner"></div>
                     </div>
 
-                    <span class="filename"></span>
-                    <span class="error server-error">{% trans 'There was a server error when uploading the file.' %}</span>
-                    <span class="error size-error">{% trans "The file's size is larger than the limit." %}</span>
-                    <span class="error extension-error">{% trans "The file's extension is not allowed." %}</span>
+                    <div class="button button-error cancel-button hide show-selected">
+                        {% trans 'Clear' %}
+                    </div>
+
+                    <span class="status hide show-selected show-in-progress show-done"></span>
                 </div>
             </div>
 
