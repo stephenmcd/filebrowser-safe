@@ -25,21 +25,21 @@
                 var hasExtensionError = !validateExtension(selectedFile, extensions);
                 var hasSizeError = !validateSize(selectedFile, allowedSize);
 
+                el.addClass('selected');
+
                 // shows the error message if there was an error
                 if(hasExtensionError || hasSizeError){
-                    el.addClass('selected');
-
                     status
                         .addClass('error')
                         .text(hasSizeError ? formData.sizeError : formData.extensionError);
 
+                    input.value = '';
                 }else if(input.value && selectedFile){
                     // jquery has .clone, however it has some strange behavior,
                     // like assigning id="null" to the newly-created element.
                     // maybe it's fixed in newer version but grapelli seems to be on 1.7
                     if(!el.next().is('.file-input-wrapper')){
-                        el.after(el[0].outerHTML);
-                        el.addClass('selected');
+                        $(el[0].outerHTML).removeClass('selected').insertAfter(el);
                     }
 
                     // display the selected file's name
@@ -72,7 +72,7 @@
 
                         var progress = element.find('.progress-inner');
 
-                        element.addClass('in-progress');
+                        element.removeClass('selected').addClass('in-progress');
 
                         // when failed, show the error message
                         promise.fail(function(){
