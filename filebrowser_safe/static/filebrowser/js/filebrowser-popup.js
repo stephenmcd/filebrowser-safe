@@ -43,7 +43,8 @@ var mediaLibrary = {
                     if ($('html').attr('lang') == 'ar') {
                         return 'مكتبة الوسائط';
                     }
-                    else { return 'Media Library'}
+
+                    return 'Media Library';
                 },
                 width: 916,
                 dialogClass: 'media-library',
