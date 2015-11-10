@@ -35,17 +35,29 @@
 
                     input.value = '';
                 }else if(input.value && selectedFile){
-                    // jquery has .clone, however it has some strange behavior,
-                    // like assigning id="null" to the newly-created element.
-                    // maybe it's fixed in newer version but grapelli seems to be on 1.7
-                    if(!el.next().is('.file-input-wrapper')){
-                        $(el[0].outerHTML).removeClass('selected').insertAfter(el);
-                    }
+                    var resume = function(){
+                        // jquery has .clone, however it has some strange behavior,
+                        // like assigning id="null" to the newly-created element.
+                        // maybe it's fixed in newer version but grapelli seems to be on 1.7
+                        if(!el.next().is('.file-input-wrapper')){
+                            $(el[0].outerHTML).removeClass('selected').insertAfter(el);
+                        }
 
-                    // display the selected file's name
-                    status
-                        .removeClass('error')
-                        .text(selectedFile.name);
+                        // display the selected file's name
+                        status.removeClass('error').text(selectedFile.name);
+                    };
+
+                    // sends a request to the server that checks whether the file is taken
+                    checkIsTaken(form, selectedFile.name).then(resume, function(filename){
+                        if(window.confirm(formData.replaceMessage + (filename || '') + '?')){
+                            resume();
+                        }else if(el.next().is('.file-input-wrapper')){
+                            el.remove();
+                        }else{
+                            el.removeClass('selected');
+                            input.value = '';
+                        }
+                    });
                 }
             });
 
@@ -208,7 +220,7 @@
 
     // checks whether the specified file's extension is allowed
     function validateExtension(file, extensions){
-        if(extensions){
+        if(file && extensions){
             var fileExtension = file.name.slice(file.name.lastIndexOf('.'), file.name.length);
 
             if(extensions.indexOf(fileExtension) === -1){
@@ -221,7 +233,7 @@
 
     // checks whether a file's size is under the limit
     function validateSize(file, allowed){
-        if(allowed){
+        if(file && allowed){
             if(typeof allowed === 'number' && !global.isNaN(allowed)){
                 return file.size <= allowed;
             }
@@ -230,6 +242,70 @@
         }
 
         return true;
+    }
+
+    // turns the result of jQuery's serializeArray into a proper object
+    function serializeToObject(array){
+        var output = {};
+        var i = 0;
+        var len = array.length;
+
+        for(i; i < len; i++){
+            output[array[i].name] = array[i].value;
+        }
+
+        return output;
+    }
+
+    // checks whether the supplied is empty
+    function isEmpty(value){
+        if(!value){
+            return false;
+        }else if(window.Array.isArray(value)){
+            return value.length === 0;
+        }else if(typeof value === 'object'){
+            return window.Object.keys(value).length === 0;
+        }
+
+        return true;
+    }
+
+    // checks whether there's a file with the same name in the same folder
+    function checkIsTaken(form, filename){
+        var checkUrl = form.data().checkUrl;
+        var isTaken = false;
+        var deferred = $.Deferred();
+
+        if(checkUrl){
+            var data = serializeToObject(form.serializeArray());
+            data.file = filename;
+
+            // checks whether a file with the same filename is
+            // present in the same folder. the backend returns an
+            // empty object if the file is taken. otherwise it returns
+            // an object like { filename: 'whatever.ext' }
+            $.post(checkUrl, data).then(function(response){
+                var parsed = null;
+
+                // JSON.parse throws an error if the response
+                // isn't valid JSON
+                try{
+                    parsed = window.JSON.parse(response);
+                }catch(e){}
+
+                isTaken = !isEmpty(parsed);
+
+                if(isTaken){
+                    deferred.reject(filename);
+                }else{
+                    deferred.resolve();
+                }
+            }, deferred.resolve);
+        }else{
+            deferred.resolve();
+        }
+
+        return deferred;
     }
 
 })(jQuery, window);
