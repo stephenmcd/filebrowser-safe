@@ -156,7 +156,10 @@ def browse(request):
     # SORTING
     query['o'] = request.GET.get('o', DEFAULT_SORTING_BY)
     query['ot'] = request.GET.get('ot', DEFAULT_SORTING_ORDER)
-    files = sorted(files, key=lambda f: getattr(f, request.GET.get('o', DEFAULT_SORTING_BY)))
+    defaultValue = ''
+    if query['o'] in ['date', 'filesize']:
+        defaultValue = 0.0
+    files = sorted(files, key=lambda f: getattr(f, query['o']) or defaultValue)
     if not request.GET.get('ot') and DEFAULT_SORTING_ORDER == "desc" or request.GET.get('ot') == "desc":
         files.reverse()
 
