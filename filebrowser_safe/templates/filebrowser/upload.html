@@ -6,7 +6,7 @@
 <!-- STYLESHEETS -->
 {% block stylesheets %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{% static "grappelli/css/forms.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'grappelli/css/forms.css' %}" />
     <link rel="stylesheet" type="text/css" href="{{ settings_var.URL_FILEBROWSER_MEDIA }}css/filebrowser.css" />
 {% endblock %}
 
@@ -33,14 +33,14 @@
 {% block content %}
 <div id="content-main">
     <form
-        action="{% url "fb_do_upload" %}"
+        action="{% url 'fb_do_upload' %}"
         method="post"
         enctype="multipart/form-data"
         id="upload-form"
         data-check-url="{% url 'fb_check' %}"
         data-replace-message="{% trans 'Do you want to replace the file' %}"
         data-redirect-when-done="{% url 'fb_browse' %}{% query_string '' 'p' %}"
-        data-allowed-extensions="{% for extension in settings_var.EXTENSIONS.items %}{% ifnotequal extension.0 'Folder' %}{% for item in extension.1 %}{{ item|safe }}{% if not forloop.last %},{% endif %}{% endfor %}{% endifnotequal %}{% endfor %}"
+        data-allowed-extensions="{% allowed_extensions_list %}"
         data-size-limit="{{ settings_var.MAX_UPLOAD_SIZE|unlocalize }}"
         data-server-error="{% trans 'There was a server error when uploading the file.' %}"
         data-size-error="{% trans 'The file size is larger than the limit.' %}"

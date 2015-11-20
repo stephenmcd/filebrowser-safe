@@ -7,7 +7,7 @@ from django import template
 from django.utils.safestring import mark_safe
 
 # filebrowser imports
-from filebrowser_safe.settings import SELECT_FORMATS
+from filebrowser_safe.settings import SELECT_FORMATS, EXTENSIONS
 
 register = template.Library()
 
@@ -143,3 +143,20 @@ def selectable(parser, token):
     return SelectableNode(filetype, format)
 
 register.tag(selectable)
+
+
+def allowed_extensions_list(separator=','):
+    """
+    Usage:
+        {% allowed_extensions_list %}
+        {% allowed_extensions_list '-' %}
+    """
+    output = []
+
+    for key in EXTENSIONS:
+        if key != 'Folder':
+            output += EXTENSIONS[key]
+
+    return separator.join(output)
+
+register.simple_tag(allowed_extensions_list)
