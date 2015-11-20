@@ -220,7 +220,7 @@
 
     // checks whether the specified file's extension is allowed
     function validateExtension(file, extensions){
-        if(file && extensions){
+        if(file && extensions && extensions.length){
             var fileExtension = file.name.slice(file.name.lastIndexOf('.'), file.name.length);
 
             if(extensions.indexOf(fileExtension) === -1){
