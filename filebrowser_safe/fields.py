@@ -1,13 +1,9 @@
 from __future__ import unicode_literals
-from future.builtins import str
-from future.builtins import super
-# coding: utf-8
+from future.builtins import str, super
 
-# imports
 import os
 import datetime
 
-# django imports
 from django.db import models
 from django import forms
 from django.core.files.storage import default_storage
@@ -17,11 +13,9 @@ from django.template.loader import render_to_string
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 
-# filebrowser imports
 from filebrowser_safe.settings import *
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.functions import url_to_path, get_directory
-from future.utils import with_metaclass
 
 
 class FileBrowseWidget(Input):
@@ -93,12 +87,15 @@ class FileBrowseFormField(forms.CharField):
         return value
 
 
-class FileBrowseField(with_metaclass(models.SubfieldBase, Field)):
+class FileBrowseField(Field):
     def __init__(self, *args, **kwargs):
         self.directory = kwargs.pop('directory', '')
         self.extensions = kwargs.pop('extensions', '')
         self.format = kwargs.pop('format', '')
         return super(FileBrowseField, self).__init__(*args, **kwargs)
+
+    def from_db_value(self, value, expression, connection, context):
+        return self.to_python(value)
 
     def to_python(self, value):
         if not value or isinstance(value, FileObject):
@@ -130,9 +127,3 @@ class FileBrowseField(with_metaclass(models.SubfieldBase, Field)):
         }
         defaults.update(kwargs)
         return super(FileBrowseField, self).formfield(**defaults)
-
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^filebrowser_safe\.fields\.FileBrowseField"])
-except ImportError:
-    pass
