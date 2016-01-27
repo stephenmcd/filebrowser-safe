@@ -28,7 +28,8 @@ except ImportError:
 
 from filebrowser_safe.settings import *
 from filebrowser_safe.functions import (get_path, get_breadcrumbs,
-    get_filterdate, get_settings_var, get_directory, convert_filename)
+    get_file_type, get_filterdate, get_settings_var, get_directory,
+    convert_filename)
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
 from filebrowser_safe.decorators import flash_login_required
@@ -320,6 +321,10 @@ def _upload_file(request):
         if request.FILES:
             filedata = request.FILES['Filedata']
             directory = get_directory()
+
+            # Validate file against EXTENSIONS setting.
+            if not get_file_type(filedata):
+                return HttpResponseBadRequest("")
 
             # PRE UPLOAD SIGNAL
             filebrowser_pre_upload.send(sender=request, path=request.POST.get('folder'), file=filedata)
