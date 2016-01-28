@@ -323,7 +323,7 @@ def _upload_file(request):
             directory = get_directory()
 
             # Validate file against EXTENSIONS setting.
-            if not get_file_type(filedata):
+            if not get_file_type(filedata.name):
                 return HttpResponseBadRequest("")
 
             # PRE UPLOAD SIGNAL
