@@ -1,12 +1,9 @@
 from __future__ import unicode_literals
 from future.builtins import str
-# coding: utf-8
 
-# django imports
 from django import template
-from django.utils.safestring import mark_safe
+from django.utils.http import urlquote
 
-# filebrowser imports
 from filebrowser_safe.settings import SELECT_FORMATS, EXTENSIONS
 
 register = template.Library()
@@ -63,7 +60,7 @@ def get_query_string(p, new_params=None, remove=None):
             del p[k]
         elif v is not None:
             p[k] = v
-    return mark_safe('?' + '&'.join([u'%s=%s' % (k, v) for k, v in list(p.items())]).replace(' ', '%20'))
+    return '?' + '&'.join([u'%s=%s' % (urlquote(k), urlquote(v)) for k, v in p.items()])
 
 
 def string_to_dict(string):
