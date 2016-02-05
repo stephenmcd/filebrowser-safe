@@ -232,9 +232,9 @@ def mkdir(request):
             except OSError as xxx_todo_changeme:
                 (errno, strerror) = xxx_todo_changeme.args
                 if errno == 13:
-                    form.errors['dir_name'] = forms.util.ErrorList([_('Permission denied.')])
+                    form.errors['dir_name'] = forms.utils.ErrorList([_('Permission denied.')])
                 else:
-                    form.errors['dir_name'] = forms.util.ErrorList([_('Error creating folder.')])
+                    form.errors['dir_name'] = forms.utils.ErrorList([_('Error creating folder.')])
     else:
         form = MakeDirForm(abs_path)
 
