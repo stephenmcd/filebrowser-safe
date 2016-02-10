@@ -70,7 +70,7 @@
 
             {% csrf_token %}
             <input name="session_key" type="hidden" id="session_key" value="{{ session_key }}" />
-            <input name="folder" type="hidden" id="folder" value="{{ query.dir|escapejs }}" />
+            <input name="folder" type="hidden" id="folder" value="{{ query.dir }}" />
             <input name="get_params" type="hidden" id="get_params" value="{% query_string '' 'p' %}" />
         </div>
         </fieldset>
