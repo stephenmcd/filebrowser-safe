@@ -63,13 +63,13 @@ class FileObjectMixin(object):
 
     @cached_property
     def filesize(self):
-        if self.exists():
+        if self.exists:
             return default_storage.size(self.path)
         return None
 
     @cached_property
     def date(self):
-        if self.exists():
+        if self.exists:
             return time.mktime(
                 default_storage.modified_time(self.path).timetuple())
         return None
@@ -81,11 +81,8 @@ class FileObjectMixin(object):
         return None
 
     @cached_property
-    def _exists(self):
-        return default_storage.exists(self.path)
-
     def exists(self):
-        return self._exists
+        return default_storage.exists(self.path)
 
     # PATH/URL ATTRIBUTES
 
