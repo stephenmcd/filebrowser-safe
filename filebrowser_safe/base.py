@@ -9,6 +9,7 @@ import mimetypes
 from django.core.files.storage import default_storage
 from django.db.models.fields.files import FieldFile
 from django.utils.encoding import smart_str
+from django.utils.functional import cached_property
 
 try:
     from django.utils.encoding import smart_text
@@ -46,89 +47,74 @@ class FileObjectMixin(object):
         return smart_text(self.path)
 
     def __repr__(self):
-        return smart_str("<%s: %s>" % (self.__class__.__name__, self or "None"))
+        return smart_str("<%s: %s>" % (
+            self.__class__.__name__, self or "None"))
 
     def __len__(self):
         return len(self.path)
 
     # GENERAL ATTRIBUTES
-    _filetype_stored = None
 
-    def _filetype(self):
-        if self._filetype_stored is not None:
-            return self._filetype_stored
+    @cached_property
+    def filetype(self):
         if self.is_folder:
-            self._filetype_stored = 'Folder'
-        else:
-            self._filetype_stored = get_file_type(self.filename)
-        return self._filetype_stored
-    filetype = property(_filetype)
+            return 'Folder'
+        return get_file_type(self.filename)
 
-    _filesize_stored = None
-
-    def _filesize(self):
-        if self._filesize_stored is not None:
-            return self._filesize_stored
+    @cached_property
+    def filesize(self):
         if self.exists():
-            self._filesize_stored = default_storage.size(self.path)
-            return self._filesize_stored
+            return default_storage.size(self.path)
         return None
-    filesize = property(_filesize)
 
-    _date_stored = None
-
-    def _date(self):
-        if self._date_stored is not None:
-            return self._date_stored
+    @cached_property
+    def date(self):
         if self.exists():
-            self._date_stored = time.mktime(default_storage.modified_time(self.path).timetuple())
-            return self._date_stored
+            return time.mktime(
+                default_storage.modified_time(self.path).timetuple())
         return None
-    date = property(_date)
 
-    def _datetime(self):
+    @property
+    def datetime(self):
         if self.date:
             return datetime.datetime.fromtimestamp(self.date)
         return None
-    datetime = property(_datetime)
 
-    _exists_stored = None
+    @cached_property
+    def _exists(self):
+        return default_storage.exists(self.path)
 
     def exists(self):
-        if self._exists_stored is None:
-            self._exists_stored = default_storage.exists(self.path)
-        return self._exists_stored
+        return self._exists
 
     # PATH/URL ATTRIBUTES
 
-    def _path_relative_directory(self):
-        "path relative to the path returned by get_directory()"
+    @property
+    def path_relative_directory(self):
+        """ path relative to the path returned by get_directory() """
         return path_strip(self.path, get_directory()).lstrip("/")
-    path_relative_directory = property(_path_relative_directory)
 
-    def _url(self):
+    @property
+    def url(self):
         return default_storage.url(self.path)
-    url = property(_url)
 
     # FOLDER ATTRIBUTES
 
-    def _directory(self):
+    @property
+    def directory(self):
         return path_strip(self.path, get_directory())
-    directory = property(_directory)
 
-    def _folder(self):
-        return os.path.dirname(path_strip(os.path.join(self.head, ''), get_directory()))
-    folder = property(_folder)
+    @property
+    def folder(self):
+        return os.path.dirname(
+            path_strip(os.path.join(self.head, ''), get_directory()))
 
-    _is_folder_stored = None
+    @cached_property
+    def is_folder(self):
+        return default_storage.isdir(self.path)
 
-    def _is_folder(self):
-        if self._is_folder_stored is None:
-            self._is_folder_stored = default_storage.isdir(self.path)
-        return self._is_folder_stored
-    is_folder = property(_is_folder)
-
-    def _is_empty(self):
+    @property
+    def is_empty(self):
         if self.is_folder:
             try:
                 dirs, files = default_storage.listdir(self.path)
@@ -138,7 +124,6 @@ class FileObjectMixin(object):
             if not dirs and not files:
                 return True
         return False
-    is_empty = property(_is_empty)
 
     def delete(self):
         if self.is_folder:
