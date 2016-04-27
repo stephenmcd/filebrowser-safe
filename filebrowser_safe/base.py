@@ -1,14 +1,13 @@
 from __future__ import unicode_literals
 # coding: utf-8
 
-# imports
 import os
 import datetime
 import time
 import mimetypes
 
-# django imports
 from django.core.files.storage import default_storage
+from django.db.models.fields.files import FieldFile
 from django.utils.encoding import smart_str
 
 try:
@@ -17,12 +16,10 @@ except ImportError:
     # Backward compatibility for Py2 and Django < 1.5
     from django.utils.encoding import smart_unicode as smart_text
 
-# filebrowser imports
-from filebrowser_safe.settings import *
 from filebrowser_safe.functions import get_file_type, path_strip, get_directory
 
 
-class FileObject():
+class FileObjectMixin(object):
     """
     The FileObject represents a file (or directory) on the server.
 
@@ -36,7 +33,6 @@ class FileObject():
     """
 
     def __init__(self, path):
-        self.path = path
         self.head = os.path.dirname(path)
         self.filename = os.path.basename(path)
         self.filename_lower = self.filename.lower()
@@ -49,10 +45,6 @@ class FileObject():
     def __unicode__(self):
         return smart_text(self.path)
 
-    @property
-    def name(self):
-        return self.path
-
     def __repr__(self):
         return smart_str("<%s: %s>" % (self.__class__.__name__, self or "None"))
 
@@ -63,7 +55,7 @@ class FileObject():
     _filetype_stored = None
 
     def _filetype(self):
-        if self._filetype_stored != None:
+        if self._filetype_stored is not None:
             return self._filetype_stored
         if self.is_folder:
             self._filetype_stored = 'Folder'
@@ -75,7 +67,7 @@ class FileObject():
     _filesize_stored = None
 
     def _filesize(self):
-        if self._filesize_stored != None:
+        if self._filesize_stored is not None:
             return self._filesize_stored
         if self.exists():
             self._filesize_stored = default_storage.size(self.path)
@@ -86,7 +78,7 @@ class FileObject():
     _date_stored = None
 
     def _date(self):
-        if self._date_stored != None:
+        if self._date_stored is not None:
             return self._date_stored
         if self.exists():
             self._date_stored = time.mktime(default_storage.modified_time(self.path).timetuple())
@@ -103,7 +95,7 @@ class FileObject():
     _exists_stored = None
 
     def exists(self):
-        if self._exists_stored == None:
+        if self._exists_stored is None:
             self._exists_stored = default_storage.exists(self.path)
         return self._exists_stored
 
@@ -131,7 +123,7 @@ class FileObject():
     _is_folder_stored = None
 
     def _is_folder(self):
-        if self._is_folder_stored == None:
+        if self._is_folder_stored is None:
             self._is_folder_stored = default_storage.isdir(self.path)
         return self._is_folder_stored
     is_folder = property(_is_folder)
@@ -168,3 +160,26 @@ class FileObject():
                 default_storage.delete(version)
             except:
                 pass
+
+
+class FileObject(FileObjectMixin):
+    def __init__(self, path):
+        self.path = path
+        super(FileObject, self).__init__(path)
+
+    @property
+    def name(self):
+        return self.path
+
+
+class FieldFileObject(FieldFile, FileObjectMixin):
+    """
+    Returned when a FileBrowseField is accessed on a model instance.
+
+    - Implements the FieldFile API for interoperability with other django
+    reusable apps.
+    - Implements the FileObject API for historical reasons.
+    """
+    def __init__(self, instance, field, path):
+        FieldFile.__init__(self, instance, field, path)
+        FileObjectMixin.__init__(self, path)

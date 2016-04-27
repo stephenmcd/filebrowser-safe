@@ -43,19 +43,6 @@ def path_strip(path, root):
     return path
 
 
-def url_to_path(value):
-    """
-    Change URL to PATH.
-    Value has to be an URL relative to MEDIA URL or a full URL (including MEDIA_URL).
-
-    Returns a PATH relative to MEDIA_ROOT.
-    """
-
-    mediaurl_re = re.compile(r'^(%s)' % (MEDIA_URL))
-    value = mediaurl_re.sub('', value)
-    return value
-
-
 def path_to_url(value):
     """
     Change PATH to URL.
