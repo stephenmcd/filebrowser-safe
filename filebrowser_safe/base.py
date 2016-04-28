@@ -20,19 +20,8 @@ except ImportError:
 from filebrowser_safe.functions import get_file_type, path_strip, get_directory
 
 
-class FileObjectMixin(object):
-    """
-    The FileObject represents a file (or directory) on the server.
-
-    An example::
-
-        from filebrowser.base import FileObject
-
-        fileobject = FileObject(path)
-
-    where path is a relative path to a storage location.
-    """
-
+class FileObjectAPI(object):
+    """ A mixin class providing file properties. """
     def __init__(self, path):
         self.head = os.path.dirname(path)
         self.filename = os.path.basename(path)
@@ -144,7 +133,18 @@ class FileObjectMixin(object):
                 pass
 
 
-class FileObject(FileObjectMixin):
+class FileObject(FileObjectAPI):
+    """
+    The FileObject represents a file (or directory) on the server.
+
+    An example::
+
+        from filebrowser.base import FileObject
+
+        fileobject = FileObject(path)
+
+    where path is a relative path to a storage location.
+    """
     def __init__(self, path):
         self.path = path
         super(FileObject, self).__init__(path)
@@ -154,14 +154,14 @@ class FileObject(FileObjectMixin):
         return self.path
 
 
-class FieldFileObject(FieldFile, FileObjectMixin):
+class FieldFileObject(FieldFile, FileObjectAPI):
     """
     Returned when a FileBrowseField is accessed on a model instance.
 
-    - Implements the FieldFile API for interoperability with other django
-    reusable apps.
+    - Implements the FieldFile API so FileBrowseField can act as substitute for
+    django's built-in FileField.
     - Implements the FileObject API for historical reasons.
     """
     def __init__(self, instance, field, path):
         FieldFile.__init__(self, instance, field, path)
-        FileObjectMixin.__init__(self, path)
+        FileObjectAPI.__init__(self, path)
