@@ -164,4 +164,4 @@ class FieldFileObject(FieldFile, FileObjectAPI):
     """
     def __init__(self, instance, field, path):
         FieldFile.__init__(self, instance, field, path)
-        FileObjectAPI.__init__(self, path)
+        FileObjectAPI.__init__(self, path or '')
