@@ -51,11 +51,6 @@ class FileBrowseWidget(Input):
         final_attrs['format'] = self.format
         final_attrs['ADMIN_THUMBNAIL'] = ADMIN_THUMBNAIL
         final_attrs['DEBUG'] = DEBUG
-        if value != "":
-            try:
-                final_attrs['directory'] = os.path.split(value.path_relative_directory)[0]
-            except:
-                pass
         return render_to_string("filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL))
 
 
