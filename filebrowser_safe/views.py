@@ -18,6 +18,7 @@ from django.shortcuts import render_to_response, HttpResponse
 from django.template import RequestContext as Context
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.csrf import csrf_exempt
 
 try:
@@ -78,6 +79,7 @@ def remove_thumbnails(file_path):
         pass
 
 
+@xframe_options_sameorigin
 def browse(request):
     """
     Browse Files/Directories.
@@ -194,6 +196,7 @@ filebrowser_pre_createdir = Signal(providing_args=["path", "dirname"])
 filebrowser_post_createdir = Signal(providing_args=["path", "dirname"])
 
 
+@xframe_options_sameorigin
 def mkdir(request):
     """
     Make Directory.
@@ -249,6 +252,7 @@ def mkdir(request):
 mkdir = staff_member_required(never_cache(mkdir))
 
 
+@xframe_options_sameorigin
 def upload(request):
     """
     Multiple File Upload.
@@ -355,6 +359,7 @@ filebrowser_pre_delete = Signal(providing_args=["path", "filename"])
 filebrowser_post_delete = Signal(providing_args=["path", "filename"])
 
 
+@xframe_options_sameorigin
 def delete(request):
     """
     Delete existing File/Directory.
@@ -422,6 +427,7 @@ filebrowser_pre_rename = Signal(providing_args=["path", "filename", "new_filenam
 filebrowser_post_rename = Signal(providing_args=["path", "filename", "new_filename"])
 
 
+@xframe_options_sameorigin
 def rename(request):
     """
     Rename existing File/Directory.
