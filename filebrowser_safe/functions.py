@@ -1,12 +1,9 @@
 from __future__ import unicode_literals
 from future.builtins import int
-from future.builtins import range
-from future.builtins import map
 from future.builtins import str
 # coding: utf-8
 
 # imports
-import os
 import re
 import unicodedata
 from time import gmtime, strftime, localtime, time
