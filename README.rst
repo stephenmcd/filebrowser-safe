@@ -14,3 +14,8 @@ address these specific issues.
 
 For further details, see 
 `Why are Grappelli and Filebrowser Forked? <http://mezzanine.jupo.org/docs/frequently-asked-questions.html#grappelli-filebrowser-forks>`_.
+
+Development
+===========
+
+You can test your local branch against the latest mezzanine development version by running `./test.sh`.
