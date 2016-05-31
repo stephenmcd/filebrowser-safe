@@ -10,7 +10,6 @@ from time import gmtime, strftime, localtime, time
 
 # django imports
 from django.utils import six
-from django.contrib.sites.models import Site
 from django.core.files.storage import default_storage
 
 # filebrowser imports
