@@ -3,3 +3,4 @@ syntax: glob
 build/*
 dist/*
 filebrowser_safe.egg-info/*
+mezzanine-git/
