@@ -118,20 +118,6 @@ class FileObjectAPI(object):
         else:
             default_storage.delete(self.path)
 
-    def delete_versions(self):
-        for version in self.versions():
-            try:
-                default_storage.delete(version)
-            except:
-                pass
-
-    def delete_admin_versions(self):
-        for version in self.admin_versions():
-            try:
-                default_storage.delete(version)
-            except:
-                pass
-
 
 class FileObject(FileObjectAPI):
     """
