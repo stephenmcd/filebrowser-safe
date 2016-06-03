@@ -80,10 +80,6 @@ class FileObjectAPI(object):
         """ path relative to the path returned by get_directory() """
         return path_strip(self.path, get_directory()).lstrip("/")
 
-    @property
-    def url(self):
-        return default_storage.url(self.path)
-
     # FOLDER ATTRIBUTES
 
     @property
@@ -138,6 +134,10 @@ class FileObject(FileObjectAPI):
     @property
     def name(self):
         return self.path
+
+    @property
+    def url(self):
+        return default_storage.url(self.path)
 
 
 class FieldFileObject(FieldFile, FileObjectAPI):
