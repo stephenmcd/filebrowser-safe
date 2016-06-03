@@ -107,13 +107,6 @@ class FileObjectAPI(object):
                 return True
         return False
 
-    def delete(self):
-        if self.is_folder:
-            default_storage.rmtree(self.path)
-            # shutil.rmtree(self.path)
-        else:
-            default_storage.delete(self.path)
-
 
 class FileObject(FileObjectAPI):
     """
@@ -151,3 +144,9 @@ class FieldFileObject(FieldFile, FileObjectAPI):
     def __init__(self, instance, field, path):
         FieldFile.__init__(self, instance, field, path)
         FileObjectAPI.__init__(self, path or '')
+
+    def delete(self, **kwargs):
+        if self.is_folder:
+            default_storage.rmtree(self.path)
+        else:
+            super(FieldFileObject, self).delete(**kwargs)
