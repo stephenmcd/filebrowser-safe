@@ -2,8 +2,9 @@ from __future__ import unicode_literals
 # coding: utf-8
 
 import os
-import datetime
 import time
+import datetime
+import warnings
 import mimetypes
 
 from django.core.files.storage import default_storage
@@ -150,3 +151,11 @@ class FieldFileObject(FieldFile, FileObjectAPI):
             default_storage.rmtree(self.path)
         else:
             super(FieldFileObject, self).delete(**kwargs)
+
+    @property
+    def path(self):
+        warnings.warn(
+            "In future versions of filebrowser-safe, the `path` property will "
+            "be absolute. To continue getting the same behavior please use "
+            "the `name` property instead.", FutureWarning)
+        return self.name
