@@ -11,7 +11,7 @@
 {% ifequal value.filetype "Image" %}
 <p class="help mezz-fb-thumbnail" id="help_{{ final_attrs.id }}">
     <a href="{{ value.url }}" target="_blank" id="link_{{ final_attrs.id }}">
-        <img id="image_{{ final_attrs.id }}" src="{{ MEDIA_URL }}{% thumbnail value.url 60 60 %}" class="preview" />
+        <img id="image_{{ final_attrs.id }}" src="{{ MEDIA_URL }}{% thumbnail value.name 60 60 %}" class="preview" />
     </a>
 </p>
 {% else %}
