@@ -170,11 +170,6 @@ def get_settings_var():
     # Extensions/Formats (for FileBrowseField)
     settings_var['EXTENSIONS'] = EXTENSIONS
     settings_var['SELECT_FORMATS'] = SELECT_FORMATS
-    # Versions
-    settings_var['VERSIONS_BASEDIR'] = VERSIONS_BASEDIR
-    settings_var['VERSIONS'] = VERSIONS
-    settings_var['ADMIN_VERSIONS'] = ADMIN_VERSIONS
-    settings_var['ADMIN_THUMBNAIL'] = ADMIN_THUMBNAIL
     # FileBrowser Options
     settings_var['MAX_UPLOAD_SIZE'] = MAX_UPLOAD_SIZE
     # Convert Filenames

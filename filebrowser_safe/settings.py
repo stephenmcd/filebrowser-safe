@@ -61,29 +61,6 @@ SELECT_FORMATS = {
 }
 SELECT_FORMATS.update(getattr(settings, "FILEBROWSER_SELECT_FORMATS", {}))
 
-# Directory to Save Image Versions (and Thumbnails). Relative to MEDIA_ROOT.
-# If no directory is given, versions are stored within the Image directory.
-# VERSION URL: VERSIONS_BASEDIR/original_path/originalfilename_versionsuffix.extension
-VERSIONS_BASEDIR = getattr(settings, 'FILEBROWSER_VERSIONS_BASEDIR', '')
-# Versions Format. Available Attributes: verbose_name, width, height, opts
-VERSIONS = getattr(settings, "FILEBROWSER_VERSIONS", {})
-
-# VERSIONS = getattr(settings, "FILEBROWSER_VERSIONS", {
-#     'fb_thumb': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop upscale'},
-#     'thumbnail': {'verbose_name': 'Thumbnail (140px)', 'width': 140, 'height': '', 'opts': ''},
-#     'small': {'verbose_name': 'Small (300px)', 'width': 300, 'height': '', 'opts': ''},
-#     'medium': {'verbose_name': 'Medium (460px)', 'width': 460, 'height': '', 'opts': ''},
-#     'big': {'verbose_name': 'Big (620px)', 'width': 620, 'height': '', 'opts': ''},
-#     'cropped': {'verbose_name': 'Cropped (60x60px)', 'width': 60, 'height': 60, 'opts': 'crop'},
-#     'croppedthumbnail': {'verbose_name': 'Cropped Thumbnail (140x140px)', 'width': 140, 'height': 140, 'opts': 'crop'},
-# })
-# Versions available within the Admin-Interface.
-ADMIN_VERSIONS = getattr(settings,
-                         'FILEBROWSER_ADMIN_VERSIONS',
-                         ['thumbnail', 'small', 'medium', 'big'])
-# Which Version should be used as Admin-thumbnail.
-ADMIN_THUMBNAIL = getattr(settings, 'FILEBROWSER_ADMIN_THUMBNAIL', 'fb_thumb')
-
 # EXTRA SETTINGS
 # True to save the URL including STATIC_URL to your model fields
 # or False (default) to save path relative to STATIC_URL.

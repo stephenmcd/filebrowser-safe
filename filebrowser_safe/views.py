@@ -57,12 +57,7 @@ else:
 
 
 # Precompile regular expressions
-filter_re = []
-for exp in EXCLUDE:
-    filter_re.append(re.compile(exp))
-for k, v in VERSIONS.items():
-    exp = (r'_%s.(%s)') % (k, '|'.join(EXTENSION_LIST))
-    filter_re.append(re.compile(exp))
+filter_re = [re.compile(exp) for exp in EXCLUDE]
 
 
 def remove_thumbnails(file_path):
@@ -110,7 +105,7 @@ def browse(request):
     files = []
     for file in dir_list + file_list:
 
-        # EXCLUDE FILES MATCHING VERSIONS_PREFIX OR ANY OF THE EXCLUDE PATTERNS
+        # EXCLUDE FILES MATCHING ANY OF THE EXCLUDE PATTERNS
         filtered = not file or file.startswith('.')
         for re_prefix in filter_re:
             if re_prefix.search(file):
