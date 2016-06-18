@@ -104,7 +104,10 @@ for exts in list(EXTENSIONS.values()):
     EXTENSION_LIST += exts
 EXCLUDE = getattr(settings, 'FILEBROWSER_EXCLUDE', (r'_(%(exts)s)_.*_q\d{1,3}\.(%(exts)s)' % {'exts': ('|'.join(EXTENSION_LIST))},))
 # Max. Upload Size in Bytes.
-MAX_UPLOAD_SIZE = getattr(settings, "FILEBROWSER_MAX_UPLOAD_SIZE", 10485760)
+MAX_UPLOAD_SIZE = getattr(
+    settings,
+    "FILEBROWSER_MAX_UPLOAD_SIZE",
+    settings.FILE_UPLOAD_MAX_MEMORY_SIZE)
 # Normalize filename and remove all non-alphanumeric characters
 # except for underscores, spaces & dashes.
 NORMALIZE_FILENAME = getattr(settings, "FILEBROWSER_NORMALIZE_FILENAME", False)
