@@ -10,6 +10,7 @@ from time import gmtime, strftime, localtime, time
 
 # django imports
 from django.utils import six
+from django.conf import settings
 from django.core.files.storage import default_storage
 
 # filebrowser imports
@@ -156,7 +157,7 @@ def get_settings_var():
 
     settings_var = {}
     # Main
-    settings_var['DEBUG'] = DEBUG
+    settings_var['DEBUG'] = settings.DEBUG
     settings_var['MEDIA_ROOT'] = MEDIA_ROOT
     settings_var['MEDIA_URL'] = MEDIA_URL
     settings_var['DIRECTORY'] = get_directory()
