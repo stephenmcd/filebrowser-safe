@@ -51,7 +51,6 @@ def path_to_url(value):
 
     Return an URL relative to MEDIA_ROOT.
     """
-
     mediaroot_re = re.compile(r'^(%s)' % (MEDIA_ROOT))
     value = mediaroot_re.sub('', value)
     return url_join(MEDIA_URL, value)
@@ -63,7 +62,6 @@ def dir_from_url(value):
     URL has to be an absolute URL including MEDIA_URL or
     an URL relative to MEDIA_URL.
     """
-
     mediaurl_re = re.compile(r'^(%s)' % (MEDIA_URL))
     value = mediaurl_re.sub('', value)
     directory_re = re.compile(r'^(%s)' % (get_directory()))
@@ -75,7 +73,6 @@ def url_join(*args):
     """
     URL join routine.
     """
-
     if args[0].startswith("http://"):
         url = "http://"
     else:
@@ -96,7 +93,6 @@ def get_path(path):
     """
     Get Path.
     """
-
     if path.startswith('.') or os.path.isabs(path) or not default_storage.isdir(os.path.join(get_directory(), path)):
         return None
     return path
@@ -115,7 +111,6 @@ def get_breadcrumbs(query, path):
     """
     Get breadcrumbs.
     """
-
     breadcrumbs = []
     dir_query = ""
     if path:
@@ -129,7 +124,6 @@ def get_filterdate(filterDate, dateTime):
     """
     Get filterdate.
     """
-
     returnvalue = ''
     dateYear = strftime("%Y", gmtime(dateTime))
     dateMonth = strftime("%m", gmtime(dateTime))
@@ -154,10 +148,9 @@ def get_settings_var():
     """
     Get settings variables used for FileBrowser listing.
     """
-
     settings_var = {}
     # Main
-    settings_var['DEBUG'] = settings.DEBUG
+    settings_var['DEBUG'] = DEBUG
     settings_var['MEDIA_ROOT'] = MEDIA_ROOT
     settings_var['MEDIA_URL'] = MEDIA_URL
     settings_var['DIRECTORY'] = get_directory()
@@ -181,7 +174,6 @@ def get_file_type(filename):
     """
     Get file type as defined in EXTENSIONS.
     """
-
     file_extension = os.path.splitext(filename)[1].lower()
     file_type = ''
     for k, v in EXTENSIONS.items():
@@ -195,7 +187,6 @@ def is_selectable(filename, selecttype):
     """
     Get select type as defined in FORMATS.
     """
-
     file_extension = os.path.splitext(filename)[1].lower()
     select_types = []
     for k, v in SELECT_FORMATS.items():
