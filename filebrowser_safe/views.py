@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.dispatch import Signal
 from django import forms
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
-from django.shortcuts import render_to_response, HttpResponse
+from django.shortcuts import render, HttpResponse
 from django.template import RequestContext as Context
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
@@ -171,7 +171,7 @@ def browse(request):
     except (EmptyPage, InvalidPage):
         page = p.page(p.num_pages)
 
-    return render_to_response('filebrowser/index.html', {
+    return render(request, 'filebrowser/index.html', {
         'dir': path,
         'p': p,
         'page': page,
@@ -182,7 +182,7 @@ def browse(request):
         'settings_var': get_settings_var(),
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': ""
-    }, context_instance=Context(request))
+    })
 browse = staff_member_required(never_cache(browse))
 
 
@@ -236,14 +236,14 @@ def mkdir(request):
     else:
         form = MakeDirForm(abs_path)
 
-    return render_to_response('filebrowser/makedir.html', {
+    return render(request, 'filebrowser/makedir.html', {
         'form': form,
         'query': query,
         'title': _(u'New Folder'),
         'settings_var': get_settings_var(),
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'New Folder')
-    }, context_instance=Context(request))
+    })
 mkdir = staff_member_required(never_cache(mkdir))
 
 
@@ -268,14 +268,14 @@ def upload(request):
     engine = __import__(settings.SESSION_ENGINE, {}, {}, [''])
     session_key = cookie_dict.get(settings.SESSION_COOKIE_NAME, None)
 
-    return render_to_response('filebrowser/upload.html', {
+    return render(request, 'filebrowser/upload.html', {
         'query': query,
         'title': _(u'Select files to upload'),
         'settings_var': get_settings_var(),
         'session_key': session_key,
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'Upload')
-    }, context_instance=Context(request))
+    })
 upload = staff_member_required(never_cache(upload))
 
 
@@ -471,7 +471,7 @@ def rename(request):
     else:
         form = RenameForm(abs_path, file_extension)
 
-    return render_to_response('filebrowser/rename.html', {
+    return render(request, 'filebrowser/rename.html', {
         'form': form,
         'query': query,
         'file_extension': file_extension,
@@ -479,5 +479,5 @@ def rename(request):
         'settings_var': get_settings_var(),
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'Rename')
-    }, context_instance=Context(request))
+    })
 rename = staff_member_required(never_cache(rename))
