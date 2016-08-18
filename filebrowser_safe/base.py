@@ -45,6 +45,9 @@ class FileObject():
         is_dir = kwargs.pop("is_dir", None)
         if is_dir:
             self._filetype_stored = "Folder"
+            self._is_folder_stored = True
+        elif is_dir is not None:
+            self._is_folder_stored = False
 
     def __str__(self):
         return smart_str(self.path)
