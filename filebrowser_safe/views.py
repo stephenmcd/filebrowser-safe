@@ -119,7 +119,7 @@ def browse(request):
     files = []
     request_filter_date = request.GET.get('filter_date', '')
     request_filter_type = request.GET.get('filter_type', '')
-    for file in dir_list + file_list:
+    for (file, is_dir) in dir_list + file_list:
 
         # EXCLUDE FILES MATCHING VERSIONS_PREFIX OR ANY OF THE EXCLUDE PATTERNS
         filtered = not file or file.startswith('.')
@@ -133,7 +133,7 @@ def browse(request):
         # CREATE FILEOBJECT
         url_path = "/".join([s.strip("/") for s in
                             [get_directory(), path, file] if s.strip("/")])
-        fileobject = FileObject(url_path)
+        fileobject = FileObject(url_path, is_dir)
 
         # FILTER / SEARCH
         append = False
