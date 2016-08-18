@@ -87,8 +87,14 @@ def browse(request):
 
     # QUERY / PATH CHECK
     query = request.GET.copy()
-    path = get_path(query.get('dir', ''))
-    directory = get_path('')
+    query_dir = query.get('dir', '')
+    path = get_path(query_dir)
+
+    # avoid duplicate call to get_path(), is possible
+    if query_dir:
+        directory = get_path('')
+    else:
+        directory = path
 
     if path is None:
         msg = _('The requested Folder does not exist.')
