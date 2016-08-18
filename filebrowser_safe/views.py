@@ -114,6 +114,8 @@ def browse(request):
 
     dir_list, file_list = default_storage.listdir(abs_path)
     files = []
+    request_filter_date = request.GET.get('filter_date', '')
+    request_filter_type = request.GET.get('filter_type', '')
     for file in dir_list + file_list:
 
         # EXCLUDE FILES MATCHING VERSIONS_PREFIX OR ANY OF THE EXCLUDE PATTERNS
@@ -132,7 +134,7 @@ def browse(request):
 
         # FILTER / SEARCH
         append = False
-        if fileobject.filetype == request.GET.get('filter_type', fileobject.filetype) and get_filterdate(request.GET.get('filter_date', ''), fileobject.date):
+        if (not request_filter_type or (fileobject.filetype == request.GET.get('filter_type', fileobject.filetype))) and (not request_filter_date or (request_filter_date and get_filterdate(request_filter_date, fileobject.date))):
             append = True
         if request.GET.get('q') and not re.compile(request.GET.get('q').lower(), re.M).search(file.lower()):
             append = False
