@@ -35,13 +35,16 @@ class FileObject():
     where path is a relative path to a storage location.
     """
 
-    def __init__(self, path):
+    def __init__(self, path, **kwargs):
         self.path = path
         self.head = os.path.dirname(path)
         self.filename = os.path.basename(path)
         self.filename_lower = self.filename.lower()
         self.filename_root, self.extension = os.path.splitext(self.filename)
         self.mimetype = mimetypes.guess_type(self.filename)
+        is_dir = kwargs.pop("is_dir", None)
+        if is_dir:
+            self._filetype_stored = "Folder"
 
     def __str__(self):
         return smart_str(self.path)

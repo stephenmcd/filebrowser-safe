@@ -113,6 +113,9 @@ def browse(request):
         counter[k] = 0
 
     dir_list, file_list = default_storage.listdir(abs_path)
+    dir_list = [(name, True) for name in dir_list]
+    file_list = [(name, False) for name in file_list]
+
     files = []
     request_filter_date = request.GET.get('filter_date', '')
     request_filter_type = request.GET.get('filter_type', '')
