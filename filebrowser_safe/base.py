@@ -48,6 +48,12 @@ class FileObject():
             self._is_folder_stored = True
         elif is_dir is not None:
             self._is_folder_stored = False
+        self._filesize_stored = kwargs.pop("size", None)
+        self._exists_stored = kwargs.pop("exists", None)
+        modified_time = kwargs.pop("last_modified", None)
+        if modified_time:
+            self._date_stored = time.mktime(modified_time.timetuple())
+        self._url_stored = kwargs.pop("url", None)
 
     def __str__(self):
         return smart_str(self.path)
@@ -81,7 +87,7 @@ class FileObject():
     _filesize_stored = None
 
     def _filesize(self):
-        if self._filesize_stored != None:
+        if self._filesize_stored is not None:
             return self._filesize_stored
         if self.exists():
             self._filesize_stored = default_storage.size(self.path)
@@ -92,7 +98,7 @@ class FileObject():
     _date_stored = None
 
     def _date(self):
-        if self._date_stored != None:
+        if self._date_stored is not None:
             return self._date_stored
         if self.exists():
             self._date_stored = time.mktime(default_storage.modified_time(self.path).timetuple())
@@ -109,7 +115,7 @@ class FileObject():
     _exists_stored = None
 
     def exists(self):
-        if self._exists_stored == None:
+        if self._exists_stored is None:
             self._exists_stored = default_storage.exists(self.path)
         return self._exists_stored
 
@@ -120,8 +126,12 @@ class FileObject():
         return path_strip(self.path, get_directory()).lstrip("/")
     path_relative_directory = property(_path_relative_directory)
 
+    _url_stored = None
+
     def _url(self):
-        return default_storage.url(self.path)
+        if self._url_stored is None:
+            self._url_stored = default_storage.url(self.path)
+        return self._url_stored
     url = property(_url)
 
     # FOLDER ATTRIBUTES

@@ -112,15 +112,12 @@ def browse(request):
     for k, v in EXTENSIONS.items():
         counter[k] = 0
 
-    dir_list, file_list = default_storage.listdir(abs_path)
-    dir_list = [(name, True) for name in dir_list]
-    file_list = [(name, False) for name in file_list]
-
+    file_records = default_storage.get_directory_entries_records(abs_path)
     files = []
     request_filter_date = request.GET.get('filter_date', '')
     request_filter_type = request.GET.get('filter_type', '')
-    for (file, is_dir) in dir_list + file_list:
-
+    for file_record in file_records:
+        file = file_record["name"]
         # EXCLUDE FILES MATCHING VERSIONS_PREFIX OR ANY OF THE EXCLUDE PATTERNS
         filtered = not file or file.startswith('.')
         for re_prefix in filter_re:
@@ -133,7 +130,14 @@ def browse(request):
         # CREATE FILEOBJECT
         url_path = "/".join([s.strip("/") for s in
                             [get_directory(), path, file] if s.strip("/")])
-        fileobject = FileObject(url_path, is_dir=is_dir)
+        fileobject = FileObject(
+            url_path,
+            is_dir=file_record["is_dir"],
+            size=file_record["size"],
+            exists=file_record["exists"],
+            last_modified=file_record["last_modified"],
+            url=file_record["url"]
+        )
 
         # FILTER / SEARCH
         append = False
@@ -150,8 +154,9 @@ def browse(request):
                     results_var['images_total'] += 1
                 if fileobject.filetype != 'Folder':
                     results_var['delete_total'] += 1
-                elif fileobject.filetype == 'Folder' and fileobject.is_empty:
-                    results_var['delete_total'] += 1
+                # Ignore for now.
+                #elif fileobject.filetype == 'Folder' and fileobject.is_empty:
+                #    results_var['delete_total'] += 1
                 if query.get('type') and query.get('type') in SELECT_FORMATS and fileobject.filetype in SELECT_FORMATS[query.get('type')]:
                     results_var['select_total'] += 1
                 elif not query.get('type'):
