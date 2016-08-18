@@ -133,7 +133,7 @@ def browse(request):
         # CREATE FILEOBJECT
         url_path = "/".join([s.strip("/") for s in
                             [get_directory(), path, file] if s.strip("/")])
-        fileobject = FileObject(url_path, is_dir)
+        fileobject = FileObject(url_path, is_dir=is_dir)
 
         # FILTER / SEARCH
         append = False
