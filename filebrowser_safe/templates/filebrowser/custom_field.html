@@ -1,4 +1,4 @@
-{% load mezzanine_tags i18n %}
+{% load mezzanine_tags i18n image_tags %}
 <style>
 .mezz-fb-thumbnail {display:inline; margin-left:5px !important;}
 .mezz-fb-thumbnail img {width:20px; height:20px; margin-top:0 !important;}
@@ -11,7 +11,7 @@
 {% ifequal value.filetype "Image" %}
 <p class="help mezz-fb-thumbnail" id="help_{{ final_attrs.id }}">
     <a href="{{ value.url }}" target="_blank" id="link_{{ final_attrs.id }}">
-        <img id="image_{{ final_attrs.id }}" src="{{ MEDIA_URL }}{# {% thumbnail value.path 60 60 %} #}" class="preview" />
+        <img id="image_{{ final_attrs.id }}" src="{{ value|image_url:'width=60 height=60' }}" class="preview" />
     </a>
 </p>
 {% else %}
