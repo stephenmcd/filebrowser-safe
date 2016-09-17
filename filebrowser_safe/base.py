@@ -157,5 +157,5 @@ class FieldFileObject(FieldFile, FileObjectAPI):
         warnings.warn(
             "In future versions of filebrowser-safe, the `path` property will "
             "be absolute. To continue getting the same behavior please use "
-            "the `name` property instead.", FutureWarning)
+            "the `name` property instead.", FutureWarning, stacklevel=2)
         return self.name
