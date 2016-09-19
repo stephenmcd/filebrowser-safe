@@ -50,6 +50,8 @@ EXTENSIONS = {
 }
 EXTENSIONS.update(getattr(settings, "FILEBROWSER_EXTENSIONS", {}))
 
+ESCAPED_EXTENSIONS = getattr(settings, 'FILEBROWSER_ESCAPED_EXTENSIONS', ('html', 'svg'))
+
 # Define different formats for allowed selections.
 # This has to be a subset of EXTENSIONS.
 SELECT_FORMATS = {

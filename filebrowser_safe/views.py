@@ -9,6 +9,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 from django.dispatch import Signal
@@ -36,6 +37,11 @@ from filebrowser_safe.base import FileObject
 from filebrowser_safe.decorators import flash_login_required
 
 from mezzanine.utils.importing import import_dotted_path
+
+try:
+    from mezzanine.utils.html import escape
+except ImportError:
+    escape = lambda s: s
 
 
 # Add some required methods to FileSystemStorage
@@ -307,8 +313,6 @@ filebrowser_post_upload = Signal(providing_args=["path", "file"])
 def _upload_file(request):
     """
     Upload file to the server.
-
-    Implement unicode handlers - https://github.com/sehmaschine/django-filebrowser/blob/master/filebrowser/sites.py#L471
     """
     if request.method == 'POST':
         folder = request.POST.get('folder')
@@ -335,6 +339,9 @@ def _upload_file(request):
             filedata.name = convert_filename(filedata.name)
             file_path = os.path.join(directory, folder, filedata.name)
             remove_thumbnails(file_path)
+
+            if "." in file_path and file_path.split(".")[-1].lower() in ESCAPED_EXTENSIONS:
+                filedata = ContentFile(escape(filedata.read()), name=filedata.name)
 
             # HANDLE UPLOAD
             uploadedfile = default_storage.save(file_path, filedata)
