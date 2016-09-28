@@ -79,10 +79,10 @@
         <h2>{% trans "Help" %}</h2>
         <div class="form-row" >
             {% for extension in settings_var.EXTENSIONS.items %}
-            {% ifnotequal extension.0 'Folder' %}
+            {% if extension.1 and extension.0 != 'Folder' %}
             <label class="required">{% if forloop.first %}{% trans "Allowed" %}:{% else %}&nbsp;{% endif %}</label>
             <p>{{ extension.0|safe }} ({{ extension.1|join:", "|safe }})</p>
-            {% endifnotequal %}
+            {% endif %}
             {% endfor %}
         </div>
         <div class="form-row" >
