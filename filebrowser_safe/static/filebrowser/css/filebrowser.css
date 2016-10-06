@@ -104,24 +104,26 @@ table .fb_showversionslink:hover, table .fb_showversionslink:active { background
 .file-input-wrapper .error{
     color: #f00;
 }
-
+.file-input-result {
+    margin: .5em 0;
+}
 /*
     note that some browsers don't allow
     input[type="file"] to be display:none
 */
 .file-input-wrapper input[type="file"],
 .file-input-wrapper .hide,
-.file-input-wrapper.selected .hide-selected,
-.file-input-wrapper.in-progress .hide-in-progress,
-.file-input-wrapper.done .hide-done{
+.file-input-result.selected .hide-selected,
+.file-input-result.in-progress .hide-in-progress,
+.file-input-result.done .hide-done{
     position: absolute;
     top: 0;
     left: -9999em;
 }
 
-.file-input-wrapper.selected .show-selected,
-.file-input-wrapper.in-progress .show-in-progress,
-.file-input-wrapper.done .show-done{
+.file-input-result.selected .show-selected,
+.file-input-result.in-progress .show-in-progress,
+.file-input-result.done .show-done{
     position: relative;
     top: auto;
     left: auto;

@@ -19,46 +19,43 @@
 
             form.on('change', 'input[type="file"]', function(e){
                 var input = this;
-                var selectedFile = input.files[0];
-                var el = $(input).closest('.file-input-wrapper');
-                var status = el.find('.status');
-                var hasExtensionError = !validateExtension(selectedFile, extensions);
-                var hasSizeError = !validateSize(selectedFile, allowedSize);
+                $.each(input.files, function(index, selectedFile) {
+                    var resultElement = $(input).closest('.file-input-wrapper').children('.file-input-result').last();
+                    var status = resultElement.find('.status');
+                    var hasExtensionError = !validateExtension(selectedFile, extensions);
+                    var hasSizeError = !validateSize(selectedFile, allowedSize);
 
-                el.addClass('selected');
+                    resultElement.addClass('selected');
 
-                // shows the error message if there was an error
-                if(hasExtensionError || hasSizeError){
-                    status
-                        .addClass('error')
-                        .text(hasSizeError ? formData.sizeError : formData.extensionError);
+                    // Add an empty result element for the next file
+                    //
+                    // jquery has .clone, however it has some strange behavior,
+                    // like assigning id="null" to the newly-created element.
+                    // maybe it's fixed in newer version but grapelli seems to be on 1.7
+                    $(resultElement[0].outerHTML).removeClass('selected').insertAfter(resultElement);
 
-                    input.value = '';
-                }else if(input.value && selectedFile){
-                    var resume = function(){
-                        // jquery has .clone, however it has some strange behavior,
-                        // like assigning id="null" to the newly-created element.
-                        // maybe it's fixed in newer version but grapelli seems to be on 1.7
-                        if(!el.next().is('.file-input-wrapper')){
-                            $(el[0].outerHTML).removeClass('selected').insertAfter(el);
+                    // shows the error message if there was an error
+                    if(hasExtensionError || hasSizeError) {
+                        status
+                            .addClass('error')
+                            .text(hasSizeError ? formData.sizeError : formData.extensionError);
+                    }else if(selectedFile) {
+                        function resume() {
+                            // display the selected file's name
+                            status.removeClass('error').text(selectedFile.name);
+                            resultElement.data('selectedFile', selectedFile);
                         }
 
-                        // display the selected file's name
-                        status.removeClass('error').text(selectedFile.name);
-                    };
-
-                    // sends a request to the server that checks whether the file is taken
-                    checkIsTaken(form, selectedFile.name).then(resume, function(filename){
-                        if(window.confirm(formData.replaceMessage + (filename || '') + '?')){
-                            resume();
-                        }else if(el.next().is('.file-input-wrapper')){
-                            el.remove();
-                        }else{
-                            el.removeClass('selected');
-                            input.value = '';
-                        }
-                    });
-                }
+                        // sends a request to the server that checks whether the file is taken
+                        checkIsTaken(form, selectedFile.name).then(resume, function(filename){
+                            if(window.confirm(formData.replaceMessage + ' ' + (filename || '') + '?')){
+                                resume();
+                            }else{
+                                resultElement.remove();
+                            }
+                        });
+                    }
+                });
             });
 
             form.on('submit', function(e){
@@ -71,16 +68,20 @@
                 $('a.deletelink').hide();
 
                 // go through all of the inputs and add them to the queue
-                $.each($('.file-input-wrapper'), function(index, el){
+                $.each($('.file-input-result'), function(index, el){
                     var element = $(el);
-                    var input = element.find('input[type="file"]').eq(0)[0];
 
                     // only add it to the queue if it has a selected file
-                    if(input && input.files.length){
+                    var file = element.data('selectedFile');
+                    if(file){
                         var promise = queueFile(url, data, {
-                            field: input.name,
-                            value: input.files[0]
+                            field: 'Filedata',
+                            value: file
                         });
+
+                        // note that the file needs to be cleared so pressing
+                        // "upload" doesn't trigger another upload
+                        element.data('selectedFile', null);
 
                         var progress = element.find('.progress-inner');
 
@@ -103,10 +104,6 @@
                         promise.always(function(){
                             element.removeClass('in-progress selected').addClass('done');
 
-                            // note that the file input needs to be cleared so pressing
-                            // "upload" doesn't trigger another upload
-                            input.value = '';
-
                             // redirect if there's nothing left in the queue
                             if(queue.length === 0){
                                 window.location.href = doneRedirect;
@@ -123,14 +120,14 @@
 
             // clears a particular item that has been selected
             form.on('click', '.cancel-button', function(){
-                var element = $(this).closest('.file-input-wrapper');
+                var element = $(this).closest('.file-input-result');
 
-                if(element.siblings('.file-input-wrapper').length){
+                if(element.siblings('.file-input-result').length){
                     element.remove();
                 }else{
                     element
                         .removeClass('selected in-progress')
-                        .find('input[type="file"]').eq(0)[0].value = '';
+                        .data('selectedFile', null);
                 }
             });
 
@@ -138,16 +135,16 @@
             $('a.deletelink').click(function(e){
                 e.preventDefault();
 
-                var wrappers = form.find('.file-input-wrapper');
+                var results = form.find('.file-input-result');
 
-                $.each(wrappers, function(index, current){
-                    var wrapped = $(current);
+                $.each(results, function(index, current){
+                    var result = $(current);
 
-                    if(index + 1 === wrappers.length){
-                        wrapped.find('input[type="file"]').eq(0)[0].value = '';
-                        wrapped.removeClass('selected in-progress done');
+                    if(index + 1 === results.length){
+                        result.data('selectedFile', null);
+                        result.removeClass('selected in-progress done');
                     }else{
-                        wrapped.remove();
+                        result.remove();
                     }
                 });
             });

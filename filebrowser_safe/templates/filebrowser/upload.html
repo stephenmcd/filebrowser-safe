@@ -49,23 +49,20 @@
     <div>
         <fieldset class="module aligned">
         <div class="form-row">
-            <div>
-                <div class="file-input-wrapper">
-                    <label class="button hide-in-progress hide-done">
-                        {% trans 'Browse' %}
-                        <input name="Filedata" type="file" />
-                    </label>
-
+            <div class="file-input-wrapper">
+                <div class="file-input-result">
                     <div class="progress hide show-in-progress show-done">
                         <div class="progress-inner"></div>
                     </div>
-
                     <div class="button button-error cancel-button hide show-selected">
-                        {% trans 'Clear' %}
+                        {% trans 'Remove' %}
                     </div>
-
                     <span class="status hide show-selected show-in-progress show-done"></span>
                 </div>
+                <label class="button hide-in-progress hide-done">
+                    {% trans 'Browse' %}
+                    <input name="Filedata" type="file" multiple />
+                </label>
             </div>
 
             {% csrf_token %}
