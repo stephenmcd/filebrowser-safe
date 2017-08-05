@@ -128,7 +128,7 @@ def get_filterdate(filterDate, dateTime):
     dateYear = strftime("%Y", gmtime(dateTime))
     dateMonth = strftime("%m", gmtime(dateTime))
     dateDay = strftime("%d", gmtime(dateTime))
-    if filterDate == ('today' and
+    if (filterDate == 'today' and
                        int(dateYear) == int(localtime()[0]) and
                        int(dateMonth) == int(localtime()[1]) and
                        int(dateDay) == int(localtime()[2])):
