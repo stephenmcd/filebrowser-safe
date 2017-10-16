@@ -473,7 +473,8 @@ def rename(request):
                 (errno, strerror) = xxx_todo_changeme1.args
                 form.errors['name'] = forms.util.ErrorList([_('Error.')])
     else:
-        form = RenameForm(abs_path, file_extension)
+        file_basename = os.path.splitext(filename)[0]
+        form = RenameForm(abs_path, file_extension, initial={'name': file_basename})
 
     return render(request, 'filebrowser/rename.html', {
         'form': form,
