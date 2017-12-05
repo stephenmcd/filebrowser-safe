@@ -322,7 +322,7 @@ msgstr[1] "%(counter) výsledky"
 #: templates/filebrowser/include/toolbar.html:9
 #, python-format
 msgid "%(full_result_count)s total"
-msgstr "%(full_result_count) celkem"
+msgstr "%(full_result_count)s celkem"
 
 #: templates/filebrowser/include/search.html:5
 msgid "Clear Restrictions"
