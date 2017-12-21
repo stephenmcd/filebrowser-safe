@@ -89,11 +89,13 @@ def url_join(*args):
     return url
 
 
-def get_path(path):
+def get_path(path, directory_path=None):
     """
     Get Path.
     """
-    if path.startswith('.') or os.path.isabs(path) or not default_storage.isdir(os.path.join(get_directory(), path)):
+    if not directory_path:
+        directory_path = get_directory()
+    if path.startswith('.') or os.path.isabs(path) or not default_storage.isdir(os.path.join(directory_path, path)):
         return None
     return path
 
@@ -144,16 +146,18 @@ def get_filterdate(filterDate, dateTime):
     return returnvalue
 
 
-def get_settings_var():
+def get_settings_var(directory_path=None):
     """
     Get settings variables used for FileBrowser listing.
     """
+    if not directory_path:
+        directory_path = get_directory()
     settings_var = {}
     # Main
     settings_var['DEBUG'] = DEBUG
     settings_var['MEDIA_ROOT'] = MEDIA_ROOT
     settings_var['MEDIA_URL'] = MEDIA_URL
-    settings_var['DIRECTORY'] = get_directory()
+    settings_var['DIRECTORY'] = directory_path
     # FileBrowser
     settings_var['URL_FILEBROWSER_MEDIA'] = URL_FILEBROWSER_MEDIA
     settings_var['PATH_FILEBROWSER_MEDIA'] = PATH_FILEBROWSER_MEDIA
