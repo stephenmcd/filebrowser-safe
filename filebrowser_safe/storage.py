@@ -117,6 +117,60 @@ class S3BotoStorageMixin(StorageMixin):
             item.delete()
 
 
+class S3Boto3StorageMixin(StorageMixin):
+
+    def isfile(self, name):
+        return self.exists(name) and self.size(name) > 0
+
+    def isdir(self, name):
+        # That's some inefficient implementation...
+        # If there are some files having 'name' as their prefix, then
+        # the name is considered to be a directory
+        if not name:  # Empty name is a directory
+            return True
+
+        if self.isfile(name):
+            return False
+
+        name = self._normalize_name(self._clean_name(name))
+        dirlist = self.bucket.objects.filter(Prefix=self._encode_name(name))
+
+        # Check whether the iterator is empty
+        for item in dirlist:
+            return True
+        return False
+
+    def move(self, old_file_name, new_file_name, allow_overwrite=False):
+
+        if self.exists(new_file_name):
+            if allow_overwrite:
+                self.delete(new_file_name)
+            else:
+                raise "The destination file '%s' exists and allow_overwrite is False" % new_file_name
+
+        old_key_name = self._encode_name(self._normalize_name(self._clean_name(old_file_name)))
+        new_key_name = self._encode_name(self._normalize_name(self._clean_name(new_file_name)))
+
+        copy_source = {
+            'Bucket': self.bucket.name,
+            'Key': old_key_name
+        }
+        try:
+            self.bucket.copy(copy_source, new_key_name)
+            self.delete(old_file_name)
+        except:
+            raise "Couldn't copy '%s' to '%s'" % (old_file_name, new_file_name)
+
+    def makedirs(self, name):
+        self.save(name + "/.folder", ContentFile(""))
+
+    def rmtree(self, name):
+        name = self._normalize_name(self._clean_name(name))
+        dirlist = self.bucket.objects.filter(Prefix=self._encode_name(name))
+        for item in dirlist:
+            item.delete()
+
+
 class GoogleStorageMixin(StorageMixin):
 
     def isfile(self, name):

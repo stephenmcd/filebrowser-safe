@@ -85,11 +85,13 @@ def browse(request):
     """
     Browse Files/Directories.
     """
+    # Get the upload directory
+    upload_directory_path = get_directory()
 
     # QUERY / PATH CHECK
     query = request.GET.copy()
-    path = get_path(query.get('dir', ''))
-    directory = get_path('')
+    path = get_path(query.get('dir', ''), directory_path=upload_directory_path)
+    directory = get_path('', directory_path=upload_directory_path)
 
     if path is None:
         msg = _('The requested Folder does not exist.')
@@ -99,7 +101,7 @@ def browse(request):
             raise ImproperlyConfigured(_("Error finding Upload-Folder. Maybe it does not exist?"))
         redirect_url = reverse("fb_browse") + query_helper(query, "", "dir")
         return HttpResponseRedirect(redirect_url)
-    abs_path = os.path.join(get_directory(), path)
+    abs_path = os.path.join(upload_directory_path, path)
 
     # INITIAL VARIABLES
     results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0}
@@ -122,12 +124,13 @@ def browse(request):
 
         # CREATE FILEOBJECT
         url_path = "/".join([s.strip("/") for s in
-                            [get_directory(), path, file] if s.strip("/")])
+                            [upload_directory_path, path, file] if s.strip("/")])
         fileobject = FileObject(url_path)
 
         # FILTER / SEARCH
         append = False
-        if fileobject.filetype == request.GET.get('filter_type', fileobject.filetype) and get_filterdate(request.GET.get('filter_date', ''), fileobject.date):
+        if (('filter_type' not in request.GET or fileobject.filetype == request.GET.get('filter_type')) and
+                ('filter_date' not in request.GET or get_filterdate(request.GET.get('filter_date'), fileobject.date))):
             append = True
         if request.GET.get('q') and not re.compile(request.GET.get('q').lower(), re.M).search(file.lower()):
             append = False
@@ -182,7 +185,7 @@ def browse(request):
         'counter': counter,
         'query': query,
         'title': _(u'Media Library'),
-        'settings_var': get_settings_var(),
+        'settings_var': get_settings_var(directory_path=upload_directory_path),
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': ""
     })
