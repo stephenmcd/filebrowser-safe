@@ -122,8 +122,9 @@ def browse(request):
 
         # CREATE FILEOBJECT
         url_path = "/".join([s.strip("/") for s in
-                            [get_directory(), path, file] if s.strip("/")])
+                            [get_directory(), path.replace("\\", "/"), file] if s.strip("/")])
         fileobject = FileObject(url_path)
+
 
         # FILTER / SEARCH
         append = False
@@ -384,7 +385,7 @@ def delete(request):
 
     normalized = os.path.normpath(os.path.join(get_directory(), path, filename))
 
-    if not normalized.startswith(get_directory()) or ".." in normalized:
+    if not normalized.startswith(get_directory().strip("/")) or ".." in normalized:
         msg = _("An error occurred")
         messages.add_message(request, messages.ERROR, msg)
     elif request.GET.get('filetype') != "Folder":
