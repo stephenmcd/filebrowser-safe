@@ -11,7 +11,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.dispatch import Signal
 from django import forms
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
