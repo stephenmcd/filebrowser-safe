@@ -61,7 +61,7 @@ class FileObjectAPI(object):
     def date(self):
         if self.exists:
             return time.mktime(
-                default_storage.modified_time(self.path).timetuple())
+                default_storage.get_modified_time(self.path).timetuple())
         return None
 
     @property
