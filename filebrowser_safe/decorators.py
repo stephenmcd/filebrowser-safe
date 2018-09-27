@@ -23,7 +23,7 @@ def flash_login_required(function):
         # Check to see if the request has already set a user (probably from middleware above). If it has,
         # use the user from the request, as we trust it has been set for a reason
         if request.user:
-            user_id = request.uer.id
+            user_id = request.user.id
         else:
             user_id = session_data['_auth_user_id']
 
