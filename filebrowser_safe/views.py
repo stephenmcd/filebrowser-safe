@@ -34,7 +34,6 @@ from filebrowser_safe.functions import (get_path, get_breadcrumbs,
     convert_filename)
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
-from filebrowser_safe.decorators import flash_login_required
 
 from mezzanine.utils.importing import import_dotted_path
 
@@ -306,7 +305,6 @@ filebrowser_post_upload = Signal(providing_args=["path", "file"])
 
 
 @csrf_exempt
-@flash_login_required
 @staff_member_required
 def _upload_file(request):
     """
