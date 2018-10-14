@@ -1,5 +1,6 @@
 .DS_Store
 .svn
+.tox
 *.pyc
 *.eggs/
 *.egg-info
