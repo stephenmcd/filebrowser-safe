@@ -1,4 +1,6 @@
 .DS_Store
-*.pyc
 .svn
+*.pyc
+*.eggs/
+*.egg-info
 mezzanine-git/
