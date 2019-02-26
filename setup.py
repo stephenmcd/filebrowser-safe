@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="filebrowser_safe",
-    version="0.5.0bevy2",
+    version="0.5.0.post3",
     description="A snapshot of the filebrowser_3 branch of django-filebrowser, "
                 "packaged as a dependency for the Mezzanine CMS for Django.",
     long_description=open("README.rst").read(),
@@ -15,4 +15,5 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
+    test_suite="runtests",
 )

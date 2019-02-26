@@ -94,6 +94,7 @@ class FileObject():
             return self._filesize_stored
         return None
     filesize = property(_filesize)
+    size = filesize
 
     _date_stored = None
 

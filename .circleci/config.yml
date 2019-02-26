@@ -1,0 +1,29 @@
+version: 2
+
+jobs:
+    python-unit-tests:
+        docker:
+            - image: circleci/python:2.7
+              auth:
+                username: $DOCKER_USER
+                password: $DOCKER_PASSWORD
+        steps:
+            - checkout
+            - run:
+                name: Run Mezzanine tests with this filebrowser
+                command: |
+                    pip install virtualenv
+                    virtualenv ~/venv
+                    source ~/venv/bin/activate
+                    ./test.sh
+            - run:
+                name: Run filebrowser-safe unit tests
+                command: |
+                    source ~/venv/bin/activate
+                    python setup.py test
+
+workflows:
+    version: 2
+    build-and-tests:
+        jobs:
+            - python-unit-tests
