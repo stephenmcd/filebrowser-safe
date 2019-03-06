@@ -4,4 +4,5 @@
 *.pyc
 *.eggs/
 *.egg-info
+.idea
 mezzanine-git/
