@@ -112,9 +112,13 @@ class S3BotoStorageMixin(StorageMixin):
 
     def rmtree(self, name):
         name = self._normalize_name(self._clean_name(name))
-        dirlist = self.listdir(self._encode_name(name))
-        for item in dirlist:
-            item.delete()
+        directories, files = self.listdir(self._encode_name(name))
+
+        for key in files:
+            self.delete('/'.join([name, key]))
+
+        for dirname in directories:
+            self.rmtree('/'.join([name, dirname]))
 
 
 class GoogleStorageMixin(StorageMixin):
