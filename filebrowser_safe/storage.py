@@ -100,7 +100,7 @@ class S3BotoStorageMixin(StorageMixin):
         old_key_name = self._encode_name(self._normalize_name(self._clean_name(old_file_name)))
         new_key_name = self._encode_name(self._normalize_name(self._clean_name(new_file_name)))
 
-        k = self.bucket.copy_key(new_key_name, self.bucket.name, old_key_name)
+        k = self.bucket.copy_key(new_key_name, self.bucket.name, old_key_name, preserve_acl=True)
 
         if not k:
             raise "Couldn't copy '%s' to '%s'" % (old_file_name, new_file_name)
