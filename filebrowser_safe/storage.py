@@ -135,6 +135,9 @@ class GoogleStorageMixin(StorageMixin):
         if not name:  # Empty name is a directory
             return True
 
+        if self.isfile(name):
+            return False
+
         (dirs, files) = self.listdir(name)
         dirlist = itertools.chain(dirs, files)
 
