@@ -126,7 +126,7 @@ class S3BotoStorageMixin(StorageMixin):
 class GoogleStorageMixin(StorageMixin):
 
     def isfile(self, name):
-        return bool(name) and self.exists(self._clean_name(name).rstrip('/'))
+        return bool(name) and self.exists(name)
 
     def isdir(self, name):
         # That's some inefficient implementation...
@@ -135,8 +135,7 @@ class GoogleStorageMixin(StorageMixin):
         if not name:  # Empty name is a directory
             return True
 
-        name = self._normalize_name(self._clean_name(name))
-        (dirs, files) = self.listdir(self._encode_name(name))
+        (dirs, files) = self.listdir(name)
         dirlist = itertools.chain(dirs, files)
 
         # Check for contents
