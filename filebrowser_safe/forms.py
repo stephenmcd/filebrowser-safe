@@ -1,17 +1,17 @@
 from __future__ import unicode_literals
-from future.builtins import super
-# coding: utf-8
 
 # imports
 import os
 import re
-
 # django imports
 from django import forms
 from django.utils.translation import ugettext as _
+from future.builtins import super
 
 # filebrowser imports
 from filebrowser_safe.settings import FOLDER_REGEX
+
+# coding: utf-8
 
 
 alnum_name_re = re.compile(FOLDER_REGEX)
