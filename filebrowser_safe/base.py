@@ -47,7 +47,7 @@ class FileObjectAPI(object):
 
     @cached_property
     def filetype(self):
-        if self.is_folder:
+        if not default_storage.type_checks_slow and self.is_folder:
             return 'Folder'
         return get_file_type(self.filename)
 
