@@ -98,7 +98,9 @@ def browse(request):
             raise ImproperlyConfigured(_("Error finding Upload-Folder. Maybe it does not exist?"))
         redirect_url = reverse("fb_browse") + query_helper(query, "", "dir")
         return HttpResponseRedirect(redirect_url)
-    abs_path = os.path.join(get_directory(), path)
+
+    base_dir = get_directory()
+    abs_path = os.path.join(base_dir, path)
 
     # INITIAL VARIABLES
     results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0}
@@ -121,7 +123,7 @@ def browse(request):
 
         # CREATE FILEOBJECT
         url_path = "/".join([s.strip("/") for s in
-                            [get_directory(), path.replace("\\", "/"), file] if s.strip("/")])
+                            [base_dir, path.replace("\\", "/"), file] if s.strip("/")])
         fileobject = FileObject(url_path)
 
 

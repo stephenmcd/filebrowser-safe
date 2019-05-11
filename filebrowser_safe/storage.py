@@ -16,6 +16,7 @@ class StorageMixin(object):
     """
     Adds some useful methods to the Storage class.
     """
+    type_checks_slow = False
 
     def isdir(self, name):
         """
@@ -125,8 +126,21 @@ class S3BotoStorageMixin(StorageMixin):
 
 class GoogleStorageMixin(StorageMixin):
 
+    type_checks_slow = True  # indicate that isfile/isdir should be avoided,
+                             # for performance reasons, as appropriate
+
     def isfile(self, name):
-        return bool(name) and self.exists(name)
+        # Because GCS does (semi-arbitrarily) create empty blobs for
+        # "folders," it's not enough to check whether the path exists;
+        # and, there's not (yet) any good way to differentiate these from
+        # proper files.
+        #
+        # It is POSSIBLE that an actual file name endswith / ...
+        # HOWEVER, it is unlikely, (and kind of evil).
+        #
+        # (Until then), just exclude paths out-of-hand if they're empty
+        # (i.e. the bucket root) OR if they end in /:
+        return bool(name) and not name.endswith('/') and self.exists(name)
 
     def isdir(self, name):
         # That's some inefficient implementation...
@@ -138,16 +152,25 @@ class GoogleStorageMixin(StorageMixin):
         if self.isfile(name):
             return False
 
-        (dirs, files) = self.listdir(name)
-        dirlist = itertools.chain(dirs, files)
+        # rather than ``listdir()``, which retrieves all results, retrieve
+        # blob iterator directly, and return as soon as ANY retrieved
+        name = self._normalize_name(clean_name(name))
+        # For bucket.list_blobs and logic below name needs to end in /
+        if not name.endswith('/'):
+            name += '/'
+
+        iterator = self.bucket.list_blobs(prefix=self._encode_name(name), delimiter='/')
+        dirlist = itertools.chain(iterator, iterator.prefixes)
 
         # Check for contents
-        for item in dirlist:
+        try:
+            next(dirlist)
+        except StopIteration:
+            return False
+        else:
             return True
-        return False
 
     def move(self, old_file_name, new_file_name, allow_overwrite=False):
-
         if self.exists(new_file_name):
             if allow_overwrite:
                 self.delete(new_file_name)
