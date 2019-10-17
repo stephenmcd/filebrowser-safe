@@ -23,7 +23,8 @@ from filebrowser_safe.functions import get_file_type, path_strip, get_directory
 
 class FileObjectAPI(object):
     """ A mixin class providing file properties. """
-    def __init__(self, path):
+    def __init__(self, path, is_folder=None):
+        self._is_folder = is_folder
         self.head = os.path.dirname(path)
         self.filename = os.path.basename(path)
         self.filename_lower = self.filename.lower()
@@ -94,6 +95,8 @@ class FileObjectAPI(object):
 
     @cached_property
     def is_folder(self):
+        if self._is_folder is not None:
+            return self._is_folder
         return default_storage.isdir(self.path)
 
     @property
@@ -121,9 +124,9 @@ class FileObject(FileObjectAPI):
 
     where path is a relative path to a storage location.
     """
-    def __init__(self, path):
+    def __init__(self, path, *args, **kwargs):
         self.path = path
-        super(FileObject, self).__init__(path)
+        super(FileObject, self).__init__(path, *args, **kwargs)
 
     @property
     def name(self):
