@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+from django.conf import settings
+from django.core.files.storage import default_storage
 from future.builtins import super
 # coding: utf-8
 
@@ -52,6 +55,8 @@ class RenameForm(forms.Form):
 
     def __init__(self, path, file_extension, *args, **kwargs):
         self.path = path
+        if re.match("^https?://", settings.MEDIA_ROOT):
+            self.path = re.sub("^" + settings.MEDIA_ROOT, "", self.path)
         self.file_extension = file_extension
         super(RenameForm, self).__init__(*args, **kwargs)
 
@@ -69,8 +74,8 @@ class RenameForm(forms.Form):
                 not alnum_name_re.search(self.path)):
                 raise forms.ValidationError(_(u'Only letters, numbers, underscores, spaces and hyphens are allowed.'))
             #  folder/file must not already exist.
-            if os.path.isdir(os.path.join(self.path, self.cleaned_data['name'])):
+            if default_storage.isdir(os.path.join(self.path, self.cleaned_data['name'])):
                 raise forms.ValidationError(_(u'The Folder already exists.'))
-            elif os.path.isfile(os.path.join(self.path, self.cleaned_data['name'] + self.file_extension)):
+            elif default_storage.isfile(os.path.join(self.path, self.cleaned_data['name'] + self.file_extension)):
                 raise forms.ValidationError(_(u'The File already exists.'))
         return self.cleaned_data['name']
