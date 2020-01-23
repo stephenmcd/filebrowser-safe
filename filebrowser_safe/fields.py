@@ -12,6 +12,7 @@ from django.db.models.fields.files import FileDescriptor
 from django.forms.widgets import Input
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_str
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from filebrowser_safe.settings import *
@@ -34,7 +35,7 @@ class FileBrowseWidget(Input):
         else:
             self.attrs = {}
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ""
         directory = self.directory
@@ -51,7 +52,10 @@ class FileBrowseWidget(Input):
         final_attrs['extensions'] = self.extensions
         final_attrs['format'] = self.format
         final_attrs['DEBUG'] = DEBUG
-        return render_to_string("filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL))
+        if renderer is not None:
+            return mark_safe(renderer.render("filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL)))
+        else:
+            return render_to_string("filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL))
 
 
 class FileBrowseFormField(forms.CharField):
