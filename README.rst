@@ -3,7 +3,7 @@ Overview
 ========
 
 filebrowser_safe is a permanent fork of 
-`FileBrowser asset manager <http://code.google.com/p/django-filebrowser/>`_ 
+`FileBrowser asset manager <https://github.com/sehmaschine/django-filebrowser>`_ 
 for `Django <http://www.djangoproject.com/>`_, to be referenced as a 
 dependency for the `Mezzanine CMS for Django <http://mezzanine.jupo.org/>`_.
 
