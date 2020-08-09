@@ -5,7 +5,6 @@ import os
 import datetime
 
 from django import forms
-from django.conf import settings
 from django.core.files.storage import default_storage
 from django.db.models.fields import Field
 from django.db.models.fields.files import FileDescriptor
@@ -25,7 +24,6 @@ class FileBrowseWidget(Input):
 
     class Media:
         js = (
-            'admin/js/jquery.init.js',
             os.path.join(URL_FILEBROWSER_MEDIA, 'js/AddFileBrowser.js'),
         )
 
