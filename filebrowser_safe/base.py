@@ -31,17 +31,17 @@ class FileObjectAPI(object):
         self.mimetype = mimetypes.guess_type(self.filename)
 
     def __str__(self):
-        return smart_str(self.path)
+        return smart_str(self.name)
 
     def __unicode__(self):
-        return smart_text(self.path)
+        return smart_text(self.name)
 
     def __repr__(self):
         return smart_str("<%s: %s>" % (
             self.__class__.__name__, self or "None"))
 
     def __len__(self):
-        return len(self.path)
+        return len(self.name)
 
     # GENERAL ATTRIBUTES
 
@@ -54,7 +54,7 @@ class FileObjectAPI(object):
     @cached_property
     def filesize(self):
         if self.exists:
-            return default_storage.size(self.path)
+            return default_storage.size(self.name)
         return None
 
     @cached_property
@@ -72,20 +72,20 @@ class FileObjectAPI(object):
 
     @cached_property
     def exists(self):
-        return default_storage.exists(self.path)
+        return default_storage.exists(self.name)
 
     # PATH/URL ATTRIBUTES
 
     @property
     def path_relative_directory(self):
         """ path relative to the path returned by get_directory() """
-        return path_strip(self.path, get_directory()).lstrip("/")
+        return path_strip(self.name, get_directory()).lstrip("/")
 
     # FOLDER ATTRIBUTES
 
     @property
     def directory(self):
-        return path_strip(self.path, get_directory())
+        return path_strip(self.name, get_directory())
 
     @property
     def folder(self):
@@ -100,7 +100,7 @@ class FileObjectAPI(object):
     def is_empty(self):
         if self.is_folder:
             try:
-                dirs, files = default_storage.listdir(self.path)
+                dirs, files = default_storage.listdir(self.name)
             except UnicodeDecodeError:
                 from mezzanine.core.exceptions import FileSystemEncodingChanged
                 raise FileSystemEncodingChanged()
@@ -131,7 +131,7 @@ class FileObject(FileObjectAPI):
 
     @property
     def url(self):
-        return default_storage.url(self.path)
+        return default_storage.url(self.name)
 
 
 class FieldFileObject(FieldFile, FileObjectAPI):
@@ -148,7 +148,7 @@ class FieldFileObject(FieldFile, FileObjectAPI):
 
     def delete(self, **kwargs):
         if self.is_folder:
-            default_storage.rmtree(self.path)
+            default_storage.rmtree(self.name)
         else:
             super(FieldFileObject, self).delete(**kwargs)
 
