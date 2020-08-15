@@ -4,7 +4,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = (
     'grappelli_safe',
     'filebrowser_safe',
-    'filebrowser_safe.tests',
+    'tests',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -20,7 +20,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
-ROOT_URLCONF = 'filebrowser_safe.tests.urls'
+ROOT_URLCONF = 'tests.urls'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'

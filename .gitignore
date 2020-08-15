@@ -3,6 +3,7 @@
 *.pyc
 .DS_Store
 .idea
+.pytest_cache
 .tox
 .vscode
 /build/
