@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from future.builtins import range
-
 # coding: utf-8
 
 from django.template import Library

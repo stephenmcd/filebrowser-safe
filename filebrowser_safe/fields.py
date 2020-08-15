@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from future.builtins import str, super
-
 import os
 import datetime
 
@@ -14,7 +11,7 @@ from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from filebrowser_safe.settings import *
+from filebrowser_safe import settings as fb_settings
 from filebrowser_safe.base import FieldFileObject
 from filebrowser_safe.functions import get_directory
 
@@ -23,7 +20,7 @@ class FileBrowseWidget(Input):
     input_type = "text"
 
     class Media:
-        js = (os.path.join(URL_FILEBROWSER_MEDIA, "js/AddFileBrowser.js"),)
+        js = (os.path.join(fb_settings.URL_FILEBROWSER_MEDIA, "js/AddFileBrowser.js"),)
 
     def __init__(self, attrs=None):
         self.directory = attrs.get("directory", "")
@@ -47,21 +44,23 @@ class FileBrowseWidget(Input):
                 default_storage.makedirs(fullpath)
         final_attrs = dict(type=self.input_type, name=name, **attrs)
         final_attrs["search_icon"] = (
-            URL_FILEBROWSER_MEDIA + "img/filebrowser_icon_show.gif"
+            fb_settings.URL_FILEBROWSER_MEDIA + "img/filebrowser_icon_show.gif"
         )
         final_attrs["directory"] = directory
         final_attrs["extensions"] = self.extensions
         final_attrs["format"] = self.format
-        final_attrs["DEBUG"] = DEBUG
+        final_attrs["DEBUG"] = fb_settings.DEBUG
         if renderer is not None:
             return mark_safe(
                 renderer.render(
-                    "filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL)
+                    "filebrowser/custom_field.html",
+                    dict(locals(), MEDIA_URL=fb_settings.MEDIA_URL),
                 )
             )
         else:
             return render_to_string(
-                "filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL)
+                "filebrowser/custom_field.html",
+                dict(locals(), MEDIA_URL=fb_settings.MEDIA_URL),
             )
 
 
@@ -89,7 +88,7 @@ class FileBrowseFormField(forms.CharField):
         self.extensions = extensions
         if format:
             self.format = format or ""
-            self.extensions = extensions or EXTENSIONS.get(format)
+            self.extensions = extensions or fb_settings.EXTENSIONS.get(format)
         super(FileBrowseFormField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
@@ -97,7 +96,7 @@ class FileBrowseFormField(forms.CharField):
         if value == "":
             return value
         file_extension = os.path.splitext(value)[1].lower().split("?")[0]
-        if self.extensions and not file_extension in self.extensions:
+        if self.extensions and file_extension not in self.extensions:
             raise forms.ValidationError(
                 self.error_messages["extension"]
                 % {"ext": file_extension, "allowed": ", ".join(self.extensions)}
@@ -126,7 +125,7 @@ class FileBrowseField(Field):
         return smart_str(value)
 
     def get_manipulator_field_objs(self):
-        return [oldforms.TextField]
+        return [forms.TextField]
 
     def get_internal_type(self):
         return "CharField"

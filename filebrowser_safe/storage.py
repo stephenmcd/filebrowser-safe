@@ -1,15 +1,13 @@
-from __future__ import unicode_literals
-
 # coding: utf-8
 
-# PYTHON IMPORTS
 import os
 import shutil
 import posixpath
 
-# DJANGO IMPORTS
 from django.core.files.move import file_move_safe
 from django.core.files.base import ContentFile
+
+FILE_EXISTS_MSG = "The destination file '{}' exists and allow_overwrite is False"
 
 
 class StorageMixin(object):
@@ -33,7 +31,7 @@ class StorageMixin(object):
         """
         Moves safely a file from one location to another.
 
-        If allow_ovewrite==False and new_file_name exists, raises an exception.
+        If allow_overwrite==False and new_file_name exists, raises an exception.
         """
         raise NotImplementedError()
 
@@ -92,12 +90,11 @@ class S3BotoStorageMixin(StorageMixin):
         return False
 
     def move(self, old_file_name, new_file_name, allow_overwrite=False):
-
         if self.exists(new_file_name):
             if allow_overwrite:
                 self.delete(new_file_name)
             else:
-                raise "The destination file '%s' exists and allow_overwrite is False" % new_file_name
+                raise FILE_EXISTS_MSG.format(new_file_name)
 
         old_key_name = self._encode_name(
             self._normalize_name(self._clean_name(old_file_name))
@@ -157,7 +154,7 @@ class GoogleStorageMixin(StorageMixin):
             if allow_overwrite:
                 self.delete(new_file_name)
             else:
-                raise "The destination file '%s' exists and allow_overwrite is False" % new_file_name
+                raise FILE_EXISTS_MSG.format(new_file_name)
 
         old_key_name = self._encode_name(
             self._normalize_name(self._clean_name(old_file_name))

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from json import dumps
 import os
 import re
@@ -16,7 +14,6 @@ from django.dispatch import Signal
 from django import forms
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, HttpResponse
-from django.template import RequestContext as Context
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -28,7 +25,7 @@ except ImportError:
     # Backward compatibility for Py2 and Django < 1.5
     from django.utils.encoding import smart_unicode as smart_text
 
-from filebrowser_safe.settings import *
+from filebrowser_safe import settings as fb_settings
 from filebrowser_safe.functions import (
     get_path,
     get_breadcrumbs,
@@ -46,7 +43,7 @@ from mezzanine.utils.importing import import_dotted_path
 try:
     from mezzanine.utils.html import escape
 except ImportError:
-    escape = lambda s: s
+    escape = lambda s: s  # noqa
 
 
 # Add some required methods to FileSystemStorage
@@ -68,7 +65,7 @@ else:
 
 
 # Precompile regular expressions
-filter_re = [re.compile(exp) for exp in EXCLUDE]
+filter_re = [re.compile(exp) for exp in fb_settings.EXCLUDE]
 
 
 def remove_thumbnails(file_path):
@@ -82,7 +79,7 @@ def remove_thumbnails(file_path):
     path = os.path.join(dir_name, settings.THUMBNAILS_DIR_NAME, file_name)
     try:
         default_storage.rmtree(path)
-    except:
+    except:  # noqa
         pass
 
 
@@ -101,7 +98,8 @@ def browse(request):
         msg = _("The requested Folder does not exist.")
         messages.add_message(request, messages.ERROR, msg)
         if directory is None:
-            # The directory returned by get_directory() does not exist, raise an error to prevent eternal redirecting.
+            # The directory returned by get_directory() does not exist, raise an error
+            # to prevent eternal redirecting.
             raise ImproperlyConfigured(
                 _("Error finding Upload-Folder. Maybe it does not exist?")
             )
@@ -118,7 +116,7 @@ def browse(request):
         "select_total": 0,
     }
     counter = {}
-    for k, v in EXTENSIONS.items():
+    for k, v in fb_settings.EXTENSIONS.items():
         counter[k] = 0
 
     dir_list, file_list = default_storage.listdir(abs_path)
@@ -169,8 +167,9 @@ def browse(request):
                     results_var["images_total"] += 1
                 if (
                     query.get("type")
-                    and query.get("type") in SELECT_FORMATS
-                    and fileobject.filetype in SELECT_FORMATS[query.get("type")]
+                    and query.get("type") in fb_settings.SELECT_FORMATS
+                    and fileobject.filetype
+                    in fb_settings.SELECT_FORMATS[query.get("type")]
                 ):
                     results_var["select_total"] += 1
                 elif not query.get("type"):
@@ -187,23 +186,23 @@ def browse(request):
             counter[fileobject.filetype] += 1
 
     # SORTING
-    query["o"] = request.GET.get("o", DEFAULT_SORTING_BY)
-    query["ot"] = request.GET.get("ot", DEFAULT_SORTING_ORDER)
+    query["o"] = request.GET.get("o", fb_settings.DEFAULT_SORTING_BY)
+    query["ot"] = request.GET.get("ot", fb_settings.DEFAULT_SORTING_ORDER)
     defaultValue = ""
     if query["o"] in ["date", "filesize"]:
         defaultValue = 0.0
     files = sorted(files, key=lambda f: getattr(f, query["o"]) or defaultValue)
     if (
         not request.GET.get("ot")
-        and DEFAULT_SORTING_ORDER == "desc"
+        and fb_settings.DEFAULT_SORTING_ORDER == "desc"
         or request.GET.get("ot") == "desc"
     ):
         files.reverse()
 
-    p = Paginator(files, LIST_PER_PAGE)
+    p = Paginator(files, fb_settings.LIST_PER_PAGE)
     try:
         page_nr = request.GET.get("p", "1")
-    except:
+    except:  # noqa
         page_nr = 1
     try:
         page = p.page(page_nr)
@@ -273,8 +272,8 @@ def mkdir(request):
                     form.cleaned_data["dir_name"]
                 )
                 messages.add_message(request, messages.SUCCESS, msg)
-                # on redirect, sort by date desc to see the new directory on top of the list
-                # remove filter in order to actually _see_ the new folder
+                # on redirect, sort by date desc to see the new directory on top of the
+                # list remove filter in order to actually _see_ the new folder
                 # remove pagination
                 redirect_url = reverse("fb_browse") + query_helper(
                     query, "ot=desc,o=date", "ot,o,filter_type,filter_date,q,p"
@@ -328,8 +327,8 @@ def upload(request):
 
     # SESSION (used for flash-uploading)
     cookie_dict = parse_cookie(request.META.get("HTTP_COOKIE", ""))
-    engine = __import__(settings.SESSION_ENGINE, {}, {}, [""])
-    session_key = cookie_dict.get(settings.SESSION_COOKIE_NAME, None)
+    engine = __import__(django_settings.SESSION_ENGINE, {}, {}, [""])  # noqa
+    session_key = cookie_dict.get(django_settings.SESSION_COOKIE_NAME, None)
 
     return render(
         request,
@@ -406,7 +405,7 @@ def _upload_file(request):
 
             if (
                 "." in file_path
-                and file_path.split(".")[-1].lower() in ESCAPED_EXTENSIONS
+                and file_path.split(".")[-1].lower() in fb_settings.ESCAPED_EXTENSIONS
             ):
                 filedata = ContentFile(escape(filedata.read()), name=filedata.name)
 
@@ -466,7 +465,6 @@ def delete(request):
         msg = _("An error occurred")
         messages.add_message(request, messages.ERROR, msg)
     elif request.GET.get("filetype") != "Folder":
-        relative_server_path = os.path.join(get_directory(), path, filename)
         try:
             # PRE DELETE SIGNAL
             filebrowser_pre_delete.send(sender=request, path=path, filename=filename)
@@ -527,7 +525,7 @@ def rename(request):
             msg = _("The requested File does not exist.")
         messages.add_message(request, messages.ERROR, msg)
         return HttpResponseRedirect(reverse("fb_browse"))
-    abs_path = os.path.join(MEDIA_ROOT, get_directory(), path)
+    abs_path = os.path.join(fb_settings.MEDIA_ROOT, get_directory(), path)
     file_extension = os.path.splitext(filename)[1].lower()
 
     if request.method == "POST":

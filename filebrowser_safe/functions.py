@@ -1,21 +1,14 @@
-from __future__ import unicode_literals
-from future.builtins import int
-from future.builtins import str
-
 # coding: utf-8
 
-# imports
+import os
 import re
 import unicodedata
 from time import gmtime, strftime, localtime, time
 
-# django imports
 from django.utils import six
-from django.conf import settings
 from django.core.files.storage import default_storage
 
-# filebrowser imports
-from filebrowser_safe.settings import *
+from filebrowser_safe import settings as fb_settings
 
 
 def get_directory():
@@ -27,7 +20,7 @@ def get_directory():
     from mezzanine.conf import settings as mezz_settings
     from mezzanine.utils.sites import current_site_id
 
-    dirname = DIRECTORY
+    dirname = fb_settings.DIRECTORY
     if getattr(mezz_settings, "MEDIA_LIBRARY_PER_SITE", False):
         dirname = os.path.join(dirname, "site-%s" % current_site_id())
     fullpath = os.path.join(mezz_settings.MEDIA_ROOT, dirname)
@@ -53,9 +46,9 @@ def path_to_url(value):
 
     Return an URL relative to MEDIA_ROOT.
     """
-    mediaroot_re = re.compile(r"^(%s)" % (MEDIA_ROOT))
+    mediaroot_re = re.compile(r"^(%s)" % (fb_settings.MEDIA_ROOT))
     value = mediaroot_re.sub("", value)
-    return url_join(MEDIA_URL, value)
+    return url_join(fb_settings.MEDIA_URL, value)
 
 
 def dir_from_url(value):
@@ -64,7 +57,7 @@ def dir_from_url(value):
     URL has to be an absolute URL including MEDIA_URL or
     an URL relative to MEDIA_URL.
     """
-    mediaurl_re = re.compile(r"^(%s)" % (MEDIA_URL))
+    mediaurl_re = re.compile(r"^(%s)" % (fb_settings.MEDIA_URL))
     value = mediaurl_re.sub("", value)
     directory_re = re.compile(r"^(%s)" % (get_directory()))
     value = directory_re.sub("", value)
@@ -158,23 +151,23 @@ def get_settings_var():
     """
     settings_var = {}
     # Main
-    settings_var["DEBUG"] = DEBUG
-    settings_var["MEDIA_ROOT"] = MEDIA_ROOT
-    settings_var["MEDIA_URL"] = MEDIA_URL
+    settings_var["DEBUG"] = fb_settings.DEBUG
+    settings_var["MEDIA_ROOT"] = fb_settings.MEDIA_ROOT
+    settings_var["MEDIA_URL"] = fb_settings.MEDIA_URL
     settings_var["DIRECTORY"] = get_directory()
     # FileBrowser
-    settings_var["URL_FILEBROWSER_MEDIA"] = URL_FILEBROWSER_MEDIA
-    settings_var["PATH_FILEBROWSER_MEDIA"] = PATH_FILEBROWSER_MEDIA
+    settings_var["URL_FILEBROWSER_MEDIA"] = fb_settings.URL_FILEBROWSER_MEDIA
+    settings_var["PATH_FILEBROWSER_MEDIA"] = fb_settings.PATH_FILEBROWSER_MEDIA
     # TinyMCE
-    settings_var["URL_TINYMCE"] = URL_TINYMCE
-    settings_var["PATH_TINYMCE"] = PATH_TINYMCE
+    settings_var["URL_TINYMCE"] = fb_settings.URL_TINYMCE
+    settings_var["PATH_TINYMCE"] = fb_settings.PATH_TINYMCE
     # Extensions/Formats (for FileBrowseField)
-    settings_var["EXTENSIONS"] = EXTENSIONS
-    settings_var["SELECT_FORMATS"] = SELECT_FORMATS
+    settings_var["EXTENSIONS"] = fb_settings.EXTENSIONS
+    settings_var["SELECT_FORMATS"] = fb_settings.SELECT_FORMATS
     # FileBrowser Options
-    settings_var["MAX_UPLOAD_SIZE"] = MAX_UPLOAD_SIZE
+    settings_var["MAX_UPLOAD_SIZE"] = fb_settings.MAX_UPLOAD_SIZE
     # Convert Filenames
-    settings_var["CONVERT_FILENAME"] = CONVERT_FILENAME
+    settings_var["CONVERT_FILENAME"] = fb_settings.CONVERT_FILENAME
     return settings_var
 
 
@@ -184,7 +177,7 @@ def get_file_type(filename):
     """
     file_extension = os.path.splitext(filename)[1].lower()
     file_type = ""
-    for k, v in EXTENSIONS.items():
+    for k, v in fb_settings.EXTENSIONS.items():
         for extension in v:
             if file_extension == extension.lower():
                 file_type = k
@@ -197,7 +190,7 @@ def is_selectable(filename, selecttype):
     """
     file_extension = os.path.splitext(filename)[1].lower()
     select_types = []
-    for k, v in SELECT_FORMATS.items():
+    for k, v in fb_settings.SELECT_FORMATS.items():
         for extension in v:
             if file_extension == extension.lower():
                 select_types.append(k)
@@ -210,7 +203,7 @@ def convert_filename(value):
     https://github.com/sehmaschine/django-filebrowser/blob/master/filebrowser/functions.py
     """
 
-    if NORMALIZE_FILENAME:
+    if fb_settings.NORMALIZE_FILENAME:
         chunks = value.split(os.extsep)
         normalized = []
 
@@ -228,7 +221,7 @@ def convert_filename(value):
         else:
             value = normalized[0]
 
-    if CONVERT_FILENAME:
+    if fb_settings.CONVERT_FILENAME:
         value = value.replace(" ", "_").lower()
 
     return value

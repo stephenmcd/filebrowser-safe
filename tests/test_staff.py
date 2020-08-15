@@ -80,7 +80,7 @@ class FilebrowserStaffTestCase(TestCase):
         self.assertFalse(default_storage.exists(new_file_path))
         response = self.client.post(
             url + "?filename=" + os.path.basename(temp_path),
-            data={"name": os.path.splitext(new_file_name)[0],},
+            data={"name": os.path.splitext(new_file_name)[0]},
             follow=True,
         )
         self.assertEqual(200, response.status_code)
@@ -115,7 +115,7 @@ class FilebrowserStaffTestCase(TestCase):
         test_file = ContentFile(b"Test File content", name="test-file-upload.txt")
         test_file_path = os.path.join(self.upload_dir, test_file.name)
         self.assertFalse(default_storage.exists(test_file_path))
-        response = self.client.post(url, data={"folder": "", "Filedata": test_file,})
+        response = self.client.post(url, data={"folder": "", "Filedata": test_file})
         self.assertEqual(200, response.status_code)
         self.assertTrue(default_storage.exists(test_file_path))
         with default_storage.open(test_file_path) as uploaded_file:

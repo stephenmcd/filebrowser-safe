@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from future.builtins import str
-
 from django import template
 from django.utils.http import urlquote
 
@@ -20,7 +17,7 @@ def query_string(context, add=None, remove=None):
     http://www.url.com/{% query_string "param_to_add=value, param_to_add=value" "param_to_remove, params_to_remove" %}
     http://www.url.com/{% query_string "" "filter" %}filter={{new_filter}}
     http://www.url.com/{% query_string "sort=value" "sort" %}
-    """
+    """  # noqa
 
     # Written as an inclusion tag to simplify getting the context.
     add = string_to_dict(add)
@@ -134,8 +131,8 @@ def selectable(parser, token):
 
     try:
         tag, filetype, format = token.split_contents()
-    except:
-        raise TemplateSyntaxError(
+    except:  # noqa:722
+        raise template.TemplateSyntaxError(
             "%s tag requires 2 arguments" % token.contents.split()[0]
         )
 
