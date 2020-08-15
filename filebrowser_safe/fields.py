@@ -20,17 +20,15 @@ from filebrowser_safe.functions import get_directory
 
 
 class FileBrowseWidget(Input):
-    input_type = 'text'
+    input_type = "text"
 
     class Media:
-        js = (
-            os.path.join(URL_FILEBROWSER_MEDIA, 'js/AddFileBrowser.js'),
-        )
+        js = (os.path.join(URL_FILEBROWSER_MEDIA, "js/AddFileBrowser.js"),)
 
     def __init__(self, attrs=None):
-        self.directory = attrs.get('directory', '')
-        self.extensions = attrs.get('extensions', '')
-        self.format = attrs.get('format', '')
+        self.directory = attrs.get("directory", "")
+        self.extensions = attrs.get("extensions", "")
+        self.format = attrs.get("format", "")
         if attrs is not None:
             self.attrs = attrs.copy()
         else:
@@ -48,42 +46,62 @@ class FileBrowseWidget(Input):
             if not default_storage.isdir(fullpath):
                 default_storage.makedirs(fullpath)
         final_attrs = dict(type=self.input_type, name=name, **attrs)
-        final_attrs['search_icon'] = URL_FILEBROWSER_MEDIA + 'img/filebrowser_icon_show.gif'
-        final_attrs['directory'] = directory
-        final_attrs['extensions'] = self.extensions
-        final_attrs['format'] = self.format
-        final_attrs['DEBUG'] = DEBUG
+        final_attrs["search_icon"] = (
+            URL_FILEBROWSER_MEDIA + "img/filebrowser_icon_show.gif"
+        )
+        final_attrs["directory"] = directory
+        final_attrs["extensions"] = self.extensions
+        final_attrs["format"] = self.format
+        final_attrs["DEBUG"] = DEBUG
         if renderer is not None:
-            return mark_safe(renderer.render("filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL)))
+            return mark_safe(
+                renderer.render(
+                    "filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL)
+                )
+            )
         else:
-            return render_to_string("filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL))
+            return render_to_string(
+                "filebrowser/custom_field.html", dict(locals(), MEDIA_URL=MEDIA_URL)
+            )
 
 
 class FileBrowseFormField(forms.CharField):
     widget = FileBrowseWidget
 
     default_error_messages = {
-        'extension': _(u'Extension %(ext)s is not allowed. Only %(allowed)s is allowed.'),
+        "extension": _(
+            "Extension %(ext)s is not allowed. Only %(allowed)s is allowed."
+        ),
     }
 
-    def __init__(self, max_length=None, min_length=None,
-                 directory=None, extensions=None, format=None,
-                 *args, **kwargs):
+    def __init__(
+        self,
+        max_length=None,
+        min_length=None,
+        directory=None,
+        extensions=None,
+        format=None,
+        *args,
+        **kwargs
+    ):
         self.max_length, self.min_length = max_length, min_length
         self.directory = directory
         self.extensions = extensions
         if format:
-            self.format = format or ''
+            self.format = format or ""
             self.extensions = extensions or EXTENSIONS.get(format)
         super(FileBrowseFormField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
         value = super(FileBrowseFormField, self).clean(value)
-        if value == '':
+        if value == "":
             return value
         file_extension = os.path.splitext(value)[1].lower().split("?")[0]
         if self.extensions and not file_extension in self.extensions:
-            raise forms.ValidationError(self.error_messages['extension'] % {'ext': file_extension, 'allowed': ", ".join(self.extensions)})
+            raise forms.ValidationError(
+                self.error_messages["extension"]
+                % {"ext": file_extension, "allowed": ", ".join(self.extensions)}
+            )
         return value
 
 
@@ -96,10 +114,10 @@ class FileBrowseField(Field):
     descriptor_class = FileDescriptor
 
     def __init__(self, *args, **kwargs):
-        self.directory = kwargs.pop('directory', '')
-        self.extensions = kwargs.pop('extensions', '')
-        self.format = kwargs.pop('format', '')
-        self.storage = kwargs.pop('storage', default_storage)
+        self.directory = kwargs.pop("directory", "")
+        self.extensions = kwargs.pop("extensions", "")
+        self.format = kwargs.pop("format", "")
+        self.storage = kwargs.pop("storage", default_storage)
         super(FileBrowseField, self).__init__(*args, **kwargs)
 
     def get_db_prep_value(self, value, connection, prepared=False):
@@ -115,17 +133,17 @@ class FileBrowseField(Field):
 
     def formfield(self, **kwargs):
         attrs = {
-            'directory': self.directory,
-            'extensions': self.extensions,
-            'format': self.format,
-            'storage': self.storage,
+            "directory": self.directory,
+            "extensions": self.extensions,
+            "format": self.format,
+            "storage": self.storage,
         }
         defaults = {
-            'form_class': FileBrowseFormField,
-            'widget': FileBrowseWidget(attrs=attrs),
-            'directory': self.directory,
-            'extensions': self.extensions,
-            'format': self.format
+            "form_class": FileBrowseFormField,
+            "widget": FileBrowseWidget(attrs=attrs),
+            "directory": self.directory,
+            "extensions": self.extensions,
+            "format": self.format,
         }
         defaults.update(kwargs)
         return super(FileBrowseField, self).formfield(**defaults)

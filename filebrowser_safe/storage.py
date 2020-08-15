@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+
 # coding: utf-8
 
 # PYTHON IMPORTS
@@ -50,7 +51,6 @@ class StorageMixin(object):
 
 
 class FileSystemStorageMixin(StorageMixin):
-
     def isdir(self, name):
         return os.path.isdir(self.path(name))
 
@@ -58,7 +58,9 @@ class FileSystemStorageMixin(StorageMixin):
         return os.path.isfile(self.path(name))
 
     def move(self, old_file_name, new_file_name, allow_overwrite=False):
-        file_move_safe(self.path(old_file_name), self.path(new_file_name), allow_overwrite=True)
+        file_move_safe(
+            self.path(old_file_name), self.path(new_file_name), allow_overwrite=True
+        )
 
     def makedirs(self, name):
         os.makedirs(self.path(name))
@@ -68,7 +70,6 @@ class FileSystemStorageMixin(StorageMixin):
 
 
 class S3BotoStorageMixin(StorageMixin):
-
     def isfile(self, name):
         return self.exists(name) and self.size(name) > 0
 
@@ -98,10 +99,16 @@ class S3BotoStorageMixin(StorageMixin):
             else:
                 raise "The destination file '%s' exists and allow_overwrite is False" % new_file_name
 
-        old_key_name = self._encode_name(self._normalize_name(self._clean_name(old_file_name)))
-        new_key_name = self._encode_name(self._normalize_name(self._clean_name(new_file_name)))
+        old_key_name = self._encode_name(
+            self._normalize_name(self._clean_name(old_file_name))
+        )
+        new_key_name = self._encode_name(
+            self._normalize_name(self._clean_name(new_file_name))
+        )
 
-        k = self.bucket.copy_key(new_key_name, self.bucket.name, old_key_name, preserve_acl=True)
+        k = self.bucket.copy_key(
+            new_key_name, self.bucket.name, old_key_name, preserve_acl=True
+        )
 
         if not k:
             raise "Couldn't copy '%s' to '%s'" % (old_file_name, new_file_name)
@@ -116,14 +123,13 @@ class S3BotoStorageMixin(StorageMixin):
         directories, files = self.listdir(self._encode_name(name))
 
         for key in files:
-            self.delete('/'.join([name, key]))
+            self.delete("/".join([name, key]))
 
         for dirname in directories:
-            self.rmtree('/'.join([name, dirname]))
+            self.rmtree("/".join([name, dirname]))
 
 
 class GoogleStorageMixin(StorageMixin):
-
     def isfile(self, name):
         return self.exists(name)
 
@@ -153,8 +159,12 @@ class GoogleStorageMixin(StorageMixin):
             else:
                 raise "The destination file '%s' exists and allow_overwrite is False" % new_file_name
 
-        old_key_name = self._encode_name(self._normalize_name(self._clean_name(old_file_name)))
-        new_key_name = self._encode_name(self._normalize_name(self._clean_name(new_file_name)))
+        old_key_name = self._encode_name(
+            self._normalize_name(self._clean_name(old_file_name))
+        )
+        new_key_name = self._encode_name(
+            self._normalize_name(self._clean_name(new_file_name))
+        )
 
         k = self.bucket.copy_key(new_key_name, self.bucket.name, old_key_name)
 
@@ -184,16 +194,16 @@ def clean_name(name):
     Cleans the name so that Windows style paths work
     """
     # Normalize Windows style paths
-    clean_name = posixpath.normpath(name).replace('\\', '/')
+    clean_name = posixpath.normpath(name).replace("\\", "/")
 
     # os.path.normpath() can strip trailing slashes so we implement
     # a workaround here.
-    if name.endswith('/') and not clean_name.endswith('/'):
+    if name.endswith("/") and not clean_name.endswith("/"):
         # Add a trailing slash as it was stripped.
-        clean_name = clean_name + '/'
+        clean_name = clean_name + "/"
 
     # Given an empty string, os.path.normpath() will return ., which we don't want
-    if clean_name == '.':
-        clean_name = ''
+    if clean_name == ".":
+        clean_name = ""
 
     return clean_name

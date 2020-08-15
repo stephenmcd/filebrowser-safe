@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+
 # coding: utf-8
 
 import os
@@ -23,6 +24,7 @@ from filebrowser_safe.functions import get_file_type, path_strip, get_directory
 
 class FileObjectAPI(object):
     """ A mixin class providing file properties. """
+
     def __init__(self, path):
         self.head = os.path.dirname(path)
         self.filename = os.path.basename(path)
@@ -37,8 +39,7 @@ class FileObjectAPI(object):
         return smart_text(self.name)
 
     def __repr__(self):
-        return smart_str("<%s: %s>" % (
-            self.__class__.__name__, self or "None"))
+        return smart_str("<%s: %s>" % (self.__class__.__name__, self or "None"))
 
     def __len__(self):
         return len(self.name)
@@ -48,7 +49,7 @@ class FileObjectAPI(object):
     @cached_property
     def filetype(self):
         if self.is_folder:
-            return 'Folder'
+            return "Folder"
         return get_file_type(self.filename)
 
     @cached_property
@@ -60,8 +61,7 @@ class FileObjectAPI(object):
     @cached_property
     def date(self):
         if self.exists:
-            return time.mktime(
-                default_storage.get_modified_time(self.path).timetuple())
+            return time.mktime(default_storage.get_modified_time(self.path).timetuple())
         return None
 
     @property
@@ -89,8 +89,7 @@ class FileObjectAPI(object):
 
     @property
     def folder(self):
-        return os.path.dirname(
-            path_strip(os.path.join(self.head, ''), get_directory()))
+        return os.path.dirname(path_strip(os.path.join(self.head, ""), get_directory()))
 
     @cached_property
     def is_folder(self):
@@ -103,6 +102,7 @@ class FileObjectAPI(object):
                 dirs, files = default_storage.listdir(self.name)
             except UnicodeDecodeError:
                 from mezzanine.core.exceptions import FileSystemEncodingChanged
+
                 raise FileSystemEncodingChanged()
             if not dirs and not files:
                 return True
@@ -121,6 +121,7 @@ class FileObject(FileObjectAPI):
 
     where path is a relative path to a storage location.
     """
+
     def __init__(self, path):
         self.path = path
         super(FileObject, self).__init__(path)
@@ -142,9 +143,10 @@ class FieldFileObject(FieldFile, FileObjectAPI):
     django's built-in FileField.
     - Implements the FileObject API for historical reasons.
     """
+
     def __init__(self, instance, field, path):
         FieldFile.__init__(self, instance, field, path)
-        FileObjectAPI.__init__(self, path or '')
+        FileObjectAPI.__init__(self, path or "")
 
     def delete(self, **kwargs):
         if self.is_folder:
@@ -157,5 +159,8 @@ class FieldFileObject(FieldFile, FileObjectAPI):
         warnings.warn(
             "In future versions of filebrowser-safe, the `path` property will "
             "be absolute. To continue getting the same behavior please use "
-            "the `name` property instead.", FutureWarning, stacklevel=2)
+            "the `name` property instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
         return self.name
