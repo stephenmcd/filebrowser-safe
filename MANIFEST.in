@@ -1,6 +1,8 @@
 include LICENSE
 include README.rst
+
 recursive-include filebrowser_safe/static *
 recursive-include filebrowser_safe/templates *.html
 recursive-include filebrowser_safe/locale *.mo *.po
 
+prune tests
