@@ -1,3 +1,6 @@
+.. image:: https://img.shields.io/pypi/v/filebrowser-safe.svg
+.. image:: https://img.shields.io/pypi/pyversions/filebrowser-safe.svg
+.. image:: https://github.com/stephenmcd/filebrowser-safe/workflows/Test%20and%20release/badge.svg
 
 Overview
 ========
