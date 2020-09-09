@@ -1,4 +1,4 @@
-import os
+import tempfile
 
 SECRET_KEY = "for testing purposes"
 ALLOWED_HOSTS = ["*"]
@@ -25,7 +25,7 @@ ROOT_URLCONF = "tests.urls"
 
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media")
+MEDIA_ROOT = tempfile.mkdtemp()
 
 
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
