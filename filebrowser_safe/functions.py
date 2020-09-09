@@ -5,7 +5,6 @@ import re
 import unicodedata
 from time import gmtime, strftime, localtime, time
 
-from django.utils import six
 from django.core.files.storage import default_storage
 
 from filebrowser_safe import settings as fb_settings
@@ -209,7 +208,7 @@ def convert_filename(value):
 
         for v in chunks:
             v = (
-                unicodedata.normalize("NFKD", six.text_type(v))
+                unicodedata.normalize("NFKD", str(v))
                 .encode("ascii", "ignore")
                 .decode("ascii")
             )

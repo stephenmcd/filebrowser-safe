@@ -30,7 +30,9 @@ class FilebrowserStaffTestCase(TestCase):
 
     def setUp(self):
         user = User.objects.create_user(
-            username="staff", password="password", is_staff=True,
+            username="staff",
+            password="password",
+            is_staff=True,
         )
         self.client.force_login(user)
 
