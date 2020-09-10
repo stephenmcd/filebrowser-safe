@@ -1,6 +1,10 @@
 .. image:: https://img.shields.io/pypi/v/filebrowser-safe.svg
+   :target: https://pypi.org/project/filebrowser-safe/
 .. image:: https://img.shields.io/pypi/pyversions/filebrowser-safe.svg
 .. image:: https://github.com/stephenmcd/filebrowser-safe/workflows/Test%20and%20release/badge.svg
+   :target: https://github.com/stephenmcd/filebrowser-safe/actions?query=workflow%3A%22Test+and+release%22
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
 
 Overview
 ========
@@ -18,18 +22,7 @@ address these specific issues.
 For further details, see
 `Why are Grappelli and Filebrowser Forked? <http://mezzanine.jupo.org/docs/frequently-asked-questions.html#grappelli-filebrowser-forks>`_.
 
-Development
-===========
+Contributing
+============
 
-After cloning the repository, install the package with the extra testing requirements and run ``tox``. This will ensure you are running the tests the same way as our CI server:
-
-.. code-block:: bash
-
-    pip install -e ".[testing]"
-    tox # Use the --parallel option to run tests in parallel (faster)
-
-You might get some ``InterpreterNotFound`` errors due to not having all Python versions available in your system. That's okay as long as you're able to successfully run the test suite for at least one Python version.
-
-Python code is enforced with ``flake8`` and  ``black``. ``tox`` will verify both for you. For your convenience you can run the command ``tox -e format`` to fix most (but not all) linter errors. Alternatively you can configure your code editor to lint and format according to the rules defined in ``setup.cfg`` to catch code style errors as you develop.
-
-When you are ready to contribute your changes create and submit a pull request for review. This will run all tests in all supported Python versions and alert if any of them fail.
+Please refer to `Mezzanine's Contribution Guidelines <https://github.com/stephenmcd/mezzanine/blob/master/CONTRIBUTING.rst>`_
