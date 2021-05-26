@@ -38,7 +38,7 @@ from filebrowser_safe.functions import (
 from filebrowser_safe.templatetags.fb_tags import query_helper
 from filebrowser_safe.base import FileObject
 
-from mezzanine.utils.importing import import_dotted_path
+from django.utils.module_loading import import_string
 
 try:
     from mezzanine.utils.html import escape
@@ -55,8 +55,8 @@ if django_settings.DEFAULT_FILE_STORAGE == "s3_folder_storage.s3.DefaultStorage"
     mixin_class_name = "filebrowser_safe.storage.S3BotoStorageMixin"
 
 try:
-    mixin_class = import_dotted_path(mixin_class_name)
-    storage_class = import_dotted_path(django_settings.DEFAULT_FILE_STORAGE)
+    mixin_class = import_string(mixin_class_name)
+    storage_class = import_string(django_settings.DEFAULT_FILE_STORAGE)
 except ImportError:
     pass
 else:
@@ -73,7 +73,7 @@ def remove_thumbnails(file_path):
     Cleans up previous Mezzanine thumbnail directories when
     a new file is written (upload or rename).
     """
-    from mezzanine.conf import settings
+    from django.conf import settings
 
     dir_name, file_name = os.path.split(file_path)
     path = os.path.join(dir_name, settings.THUMBNAILS_DIR_NAME, file_name)

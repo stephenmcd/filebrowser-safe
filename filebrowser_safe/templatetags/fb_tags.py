@@ -1,9 +1,33 @@
 from django import template
 from django.utils.http import urlquote
+import warnings
 
 from filebrowser_safe.settings import SELECT_FORMATS, EXTENSIONS
 
 register = template.Library()
+
+try:
+    from mezzanine.core.templatetags.mezzanine_tags import thumbnail
+except ImportError:
+    # TODO: filebrowser-safe should not rely on the `thumbnail` tag at all since its
+    # provided by Mezzanine.
+    #
+    # For now we just want to be able tu run the test suite without having mezzanine
+    # installed, and this will do. Remove once filebrowser-safe is completely decoupled
+    # from mezzanine.
+    warnings.warn(
+        """
+        You are using a placeholder implementation of the thumbnail tag intended for
+        test purposes only. If you're seeing this you might have a problem with your
+        Mezzanine installation.
+        """
+    )
+
+    def thumbnail(image_url, *args, **kwargs):
+        return image_url
+
+
+register.simple_tag(thumbnail)
 
 
 @register.inclusion_tag("filebrowser/include/_response.html", takes_context=True)

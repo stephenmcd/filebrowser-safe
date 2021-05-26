@@ -3,7 +3,6 @@ import tempfile
 SECRET_KEY = "for testing purposes"
 ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = (
-    "grappelli_safe",
     "filebrowser_safe",
     "tests",
     "django.contrib.admin",
@@ -44,7 +43,6 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
-                "mezzanine.conf.context_processors.settings",
             ],
         },
     },
@@ -52,15 +50,3 @@ TEMPLATES = [
 
 # Non standart settings
 THUMBNAILS_DIR_NAME = "thumbnails"
-
-# Mezzanine specific settings
-GRAPPELLI_INSTALLED = False
-PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
-TINYMCE_SETUP_JS = STATIC_URL
-JQUERY_FILENAME = STATIC_URL
-JQUERY_UI_FILENAME = STATIC_URL
-TEMPLATE_ACCESSIBLE_SETTINGS = (
-    "JQUERY_FILENAME",
-    "JQUERY_UI_FILENAME",
-    "TINYMCE_SETUP_JS",
-)

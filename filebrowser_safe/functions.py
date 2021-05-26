@@ -3,11 +3,33 @@
 import os
 import re
 import unicodedata
+import warnings
 from time import gmtime, strftime, localtime, time
 
+from django.conf import settings as dj_settings
 from django.core.files.storage import default_storage
 
 from filebrowser_safe import settings as fb_settings
+
+try:
+    from mezzanine.utils.sites import current_site_id
+except ImportError:
+    # TODO: filebrowser-safe should not rely on `current_site_id` at all since its
+    # provided by Mezzanine.
+    #
+    # For now we just want to be able tu run the test suite without having mezzanine
+    # installed, and this will do. Remove once filebrowser-safe is completely decoupled
+    # from mezzanine.
+    warnings.warn(
+        """
+        You are using a placeholder implementation of the current_site_id function
+        intended for test purposes only. If you're seeing this you might have a problem
+        with your Mezzanine installation.
+        """
+    )
+
+    def current_site_id():
+        return dj_settings.SITE_ID
 
 
 def get_directory():
@@ -16,13 +38,11 @@ def get_directory():
     the site's ID if ``MEDIA_LIBRARY_PER_SITE`` is ``True``, and also
     creating the root directory if missing.
     """
-    from mezzanine.conf import settings as mezz_settings
-    from mezzanine.utils.sites import current_site_id
 
     dirname = fb_settings.DIRECTORY
-    if getattr(mezz_settings, "MEDIA_LIBRARY_PER_SITE", False):
+    if getattr(dj_settings, "MEDIA_LIBRARY_PER_SITE", False):
         dirname = os.path.join(dirname, "site-%s" % current_site_id())
-    fullpath = os.path.join(mezz_settings.MEDIA_ROOT, dirname)
+    fullpath = os.path.join(dj_settings.MEDIA_ROOT, dirname)
     if not default_storage.isdir(fullpath):
         default_storage.makedirs(fullpath)
     return dirname
