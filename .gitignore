@@ -6,5 +6,6 @@
 .pytest_cache
 .tox
 .vscode
+/junit/
 /build/
 /dist/
