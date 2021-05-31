@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import os
 
 from django.conf import settings
@@ -87,7 +85,7 @@ for exts in list(EXTENSIONS.values()):
 EXCLUDE = getattr(
     settings,
     "FILEBROWSER_EXCLUDE",
-    (r"_(%(exts)s)_.*_q\d{1,3}\.(%(exts)s)" % {"exts": ("|".join(EXTENSION_LIST))},),
+    (r"_({exts})_.*_q\d{{1,3}}\.({exts})".format(exts=("|".join(EXTENSION_LIST))),),
 )
 # Max. Upload Size in Bytes.
 MAX_UPLOAD_SIZE = getattr(

@@ -134,11 +134,9 @@ def browse(request):
 
         # CREATE FILEOBJECT
         url_path = "/".join(
-            [
-                s.strip("/")
-                for s in [get_directory(), path.replace("\\", "/"), file]
-                if s.strip("/")
-            ]
+            s.strip("/")
+            for s in [get_directory(), path.replace("\\", "/"), file]
+            if s.strip("/")
         )
         fileobject = FileObject(url_path)
 

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import os
 import posixpath
 import shutil
@@ -10,7 +8,7 @@ from django.core.files.move import file_move_safe
 FILE_EXISTS_MSG = "The destination file '{}' exists and allow_overwrite is False"
 
 
-class StorageMixin(object):
+class StorageMixin:
     """
     Adds some useful methods to the Storage class.
     """
@@ -108,7 +106,7 @@ class S3BotoStorageMixin(StorageMixin):
         )
 
         if not k:
-            raise "Couldn't copy '%s' to '%s'" % (old_file_name, new_file_name)
+            raise f"Couldn't copy '{old_file_name}' to '{new_file_name}'"
 
         self.delete(old_file_name)
 
@@ -166,7 +164,7 @@ class GoogleStorageMixin(StorageMixin):
         k = self.bucket.copy_key(new_key_name, self.bucket.name, old_key_name)
 
         if not k:
-            raise "Couldn't copy '%s' to '%s'" % (old_file_name, new_file_name)
+            raise f"Couldn't copy '{old_file_name}' to '{new_file_name}'"
 
         self.delete(old_file_name)
 

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import datetime
 import mimetypes
 import os
@@ -20,7 +18,7 @@ except ImportError:
 from filebrowser_safe.functions import get_directory, get_file_type, path_strip
 
 
-class FileObjectAPI(object):
+class FileObjectAPI:
     """ A mixin class providing file properties. """
 
     def __init__(self, path):
@@ -37,7 +35,7 @@ class FileObjectAPI(object):
         return smart_text(self.name)
 
     def __repr__(self):
-        return smart_str("<%s: %s>" % (self.__class__.__name__, self or "None"))
+        return smart_str("<{}: {}>".format(self.__class__.__name__, self or "None"))
 
     def __len__(self):
         return len(self.name)
@@ -122,7 +120,7 @@ class FileObject(FileObjectAPI):
 
     def __init__(self, path):
         self.path = path
-        super(FileObject, self).__init__(path)
+        super().__init__(path)
 
     @property
     def name(self):
@@ -150,7 +148,7 @@ class FieldFileObject(FieldFile, FileObjectAPI):
         if self.is_folder:
             default_storage.rmtree(self.name)
         else:
-            super(FieldFileObject, self).delete(**kwargs)
+            super().delete(**kwargs)
 
     @property
     def path(self):

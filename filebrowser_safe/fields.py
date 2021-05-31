@@ -89,10 +89,10 @@ class FileBrowseFormField(forms.CharField):
         if format:
             self.format = format or ""
             self.extensions = extensions or fb_settings.EXTENSIONS.get(format)
-        super(FileBrowseFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self, value):
-        value = super(FileBrowseFormField, self).clean(value)
+        value = super().clean(value)
         if value == "":
             return value
         file_extension = os.path.splitext(value)[1].lower().split("?")[0]
@@ -117,7 +117,7 @@ class FileBrowseField(Field):
         self.extensions = kwargs.pop("extensions", "")
         self.format = kwargs.pop("format", "")
         self.storage = kwargs.pop("storage", default_storage)
-        super(FileBrowseField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_db_prep_value(self, value, connection, prepared=False):
         if value is None:
@@ -145,11 +145,11 @@ class FileBrowseField(Field):
             "format": self.format,
         }
         defaults.update(kwargs)
-        return super(FileBrowseField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
     def contribute_to_class(self, cls, name, **kwargs):
         """
         From django.db.models.fields.files.FileField.contribute_to_class
         """
-        super(FileBrowseField, self).contribute_to_class(cls, name, **kwargs)
+        super().contribute_to_class(cls, name, **kwargs)
         setattr(cls, self.name, self.descriptor_class(self))

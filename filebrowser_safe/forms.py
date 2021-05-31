@@ -22,7 +22,7 @@ class MakeDirForm(forms.Form):
 
     def __init__(self, path, *args, **kwargs):
         self.path = path
-        super(MakeDirForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     dir_name = forms.CharField(
         widget=forms.TextInput(
@@ -52,7 +52,7 @@ class RenameForm(forms.Form):
     def __init__(self, path, file_extension, *args, **kwargs):
         self.path = path
         self.file_extension = file_extension
-        super(RenameForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     name = forms.CharField(
         widget=forms.TextInput(

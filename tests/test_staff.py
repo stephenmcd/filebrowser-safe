@@ -17,12 +17,12 @@ User = get_user_model()
 class FilebrowserStaffTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        super(FilebrowserStaffTestCase, cls).setUpClass()
+        super().setUpClass()
         cls.upload_dir = default_storage.path(get_directory())
 
     @classmethod
     def tearDownClass(cls):
-        super(FilebrowserStaffTestCase, cls).tearDownClass()
+        super().tearDownClass()
         # Cleanup the upload directory if some of the tests failed and
         # didn't cleanup after itself.
         shutil.rmtree(cls.upload_dir)
