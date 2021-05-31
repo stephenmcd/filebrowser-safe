@@ -9,7 +9,7 @@ from django.forms.widgets import Input
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from filebrowser_safe import settings as fb_settings
 from filebrowser_safe.base import FieldFileObject

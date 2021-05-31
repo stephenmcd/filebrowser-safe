@@ -3,7 +3,7 @@
 import os
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 DEFAULT_URL_TINYMCE = settings.STATIC_URL + "grappelli/tinymce/jscripts/tiny_mce/"
 DEFAULT_PATH_TINYMCE = os.path.join(

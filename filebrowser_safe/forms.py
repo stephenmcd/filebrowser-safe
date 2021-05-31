@@ -2,7 +2,7 @@ import os
 import re
 
 from django import forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from filebrowser_safe.settings import FOLDER_REGEX
 
