@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: pip install tox -U pip
       - name: Lint
-        run: tox -e package -e flake8 -e black -e pyupgrade
+        run: tox -e package -e flake8 -e black -e isort -e pyupgrade
 
   # Create a new semantic release
   release:
