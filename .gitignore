@@ -2,10 +2,12 @@
 *.eggs/
 *.pyc
 .DS_Store
+.coverage
 .idea
 .pytest_cache
 .tox
 .vscode
-/junit/
 /build/
 /dist/
+/htmlcov/
+/junit/

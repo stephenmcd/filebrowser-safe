@@ -6,4 +6,4 @@ recursive-include filebrowser_safe/templates *.html
 recursive-include filebrowser_safe/locale *.mo *.po
 
 prune tests
-exclude .releaserc .isort.cfg tox.ini pytest.ini
+exclude .releaserc .isort.cfg tox.ini pytest.ini .coveragerc
