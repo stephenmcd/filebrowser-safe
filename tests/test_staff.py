@@ -11,7 +11,6 @@ from django.urls import reverse
 from filebrowser_safe.functions import get_directory
 from filebrowser_safe.templatetags.fb_tags import get_query_string
 
-
 User = get_user_model()
 
 

@@ -1,11 +1,11 @@
 # coding: utf-8
 
 import os
-import shutil
 import posixpath
+import shutil
 
-from django.core.files.move import file_move_safe
 from django.core.files.base import ContentFile
+from django.core.files.move import file_move_safe
 
 FILE_EXISTS_MSG = "The destination file '{}' exists and allow_overwrite is False"
 

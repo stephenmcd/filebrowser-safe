@@ -4,7 +4,7 @@ import os
 import re
 import unicodedata
 import warnings
-from time import gmtime, strftime, localtime, time
+from time import gmtime, localtime, strftime, time
 
 from django.conf import settings as dj_settings
 from django.core.files.storage import default_storage

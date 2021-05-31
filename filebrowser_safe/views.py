@@ -1,19 +1,19 @@
-from json import dumps
 import os
 import re
+from json import dumps
 
-from django.conf import settings as django_settings
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib import messages
-from django.core.exceptions import ImproperlyConfigured
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.urls import reverse
-from django.dispatch import Signal
 from django import forms
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
-from django.shortcuts import render, HttpResponse
+from django.conf import settings as django_settings
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.exceptions import ImproperlyConfigured
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.core.paginator import EmptyPage, InvalidPage, Paginator
+from django.dispatch import Signal
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.shortcuts import HttpResponse, render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -25,20 +25,20 @@ except ImportError:
     # Backward compatibility for Py2 and Django < 1.5
     from django.utils.encoding import smart_unicode as smart_text
 
+from django.utils.module_loading import import_string
+
 from filebrowser_safe import settings as fb_settings
+from filebrowser_safe.base import FileObject
 from filebrowser_safe.functions import (
-    get_path,
+    convert_filename,
     get_breadcrumbs,
+    get_directory,
     get_file_type,
     get_filterdate,
+    get_path,
     get_settings_var,
-    get_directory,
-    convert_filename,
 )
 from filebrowser_safe.templatetags.fb_tags import query_helper
-from filebrowser_safe.base import FileObject
-
-from django.utils.module_loading import import_string
 
 try:
     from mezzanine.utils.html import escape

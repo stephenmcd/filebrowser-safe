@@ -1,8 +1,9 @@
-from django import template
-from django.utils.http import urlquote
 import warnings
 
-from filebrowser_safe.settings import SELECT_FORMATS, EXTENSIONS
+from django import template
+from django.utils.http import urlquote
+
+from filebrowser_safe.settings import EXTENSIONS, SELECT_FORMATS
 
 register = template.Library()
 

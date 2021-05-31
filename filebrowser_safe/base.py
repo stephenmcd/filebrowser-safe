@@ -1,10 +1,10 @@
 # coding: utf-8
 
+import datetime
+import mimetypes
 import os
 import time
-import datetime
 import warnings
-import mimetypes
 
 from django.core.files.storage import default_storage
 from django.db.models.fields.files import FieldFile
@@ -17,7 +17,7 @@ except ImportError:
     # Backward compatibility for Py2 and Django < 1.5
     from django.utils.encoding import smart_unicode as smart_text
 
-from filebrowser_safe.functions import get_file_type, path_strip, get_directory
+from filebrowser_safe.functions import get_directory, get_file_type, path_strip
 
 
 class FileObjectAPI(object):

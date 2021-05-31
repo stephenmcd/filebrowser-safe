@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from filebrowser_safe import views
 
-
 urlpatterns = [
     url(r"^browse/$", views.browse, name="fb_browse"),
     url(r"^mkdir/", views.mkdir, name="fb_mkdir"),
