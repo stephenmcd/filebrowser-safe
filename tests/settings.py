@@ -47,6 +47,3 @@ TEMPLATES = [
         },
     },
 ]
-
-# Non standart settings
-THUMBNAILS_DIR_NAME = "thumbnails"

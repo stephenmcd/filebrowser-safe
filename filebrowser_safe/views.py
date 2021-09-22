@@ -75,8 +75,9 @@ def remove_thumbnails(file_path):
     """
     from django.conf import settings
 
+    thumb_dir = getattr(settings, "THUMBNAILS_DIR_NAME", ".thumbnails")
     dir_name, file_name = os.path.split(file_path)
-    path = os.path.join(dir_name, settings.THUMBNAILS_DIR_NAME, file_name)
+    path = os.path.join(dir_name, thumb_dir, file_name)
     try:
         default_storage.rmtree(path)
     except:  # noqa
