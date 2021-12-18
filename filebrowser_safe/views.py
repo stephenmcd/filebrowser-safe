@@ -19,11 +19,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.decorators.csrf import csrf_exempt
 
-try:
-    from django.utils.encoding import smart_text
-except ImportError:
-    # Backward compatibility for Py2 and Django < 1.5
-    from django.utils.encoding import smart_unicode as smart_text
+from django.utils.encoding import smart_str
 
 from django.utils.module_loading import import_string
 
@@ -230,8 +226,8 @@ browse = staff_member_required(never_cache(browse))
 
 
 # mkdir signals
-filebrowser_pre_createdir = Signal(providing_args=["path", "dirname"])
-filebrowser_post_createdir = Signal(providing_args=["path", "dirname"])
+filebrowser_pre_createdir = Signal()
+filebrowser_post_createdir = Signal()
 
 
 @xframe_options_sameorigin
@@ -364,8 +360,8 @@ def _check_file(request):
 
 
 # upload signals
-filebrowser_pre_upload = Signal(providing_args=["path", "file"])
-filebrowser_post_upload = Signal(providing_args=["path", "file"])
+filebrowser_pre_upload = Signal()
+filebrowser_post_upload = Signal()
 
 
 @csrf_exempt
@@ -412,8 +408,8 @@ def _upload_file(request):
             uploadedfile = default_storage.save(file_path, filedata)
             if default_storage.exists(file_path) and file_path != uploadedfile:
                 default_storage.move(
-                    smart_text(uploadedfile),
-                    smart_text(file_path),
+                    smart_str(uploadedfile),
+                    smart_str(file_path),
                     allow_overwrite=True,
                 )
 
@@ -421,7 +417,7 @@ def _upload_file(request):
             filebrowser_post_upload.send(
                 sender=request,
                 path=request.POST.get("folder"),
-                file=FileObject(smart_text(file_path)),
+                file=FileObject(smart_str(file_path)),
             )
         get_params = request.POST.get("get_params")
         if get_params:
@@ -430,8 +426,8 @@ def _upload_file(request):
 
 
 # delete signals
-filebrowser_pre_delete = Signal(providing_args=["path", "filename"])
-filebrowser_post_delete = Signal(providing_args=["path", "filename"])
+filebrowser_pre_delete = Signal()
+filebrowser_post_delete = Signal()
 
 
 @xframe_options_sameorigin
@@ -499,8 +495,8 @@ delete = staff_member_required(never_cache(delete))
 
 
 # rename signals
-filebrowser_pre_rename = Signal(providing_args=["path", "filename", "new_filename"])
-filebrowser_post_rename = Signal(providing_args=["path", "filename", "new_filename"])
+filebrowser_pre_rename = Signal()
+filebrowser_post_rename = Signal()
 
 
 @xframe_options_sameorigin
