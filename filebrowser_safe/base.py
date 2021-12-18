@@ -9,11 +9,7 @@ from django.db.models.fields.files import FieldFile
 from django.utils.encoding import smart_str
 from django.utils.functional import cached_property
 
-try:
-    from django.utils.encoding import smart_text
-except ImportError:
-    # Backward compatibility for Py2 and Django < 1.5
-    from django.utils.encoding import smart_unicode as smart_text
+from django.utils.encoding import smart_str
 
 from filebrowser_safe.functions import get_directory, get_file_type, path_strip
 
@@ -32,7 +28,7 @@ class FileObjectAPI:
         return smart_str(self.name)
 
     def __unicode__(self):
-        return smart_text(self.name)
+        return smart_str(self.name)
 
     def __repr__(self):
         return smart_str("<{}: {}>".format(self.__class__.__name__, self or "None"))

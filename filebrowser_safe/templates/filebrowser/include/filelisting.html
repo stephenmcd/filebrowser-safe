@@ -10,18 +10,18 @@ h1 {margin:-30px 0 15px 0;}
 <tr class="{% cycle 'row1' 'row2' %}">
 
     <!-- FILESELECT FOR FILEBROWSEFIELD -->
-    {% ifequal query.pop '1' %}
+    {% if query.pop == '1' %}
     {% if results_var.select_total %}
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
         {% if selectable %}
-        <a href="javascript://" onclick="FileSubmit('{{ file.path }}', '{{ file.url }}', '{{ settings_var.MEDIA_URL }}{% ifequal file.filetype 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endifequal %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
+        <a href="javascript://" onclick="FileSubmit('{{ file.path }}', '{{ file.url }}', '{{ settings_var.MEDIA_URL }}{% if file.filetype == 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endif %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
         {% else %}
         <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
         {% endif %}
     </td>
     {% endif %}
-    {% endifequal %}
+    {% endif %}
 
     <!-- FILESELECT FOR RTE/TINYMCE -->
     {% if query.pop == '2' or query.pop == '5' %}
@@ -38,7 +38,7 @@ h1 {margin:-30px 0 15px 0;}
     {% endif %}
 
     <!-- FILESELECT FOR CKEDITOR (FORMER "FCKEDITOR") -->
-    {% ifequal query.pop '3' %}
+    {% if query.pop == '3' %}
     {% if results_var.select_total %}
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
@@ -49,10 +49,10 @@ h1 {margin:-30px 0 15px 0;}
         {% endif %}
     </td>
     {% endif %}
-    {% endifequal %}
+    {% endif %}
 
     <!-- GENERIC FILESELECT: opener grabs file url from rel attribute dynamically on click -->
-    {% ifequal query.pop '4' %}
+    {% if query.pop == '4' %}
     {% if results_var.select_total %}
     <td class="fb_icon">
         {% selectable file.filetype query.type %}
@@ -63,7 +63,7 @@ h1 {margin:-30px 0 15px 0;}
         {% endif %}
     </td>
     {% endif %}
-    {% endifequal %}
+    {% endif %}
 
     <!-- FILEICON -->
     <td class="fb_icon"><img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" /></td>
@@ -71,18 +71,18 @@ h1 {margin:-30px 0 15px 0;}
     <!-- THUMBNAIL -->
     {% if results_var.images_total %}
     <td class="fb_icon">
-        {% ifequal file.filetype 'Image' %}
+        {% if file.filetype == 'Image' %}
         <a href="{{ file.url }}" target="_blank"><img src="{{ settings_var.MEDIA_URL }}{% thumbnail file.path 60 60 %}" title="{% trans 'View Image' %}" /></a>
-        {% endifequal %}
+        {% endif %}
     </td>
     {% endif %}
 
     <!-- FILENAME/DIMENSIONS -->
-    {% ifequal file.filetype 'Folder' %}
+    {% if file.filetype == 'Folder' %}
     <td><b><a href="{% url "fb_browse" %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}">{{ file.filename }}</a></b></td>
     {% else %}
     <td><b><a href="{{ file.url }}" target="_blank">{{ file.filename }}</a></b></td>
-    {% endifequal %}
+    {% endif %}
 
     <!-- RENAME -->
     {% if query.pop != '4' %}
@@ -97,13 +97,13 @@ h1 {margin:-30px 0 15px 0;}
 
     <!-- DELETE -->
     <td class="fb_icon">
-        {% ifnotequal file.filetype 'Folder' %}
+        {% if file.filetype != 'Folder' %}
         <form method="POST" action="{% url "fb_delete" %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
         <a href="#" class="fb_deletelink" onclick="if (confirm('{% trans "Are you sure you want to delete this file?" %}')) {jQuery('#delete-{{ forloop.counter0 }}').submit();} return false;" title="{% trans 'Delete File' %}"></a>
         {% else %}
         <form method="POST" action="{% url "fb_delete" %}{% query_string %}&amp;filename={{ file.filename }}&amp;filetype={{ file.filetype }}" id="delete-{{ forloop.counter0 }}">{% csrf_token %}</form>
         <a href="#" class="fb_deletelink" onclick="if (confirm('{% trans "Are you sure you want to delete this Folder?" %}')) {jQuery('#delete-{{ forloop.counter0 }}').submit();} return false;" title="{% trans 'Delete Folder' %}"></a>
-        {% endifnotequal %}
+        {% endif %}
     </td>
 
     <!-- DEBUG -->
@@ -121,15 +121,15 @@ h1 {margin:-30px 0 15px 0;}
         <strong>Full URL</strong> {{ file.url }}<br /><br />
         <strong>URL for FileBrowseField</strong> {{ file.url }}<br />
         <strong>Thumbnail URL</strong> {{ file.url_thumbnail }}
-        {% ifequal file.filetype 'Image' %}<br /><br />
+        {% if file.filetype == 'Image' %}<br /><br />
         <strong>Dimensions</strong> {{ file.dimensions }}<br />
         <strong>Width</strong> {{ file.width }}<br />
         <strong>Height</strong> {{ file.height }}<br />
         <strong>Orientation</strong> {{ file.orientation }}
-        {% endifequal %}
-        {% ifequal file.filetype 'Folder' %}<br /><br />
+        {% endif %}
+        {% if file.filetype == 'Folder' %}<br /><br />
         <strong>Is Empty</strong> {{ file.is_empty }}
-        {% endifequal %}
+        {% endif %}
     </td>
     {% endif %}
 
