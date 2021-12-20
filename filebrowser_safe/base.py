@@ -9,13 +9,11 @@ from django.db.models.fields.files import FieldFile
 from django.utils.encoding import smart_str
 from django.utils.functional import cached_property
 
-from django.utils.encoding import smart_str
-
 from filebrowser_safe.functions import get_directory, get_file_type, path_strip
 
 
 class FileObjectAPI:
-    """ A mixin class providing file properties. """
+    """A mixin class providing file properties."""
 
     def __init__(self, path):
         self.head = os.path.dirname(path)
@@ -70,7 +68,7 @@ class FileObjectAPI:
 
     @property
     def path_relative_directory(self):
-        """ path relative to the path returned by get_directory() """
+        """path relative to the path returned by get_directory()"""
         return path_strip(self.name, get_directory()).lstrip("/")
 
     # FOLDER ATTRIBUTES
