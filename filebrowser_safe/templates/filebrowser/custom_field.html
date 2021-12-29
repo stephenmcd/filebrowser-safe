@@ -15,7 +15,7 @@
   );">
     <img src="{{ final_attrs.search_icon }}" alt="" />
 </a>
-{% ifequal value.filetype "Image" %}
+{% if value.filetype == "Image" %}
 <p class="help mezz-fb-thumbnail" id="help_{{ final_attrs.id }}">
     <a href="{{ value.url }}" target="_blank" id="link_{{ final_attrs.id }}">
         <img id="image_{{ final_attrs.id }}" src="{{ MEDIA_URL }}{% thumbnail value.name 60 60 %}" class="preview" />
@@ -28,7 +28,7 @@
     </a>
     {{ value.path }}
 </p>
-{% endifequal %}
+{% endif %}
 {% if not self.is_required %}
     <p class="help mezz-fb-clear" id="clear_{{ final_attrs.id }}" style="display:{% if value %}inline{% else %}none{% endif %}; margin:0 10px;">
         <a href="javascript:FileBrowser.clear('{{ final_attrs.id }}');">{% trans "Clear" %}</a>
