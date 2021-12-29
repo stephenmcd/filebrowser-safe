@@ -88,7 +88,9 @@ jobs:
         run: tox -e package -e lint -e pyupgrade
 
   # Create a new semantic release
+  # Only runs on the original repo, not forks
   release:
+    if: github.repository_owner == 'stephenmcd'
     needs: [test, lint]
     runs-on: ubuntu-latest
     steps:
