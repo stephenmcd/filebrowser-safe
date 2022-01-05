@@ -107,6 +107,7 @@ def get_path(path):
     """
     if (
         path.startswith(".")
+        or "../" in path
         or os.path.isabs(path)
         or not default_storage.isdir(os.path.join(get_directory(), path))
     ):

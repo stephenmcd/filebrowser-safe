@@ -1,7 +1,9 @@
 import os
 import shutil
 import tempfile
+from pathlib import Path
 
+import pytest
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -19,6 +21,8 @@ class FilebrowserStaffTestCase(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.upload_dir = default_storage.path(get_directory())
+        cls.subdir = Path(cls.upload_dir) / "TEST_DIRECTORY"
+        cls.subdir.mkdir()
 
     @classmethod
     def tearDownClass(cls):
@@ -37,11 +41,21 @@ class FilebrowserStaffTestCase(TestCase):
 
     def test_browse(self):
         url = reverse("fb_browse")
-        with tempfile.NamedTemporaryFile(
-            dir=self.upload_dir, prefix="fb-", suffix="-test.txt"
-        ) as temp_file:
+        with tempfile.NamedTemporaryFile(dir=self.upload_dir) as temp_file:
             response = self.client.get(url)
             self.assertContains(response, os.path.basename(temp_file.name))
+            self.assertContains(response, self.subdir.name)
+
+    def test_browse__dir(self):
+        url = reverse("fb_browse") + f"?dir={self.subdir.name}"
+        with tempfile.NamedTemporaryFile(dir=str(self.subdir)) as temp_file:
+            response = self.client.get(url, data={"dir": self.subdir.name})
+            self.assertContains(response, os.path.basename(temp_file.name))
+
+    def test_browse__suspicious(self):
+        url = reverse("fb_browse") + f"?dir={self.subdir.name}/../"
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("fb_browse") + "?")
 
     def test_mkdir_page_get(self):
         url = reverse("fb_mkdir")
