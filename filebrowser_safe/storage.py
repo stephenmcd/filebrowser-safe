@@ -80,7 +80,7 @@ class S3BotoStorageMixin(StorageMixin):
             return False
 
         name = self._normalize_name(self._clean_name(name))
-        dirlist = self.listdir(self._encode_name(name))
+        dirlist = self.listdir(name)
 
         # Check whether the iterator is empty
         for item in dirlist:
@@ -94,12 +94,8 @@ class S3BotoStorageMixin(StorageMixin):
             else:
                 raise FILE_EXISTS_MSG.format(new_file_name)
 
-        old_key_name = self._encode_name(
-            self._normalize_name(self._clean_name(old_file_name))
-        )
-        new_key_name = self._encode_name(
-            self._normalize_name(self._clean_name(new_file_name))
-        )
+        old_key_name = self._normalize_name(self._clean_name(old_file_name))
+        new_key_name = self._normalize_name(self._clean_name(new_file_name))
 
         k = self.bucket.copy_key(
             new_key_name, self.bucket.name, old_key_name, preserve_acl=True
@@ -115,7 +111,7 @@ class S3BotoStorageMixin(StorageMixin):
 
     def rmtree(self, name):
         name = self._normalize_name(self._clean_name(name))
-        directories, files = self.listdir(self._encode_name(name))
+        directories, files = self.listdir(name)
 
         for key in files:
             self.delete("/".join([name, key]))
@@ -139,7 +135,7 @@ class GoogleStorageMixin(StorageMixin):
             return False
 
         name = self._normalize_name(self._clean_name(name))
-        dirlist = self.listdir(self._encode_name(name))
+        dirlist = self.listdir(name)
 
         # Check whether the iterator is empty
         for item in dirlist:
@@ -154,12 +150,8 @@ class GoogleStorageMixin(StorageMixin):
             else:
                 raise FILE_EXISTS_MSG.format(new_file_name)
 
-        old_key_name = self._encode_name(
-            self._normalize_name(self._clean_name(old_file_name))
-        )
-        new_key_name = self._encode_name(
-            self._normalize_name(self._clean_name(new_file_name))
-        )
+        old_key_name = self._normalize_name(self._clean_name(old_file_name))
+        new_key_name = self._normalize_name(self._clean_name(new_file_name))
 
         k = self.bucket.copy_key(new_key_name, self.bucket.name, old_key_name)
 
@@ -173,7 +165,7 @@ class GoogleStorageMixin(StorageMixin):
 
     def rmtree(self, name):
         name = self._normalize_name(self._clean_name(name))
-        dirlist = self.listdir(self._encode_name(name))
+        dirlist = self.listdir(name)
         for item in dirlist:
             item.delete()
 
