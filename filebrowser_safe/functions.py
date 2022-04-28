@@ -184,6 +184,7 @@ def get_settings_var():
     settings_var["SELECT_FORMATS"] = fb_settings.SELECT_FORMATS
     # FileBrowser Options
     settings_var["MAX_UPLOAD_SIZE"] = fb_settings.MAX_UPLOAD_SIZE
+    settings_var["MAX_IMAGE_UPLOAD_SIZE"] = fb_settings.MAX_IMAGE_UPLOAD_SIZE
     # Convert Filenames
     settings_var["CONVERT_FILENAME"] = fb_settings.CONVERT_FILENAME
     return settings_var

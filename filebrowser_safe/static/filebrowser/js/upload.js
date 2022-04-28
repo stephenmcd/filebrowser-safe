@@ -16,6 +16,7 @@
             var doneRedirect = formData.redirectWhenDone || '/';
             var extensions = formData.allowedExtensions && formData.allowedExtensions.split(',');
             var allowedSize = formData.sizeLimit && parseInt(formData.sizeLimit);
+            var allowedImageSize = formData.sizeImageLimit && parseInt(formData.sizeImageLimit);
 
             form.on('change', 'input[type="file"]', function(e){
                 var input = this;
@@ -24,6 +25,7 @@
                     var status = resultElement.find('.status');
                     var hasExtensionError = !validateExtension(selectedFile, extensions);
                     var hasSizeError = !validateSize(selectedFile, allowedSize);
+                    var hasImageSizeError = !validateImageSize(selectedFile, allowedImageSize);
 
                     resultElement.addClass('selected');
 
@@ -35,10 +37,12 @@
                     $(resultElement[0].outerHTML).removeClass('selected').insertAfter(resultElement);
 
                     // shows the error message if there was an error
-                    if(hasExtensionError || hasSizeError) {
-                        status
-                            .addClass('error')
-                            .text(hasSizeError ? formData.sizeError : formData.extensionError);
+                    if(hasExtensionError) {
+                        status.addClass('error').text(formData.extensionError);
+                    }else if (hasSizeError) {
+                        status.addClass('error').text(formData.sizeError);
+                    }else if (hasImageSizeError) {
+                        status.addClass('error').text(formData.sizeImageError);
                     }else if(selectedFile) {
                         function resume() {
                             // display the selected file's name
@@ -88,7 +92,7 @@
                         element.removeClass('selected').addClass('in-progress');
 
                         // when failed, show the error message
-                        promise.fail(function(){
+                        promise.fail(function(jqXHR, textStatus, errorThrown){
                             element.find('.status').addClass('error').text(formData.serverError);
                         });
 
@@ -231,6 +235,20 @@
     // checks whether a file's size is under the limit
     function validateSize(file, allowed){
         if(file && allowed){
+            if(typeof allowed === 'number' && !global.isNaN(allowed)){
+                return file.size <= allowed;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+
+    // checks whether an image's size is under the limit
+    function validateImageSize(file, allowed){
+        if(file && allowed && file.type.startsWith('image')){
             if(typeof allowed === 'number' && !global.isNaN(allowed)){
                 return file.size <= allowed;
             }

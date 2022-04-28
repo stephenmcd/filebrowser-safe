@@ -41,8 +41,10 @@
         data-redirect-when-done="{% url 'fb_browse' %}{% query_string '' 'p' %}"
         data-allowed-extensions="{% allowed_extensions_list %}"
         data-size-limit="{{ settings_var.MAX_UPLOAD_SIZE|unlocalize }}"
+        data-size-image-limit="{{ settings_var.MAX_IMAGE_UPLOAD_SIZE|unlocalize }}"
         data-server-error="{% trans 'There was a server error when uploading the file.' %}"
-        data-size-error="{% trans 'The file size is larger than the limit.' %}"
+        data-size-error="{% trans 'The file size exceeds the limit of' %} {{ settings_var.MAX_UPLOAD_SIZE|filesizeformat }}"
+        data-size-image-error="{% trans 'The image file size exceeds the limit of' %} {{ settings_var.MAX_IMAGE_UPLOAD_SIZE|filesizeformat }}"
         data-extension-error="{% trans 'The file extension is not allowed.' %}">
 
     <div>
@@ -85,6 +87,13 @@
             <label class="required">{% trans "Max. Filesize" %}:</label>
             <p>{{ settings_var.MAX_UPLOAD_SIZE|filesizeformat }}</p>
         </div>
+        {% if settings_var.MAX_IMAGE_UPLOAD_SIZE != settings_var.MAX_UPLOAD_SIZE %}
+        <div class="form-row" >
+            <label class="required">{% trans "Max. Image Filesize" %}:</label>
+            <p>{{ settings_var.MAX_IMAGE_UPLOAD_SIZE|filesizeformat }}</p>
+        </div>           
+        {% endif %}
+
         {% if settings_var.CONVERT_FILENAME %}
         <div class="form-row" >
             <label class="required">&nbsp;</label>

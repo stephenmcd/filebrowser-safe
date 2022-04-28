@@ -91,6 +91,9 @@ EXCLUDE = getattr(
 MAX_UPLOAD_SIZE = getattr(
     settings, "FILEBROWSER_MAX_UPLOAD_SIZE", settings.FILE_UPLOAD_MAX_MEMORY_SIZE
 )
+MAX_IMAGE_UPLOAD_SIZE = getattr(
+    settings, "FILEBROWSER_MAX_IMAGE_UPLOAD_SIZE", MAX_UPLOAD_SIZE
+)
 # Normalize filename and remove all non-alphanumeric characters
 # except for underscores, spaces & dashes.
 NORMALIZE_FILENAME = getattr(settings, "FILEBROWSER_NORMALIZE_FILENAME", False)
