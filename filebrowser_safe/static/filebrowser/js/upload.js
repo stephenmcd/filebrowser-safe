@@ -93,9 +93,7 @@
 
                         // when failed, show the error message
                         promise.fail(function(jqXHR, textStatus, errorThrown){
-                            //element.find('.status').addClass('error').text(formData.serverError);
-                            element.find('.status').addClass('error').text("Request Failed (server response logged to console): " + textStatus + ", " + errorThrown + ". Server response: " 
- + jqXHR.responseText);
+                            element.find('.status').addClass('error').text(formData.serverError);
                         });
 
                         // on progress, update the progressbar
