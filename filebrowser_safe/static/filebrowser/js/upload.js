@@ -37,10 +37,12 @@
                     $(resultElement[0].outerHTML).removeClass('selected').insertAfter(resultElement);
 
                     // shows the error message if there was an error
-                    if(hasExtensionError || hasSizeError || hasImageSizeError) {
-                        status
-                            .addClass('error')
-                            .text(hasSizeError || hasImageSizeError ? formData.sizeError : formData.extensionError);
+                    if(hasExtensionError) {
+                        status.addClass('error').text(formData.extensionError);
+                    }else if (hasSizeError) {
+                        status.addClass('error').text(formData.sizeError);
+                    }else if (hasImageSizeError) {
+                        status.addClass('error').text(formData.sizeImageError);
                     }else if(selectedFile) {
                         function resume() {
                             // display the selected file's name
