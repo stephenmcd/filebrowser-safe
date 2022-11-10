@@ -5,13 +5,14 @@ import warnings
 from time import gmtime, localtime, strftime, time
 
 from django.conf import settings as dj_settings
+from django.core.exceptions import AppRegistryNotReady
 from django.core.files.storage import default_storage
 
 from filebrowser_safe import settings as fb_settings
 
 try:
     from mezzanine.utils.sites import current_site_id
-except ImportError:
+except (AppRegistryNotReady, ImportError) as e:
     # TODO: filebrowser-safe should not rely on `current_site_id` at all since its
     # provided by Mezzanine.
     #
