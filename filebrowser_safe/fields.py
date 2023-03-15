@@ -7,6 +7,7 @@ from django.db.models.fields import Field
 from django.db.models.fields.files import FileDescriptor
 from django.forms.widgets import Input
 from django.template.loader import render_to_string
+from django.templatetags.static import static
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -20,7 +21,7 @@ class FileBrowseWidget(Input):
     input_type = "text"
 
     class Media:
-        js = (os.path.join(fb_settings.URL_FILEBROWSER_MEDIA, "js/AddFileBrowser.js"),)
+        js = (static("filebrowser/js/AddFileBrowser.js"),)
 
     def __init__(self, attrs=None):
         self.directory = attrs.get("directory", "")
@@ -44,7 +45,7 @@ class FileBrowseWidget(Input):
                 default_storage.makedirs(fullpath)
         final_attrs = dict(type=self.input_type, name=name, **attrs)
         final_attrs["search_icon"] = (
-            fb_settings.URL_FILEBROWSER_MEDIA + "img/filebrowser_icon_show.gif"
+            static("filebrowser/img/filebrowser_icon_show.gif")
         )
         final_attrs["directory"] = directory
         final_attrs["extensions"] = self.extensions

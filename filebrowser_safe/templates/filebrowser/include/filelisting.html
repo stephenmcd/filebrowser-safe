@@ -17,7 +17,7 @@ h1 {margin:-30px 0 15px 0;}
         {% if selectable %}
         <a href="javascript://" onclick="FileSubmit('{{ file.path }}', '{{ file.url }}', '{{ settings_var.MEDIA_URL }}{% if file.filetype == 'Image' %}{% thumbnail file.path 60 60 %}{% else %}{{ file.path }}{% endif %}', '{{ file.filetype }}');" class="fb_selectlink" title="{% trans 'Select' %}"></a>
         {% else %}
-        <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
+        <img src="{% static 'filebrowser/img/filebrowser_icon_select_disabled.gif' %}" width="23" height="17" />
         {% endif %}
     </td>
     {% endif %}
@@ -31,7 +31,7 @@ h1 {margin:-30px 0 15px 0;}
         {% if selectable %}
         <a href="javascript:FileBrowserDialogue.fileSubmit('{{ file.url|escapejs }}');" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
         {% else %}
-        <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
+        <img src="{% static 'filebrowser/img/filebrowser_icon_select_disabled.gif' %}" width="23" height="17" />
         {% endif %}
     </td>
     {% endif %}
@@ -45,7 +45,7 @@ h1 {margin:-30px 0 15px 0;}
         {% if selectable %}
         <a href="#" onclick="OpenFile(ProtectPath('{{ file.url|escapejs }}'));return false;" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
         {% else %}
-        <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
+        <img src="{% static 'filebrowser/img/filebrowser_icon_select_disabled.gif' %}" width="23" height="17" />
         {% endif %}
     </td>
     {% endif %}
@@ -59,15 +59,16 @@ h1 {margin:-30px 0 15px 0;}
         {% if selectable %}
         <a href="#" rel="{{ file.url|escape }}" class="fb_selectlink" title="{% trans 'Select File' %}"></a>
         {% else %}
-        <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_icon_select_disabled.gif" width="23" height="17" />
+        <img src="{% static 'filebrowser/img/filebrowser_icon_select_disabled.gif' %}" width="23" height="17" />
         {% endif %}
     </td>
     {% endif %}
     {% endif %}
 
     <!-- FILEICON -->
-    <td class="fb_icon"><img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" /></td>
-
+    {% with 'filebrowser/'|add:{{ settings_var.URL_FILEBROWSER_MEDIA }}|add:'img/filebrowser_type_'|add:{{ file.filetype|lower }}|add:'.gif' as fileicon  %}
+    <td class="fb_icon"><img src="{% static fileicon %} /></td>
+    {% endwith %}
     <!-- THUMBNAIL -->
     {% if results_var.images_total %}
     <td class="fb_icon">
