@@ -66,9 +66,7 @@ h1 {margin:-30px 0 15px 0;}
     {% endif %}
 
     <!-- FILEICON -->
-    {% with 'filebrowser/'|add:{{ settings_var.URL_FILEBROWSER_MEDIA }}|add:'img/filebrowser_type_'|add:{{ file.filetype|lower }}|add:'.gif' as fileicon  %}
-    <td class="fb_icon"><img src="{% static fileicon %} /></td>
-    {% endwith %}
+    <td class="fb_icon"><img src="{% get_filetype_icon file.filetype %}" /></td>
     <!-- THUMBNAIL -->
     {% if results_var.images_total %}
     <td class="fb_icon">
