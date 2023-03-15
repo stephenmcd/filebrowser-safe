@@ -20,12 +20,6 @@ MEDIA_URL = getattr(settings, "FILEBROWSER_MEDIA_URL", settings.MEDIA_URL)
 # DO NOT USE A SLASH AT THE BEGINNING, DO NOT FORGET THE TRAILING SLASH AT THE END.
 DIRECTORY = getattr(settings, "FILEBROWSER_DIRECTORY", "uploads/")
 
-# The URL/PATH to your filebrowser media-files.
-URL_FILEBROWSER_MEDIA = getattr(
-    settings,
-    "FILEBROWSER_URL_FILEBROWSER_MEDIA",
-    "%sfilebrowser/" % settings.STATIC_URL,
-)
 PATH_FILEBROWSER_MEDIA = getattr(
     settings,
     "FILEBROWSER_PATH_FILEBROWSER_MEDIA",
