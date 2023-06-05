@@ -1,6 +1,7 @@
 import warnings
 
 from django import template
+from django.templatetags.static import static
 
 from urllib.parse import quote
 
@@ -184,3 +185,7 @@ def allowed_extensions_list(separator=","):
 
 
 register.simple_tag(allowed_extensions_list)
+
+@register.simple_tag
+def get_filetype_icon(filetype):
+    return static(f'filebrowser/img/filebrowser_type_{filetype.lower()}.gif')

@@ -174,7 +174,6 @@ def get_settings_var():
     settings_var["MEDIA_URL"] = fb_settings.MEDIA_URL
     settings_var["DIRECTORY"] = get_directory()
     # FileBrowser
-    settings_var["URL_FILEBROWSER_MEDIA"] = fb_settings.URL_FILEBROWSER_MEDIA
     settings_var["PATH_FILEBROWSER_MEDIA"] = fb_settings.PATH_FILEBROWSER_MEDIA
     # TinyMCE
     settings_var["URL_TINYMCE"] = fb_settings.URL_TINYMCE
